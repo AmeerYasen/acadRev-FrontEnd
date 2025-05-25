@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@theme{
+  --color-primary: var(--primary-color);
+  --color-hover: var(--primary-hover);
+  --color-secondary: var(--secondary-color);
+  --color-darknavy: var(--darknavy-color);
+
+  
+  --text-main: var(--text-main);
+  --text-dark: var(--text-dark);
+  --text-medium: var(--text-medium);
+  --text-light: var(--text-light);
+  --text-primary: var(--text-primary);
+  --text-primary-hover: var(--text-primary-hover);
+
+  --bg-main: var(--bg-main);
+  --bg-light: var(--bg-light);
+  --bg-lighter: var(--bg-lighter);
+  --bg-input: var(--bg-input);
+  --bg-card: var(--bg-card);
+
+  --border-main: var(--border-main);
+  --border-dark: var(--border-dark);
+  --border-primary: var(--border-primary);
+}
+
+:root{
+  /* Primary Colors */
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-color: #6c757d;
+  --darknavy-color: #1F2857;
+
+  
+  /* Background Colors */
+  --bg-main: #f8f9fa;
+  --bg-light: #f3f4f6;
+  --bg-lighter: #f9fafb;
+  --bg-input: #ffffff;
+  --bg-card: #ffffff;
+  
+  /* Text Colors */
+  --text-main: #212529;
+  --text-dark: #1f2937;
+  --text-medium: #4b5563;
+  --text-light: #9ca3af;
+  --text-primary: #3b82f6;
+  --text-primary-hover: #2563eb;
+  
+  
+  /* Border Colors */
+  --border-main: #d1d5db;
+  --border-dark: #4b5563;
+  --border-primary: #60a5fa;
+
+  
+
+
+}
+
+.darkmode:root{
+  /* Primary Colors (same as light mode) */
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-color: #6c757d;
+  
+  /* Background Colors */
+  --bg-main: #1a1a1a;
+  --bg-light: #1f2937;
+  --bg-lighter: #111827;
+  --bg-input: #374151;
+  --bg-card: #1f2937;
+  
+  /* Text Colors */
+  --text-main: #ffffff;
+  --text-dark: #f3f4f6;
+  --text-medium: #d1d5db;
+  --text-light: #9ca3af;
+  --text-primary: #60a5fa;
+  --text-primary-hover: #93c5fd;
+  
+  /* Font Styles (same as light mode) */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.5rem;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+body{
+  min-height: 100vh;
+}
+
+

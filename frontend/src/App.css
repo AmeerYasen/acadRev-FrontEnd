@@ -1,0 +1,47 @@
+/* src/App.css */
+:root {
+    --sidebar-expanded-width: 240px;
+    --sidebar-collapsed-width: 64px;
+    --header-height: 64px;
+    --transition-speed: 0.3s;
+  }
+  
+  /* Ensure smooth transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: var(--transition-speed);
+  }
+  
+  /* Hide scrollbar for clean look */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Make content transition smoother */
+  .content-transition {
+    transition: margin-left var(--transition-speed) ease-in-out;
+  }
+  
+  /* Basic responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar-mobile {
+      transform: translateX(-100%);
+    }
+    
+    .sidebar-mobile.expanded {
+      transform: translateX(0);
+    }
+  }
+  
+  main {
+    /* Adjust duration and timing function to match framer-motion if desired */
+    transition: padding-left 0.3s ease-in-out;
+  }
+  
+  /* Other styles... */
