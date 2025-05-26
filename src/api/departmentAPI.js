@@ -117,3 +117,51 @@ export const fetchDepartmentsByCollege = async () => {
     throw new Error(error.message || 'Failed to fetch college departments');
   }
 };
+
+export const fetchDepartmentsWithPagination = async (page = 1, perPage = 20, options = {}) => {
+  try {
+    let endpoint = ENDPOINTS.DEPARTMENTS.PAGINATION(page, perPage);
+    const queryParams = new URLSearchParams();
+
+    if (options.college_id) {
+      queryParams.append('college_id', options.college_id);
+    }
+    if (options.university_id) {
+      queryParams.append('university_id', options.university_id);
+    }
+    if (options.search) {
+      queryParams.append('search', options.search);
+    }
+
+    const queryString = queryParams.toString();
+    if (queryString) {
+      endpoint += `&${queryString}`;
+    }
+    console.log(`Fetching paginated departments from endpoint: ${endpoint}`);
+    const response = await apiFetch(endpoint);
+
+    // Check if the response is successful and has the expected structure
+    if (response && response.success && Array.isArray(response.data) && response.pagination) {
+      return {
+        data: response.data,
+        pagination: {
+          currentPage: response.pagination.currentPage,
+          totalPages: response.pagination.totalPages,
+          totalRecords: response.pagination.totalRecords,
+          nextPage: response.pagination.nextPage,
+          hasNextPage: response.pagination.hasNextPage,
+          hasPrevPage: response.pagination.hasPrevPage,
+          prevPage: response.pagination.prevPage,
+        },
+      };
+    } else {
+      // Log the unexpected structure for debugging
+      console.warn('Paginated departments response structure was unexpected or request failed:', response);
+      // Throw an error or return a default structure
+      throw new Error(response?.message || 'Invalid data format received from server for paginated departments');
+    }
+  } catch (error) {
+    // Ensure the error message is propagated
+    throw new Error(error.message || 'Failed to fetch paginated departments');
+  }
+}

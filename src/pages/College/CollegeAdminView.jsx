@@ -135,7 +135,6 @@ const CollegeAdminView = ({
               <CollegeCard
                 key={college.id}
                 college={college}
-                universityCode={universityCodeMap[college.university_id]}
                 onClick={openCollegePopup}
               />
             ))}

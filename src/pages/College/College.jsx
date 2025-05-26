@@ -112,15 +112,7 @@ const College = () => {
     }
   }, [userRole, selectedUniversityId, user?.universityId, user, isLoggedIn, showError]);
 
-  const universityCodeMap = useMemo(() => {
-    if (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY) {
-      return universitiesList.reduce((map, uni) => {
-        map[uni.id] = uni.code;
-        return map;
-      }, {});
-    }
-    return {};
-  }, [universitiesList, userRole]);
+  
 
   const selectedUniversityForContext = useMemo(() => {
     if (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY) {
@@ -269,7 +261,6 @@ const College = () => {
           collegeError={error}
           collegesLoading={loading}
           filteredColleges={filteredColleges}
-          universityCodeMap={universityCodeMap}
           openCollegePopup={openPopup}
           onCollegeAdded={handleCollegeAdded}
         />

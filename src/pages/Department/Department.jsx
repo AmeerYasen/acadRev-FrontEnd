@@ -1,209 +1,312 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { fetchDepartmentsWithPagination, editDepartment } from '../../api/departmentAPI';
 import { useAuth } from '../../context/AuthContext';
-import UniversityNav from '../../components/sharedViews/viewNav';
-import CollegeCard from '../../components/sharedViews/viewCard';
-import DepartmentModal from './DepartmentModal';
-import AddDepartmentModal from './AddDepartmentModal';
-import { ROLES, getRoleWeight } from '../../constants';
-import * as departmentApi from '../../api/departmentApi';
-import {fetchCollegesByUniversity,fetchColleges} from '../../api/collegeApi';
-import {fetchUniversities} from '../../api/universityApi'; // Adjust the import path as needed
+import {ROLES,getRoleWeight} from '../../constants';
+import DepartmentAdminView from './DepartmentAdminView';
+import DepartmentStaffView from './DepartmentStaffView';
+import DepartmentEditModal from './components/DepartmentEditModal';
 
-// // Assuming you have an API module for departments
+// Main Department component
 const Department = () => {
-  const { user } = useAuth();
-  const [universities, setUniversities] = useState([]);
-  const [colleges, setColleges] = useState([]);
+  const { user } = useAuth() || {};
+  const userRole = user?.role || ROLES.GUEST;
+
   const [departments, setDepartments] = useState([]);
-  const [selectedCollegeId, setSelectedCollegeId] = useState(null);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showDepartmentModal, setShowDepartmentModal] = useState(false);
-  const [showAddDepartmentModal, setShowAddDepartmentModal] = useState(false);
-  const userRole = user?.role || '';
-  const userRoleWeight = getRoleWeight(userRole);
-  useEffect(() => {
-    fetchData();
-  }, [user, selectedCollegeId]);
+  const [universities, setUniversities] = useState([]);
+  const [colleges, setColleges] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUniversity, setSelectedUniversity] = useState(null);
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  
+  const [itemsPerPage, setItemsPerPage] = useState(12); // Customizable items per page
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    
+  // Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentDepartmentToEdit, setCurrentDepartmentToEdit] = useState(null);
+
+  // Pagination control flags
+  const [hasPrevPage, setHasPrevPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  
+  // Track if filters were applied to avoid unnecessary fetches
+  const [filtersChanged, setFiltersChanged] = useState(false);
+
+  const fetchUniversities = async () => {
     try {
-      if (userRoleWeight <= 3) { // Admin/Authority user
-        if (!selectedCollegeId) {
-          // Fetch colleges for navigation
-          // Assuming user.university_id is available for these roles, or user.id if it's a university entity itself
-          const universityId = user?.university_id ; 
-       
-          if (universityId) {
-            const fetchedColleges = await fetchCollegesByUniversity(universityId);
-            setColleges(fetchedColleges);
-            setDepartments([]); // Clear departments when no college is selected
-          } else {
-            // Fallback or if no specific university context, fetch all colleges (adjust as needed)
-            const allColleges = await fetchColleges(); 
-            setColleges(allColleges);
-            setDepartments([]);
-          } 
-        } else {
-          // Fetch departments for selected college
-          const fetchedDepartments = await departmentApi.fetchDepartmentsByCollege(selectedCollegeId);
-          setDepartments(fetchedDepartments);
-        }
-      } else if (user?.role === ROLES.COLLEGE) {
-        // College user sees only their departments
-        if (user.college_id) {
-          const fetchedDepartments = await departmentApi.fetchDepartmentsByCollege(user.college_id);
-          setDepartments(fetchedDepartments);
-        } else {
-          setError("College ID not found for the current user.");
-          setDepartments([]);
-        }
-      } else if (user?.role === ROLES.DEPARTMENT) {
-        // Department user sees their department info
-        if (user.department_id) {
-          const departmentData = await departmentApi.fetchDepartmentById(user.department_id);
-          setSelectedDepartment(departmentData);
-          // Optionally, set this department as the only one in the list if needed for UI consistency
-          // setDepartments([departmentData]); 
-          setShowDepartmentModal(true); // Or handle display directly
-        } else {
-          setError("Department ID not found for the current user.");
-        }
+      const response = await fetchUniversities();
+      if (Array.isArray(response)) {
+        return response;
+      } else {
+        console.error("Invalid universities data format:", response);
+        return [];
       }
     } catch (err) {
-      setError(err.message);
+      console.error("Failed to fetch universities:", err);
+      return [];
+    }
+  };
+
+  const fetchColleges = async () => {
+    try {
+      const response = await fetchColleges();
+      if (Array.isArray(response)) {
+        return response;
+      } else {
+        console.error("Invalid colleges data format:", response);
+        return [];
+      }
+    } catch (err) {
+      console.error("Failed to fetch colleges:", err);
+      return [];
+    }
+  };
+
+  // Fetch departments with current filters and pagination
+  const fetchDepartments = useCallback(async (pageToFetch) => {
+    setLoading(true);
+    setError(null);
+    let determinedPage = pageToFetch; // To store the page number confirmed by API or logic
+
+    try {
+      const options = {};
+      if (searchTerm) options.search = searchTerm;
+      if (selectedUniversity) options.university_id = selectedUniversity.id;
+      if (selectedCollege) options.college_id = selectedCollege.id;
+
+      console.log(`Fetching departments: page ${pageToFetch}, items: ${itemsPerPage}, options:`, options);
+
+      const response = await fetchDepartmentsWithPagination(pageToFetch, itemsPerPage, options);
+      
+      if (response && response.data && response.pagination) {
+        setDepartments(response.data);
+        
+        const pagination = response.pagination;
+        
+        setTotalRecords(pagination.totalRecords || 0);
+        const calculatedTotalPages = Math.ceil((pagination.totalRecords || 0) / itemsPerPage) || 1;
+        setTotalPages(calculatedTotalPages);
+        
+        // Determine the actual current page based on API response
+        determinedPage = Math.min(
+          Math.max(1, pagination.currentPage || pageToFetch), 
+          calculatedTotalPages
+        );
+        
+        setHasPrevPage(determinedPage > 1);
+        setHasNextPage(determinedPage < calculatedTotalPages);
+        
+        console.log(`Data fetched. Effective page: ${determinedPage}/${calculatedTotalPages}`);
+      } else {
+        console.warn("Invalid response format or no data:", response);
+        setDepartments([]);
+        setTotalRecords(0);
+        setTotalPages(1);
+        determinedPage = 1; // Reset to page 1 on error or invalid data
+        setHasPrevPage(false);
+        setHasNextPage(false);
+      }
+    } catch (err) {
+      console.error("Failed to fetch departments:", err);
+      setError(err.message || "Failed to fetch departments");
+      setDepartments([]);
+      setTotalRecords(0);
+      setTotalPages(1);
+      determinedPage = 1; // Reset to page 1 on error
+      setHasPrevPage(false);
+      setHasNextPage(false);
     } finally {
       setLoading(false);
     }
-  };
+    return determinedPage; // Return the page number that was effectively processed
+  }, [searchTerm, selectedUniversity, selectedCollege, itemsPerPage]); // Removed currentPage from dependencies
 
-  const handleCollegeSelect = (collegeId) => {
-    setSelectedCollegeId(collegeId);
-  };
-
-  const handleDepartmentClick = (department) => {
-    setSelectedDepartment(department);
-    setShowDepartmentModal(true);
-  };
-
-  const handleAddDepartment = () => {
-    setShowAddDepartmentModal(true);
-  };
-
-  const handleDepartmentAdded = () => {
-    fetchData(); // Refresh the data
-    setShowAddDepartmentModal(false);
-  };
-
-  const renderContent = () => {
-    if (loading) {
-      return <div className="p-6">Loading...</div>;
+  // Handle page changes from the pagination component
+  const handlePageChange = (pageNumber) => {
+    console.log(`Page change requested: ${pageNumber}`);
+    
+    if (pageNumber >= 1 && pageNumber <= totalPages && pageNumber !== currentPage) {
+      console.log(`Setting page to: ${pageNumber}`);
+      setCurrentPage(pageNumber);
     }
+  };
 
-    if (error) {
-      return <div className="p-6 text-red-500">Error: {error}</div>;
+  // Effect to fetch departments when the page changes or itemsPerPage changes
+  useEffect(() => {
+    let isMounted = true;
+    const loadData = async () => {
+      const loadedPage = await fetchDepartments(currentPage);
+      if (isMounted && loadedPage !== currentPage) {
+        // If fetchDepartments determined a different page was loaded (e.g. API corrected it)
+        // then update the currentPage state.
+        setCurrentPage(loadedPage);
+      }
+    };
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, itemsPerPage, fetchDepartments]); // Added itemsPerPage
+
+  // Handle filter button click
+  const handleFilter = () => {
+    if (currentPage === 1) {
+      // If we're already on page 1, just fetch.
+      // The `fetchDepartments` will return the page it loaded (should be 1).
+      // The useEffect won't run again if currentPage is already 1 unless fetchDepartments ref changes.
+      // This direct call ensures a refresh.
+      fetchDepartments(1).then(loadedPage => {
+        // If API somehow redirects from page 1 to another page (unlikely for page 1)
+        if (loadedPage !== 1) {
+            setCurrentPage(loadedPage);
+        }
+      });
+    } else {
+      // If not on page 1, setting currentPage to 1 will trigger the useEffect,
+      // which then calls fetchDepartments.
+      setCurrentPage(1);
     }
-
-    // University/Admin/Authority view - show colleges as cards when no college selected
-    if (userRoleWeight<=3 && !selectedCollegeId) {
-      return (
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-primary-dark">Select a College to View Departments</h1>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {colleges.map(college => (
-              <CollegeCard
-                key={college.id}
-                item={college}
-                parentCode={college.code}
-                onClick={() => handleCollegeSelect(college.id)}
-                itemType="college"
-              />
-            ))}
-          </div>
-        </div>
-      );
+    
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
     }
+  };
 
-    // Show departments
+  // Handle filter reset
+  const handleReset = () => {
+    setSearchTerm('');
+    setSelectedUniversity(null);
+    setSelectedCollege(null);
+    // setItemsPerPage(12); // Optionally reset itemsPerPage here too
+    setFiltersChanged(true);
+    
+    if (currentPage === 1) {
+      fetchDepartments(1);
+    } else {
+      setCurrentPage(1); // This will trigger fetch via useEffect
+    }
+  };
+
+  const handleItemsPerPageChange = (newSize) => {
+    setItemsPerPage(Number(newSize));
+    setCurrentPage(1); // Reset to page 1 when items per page changes
+  };
+  
+  // Handle changes to filters
+  useEffect(() => {
+    setFiltersChanged(true);
+  }, [searchTerm, selectedUniversity, selectedCollege]);
+
+  const openDepartmentModal = (department) => {
+    setCurrentDepartmentToEdit(department);
+    setIsEditModalOpen(true);
+  };
+
+  const closeDepartmentModal = () => {
+    setIsEditModalOpen(false);
+    setCurrentDepartmentToEdit(null);
+  };
+
+  const handleUpdateDepartment = async (updatedData) => {
+    if (!currentDepartmentToEdit || !currentDepartmentToEdit.id) {
+        console.error("No department selected for update or ID missing.");
+        return;
+    }
+    try {
+        setLoading(true);
+        
+        // Simulate update success
+        setDepartments(prev => prev.map(d => d.id === updatedData.id ? updatedData : d));
+        console.log("Department updated successfully!", updatedData);
+        closeDepartmentModal();
+        
+        // Refresh data
+        fetchDepartments(currentPage);
+    } catch (err) {
+        console.error("Failed to update department:", err);
+    } finally {
+        setLoading(false);
+    }
+  };
+  
+  // Determine view based on user role
+  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY_ADMIN].includes(userRole);
+
+  // Show loading screen only on initial load
+  if (loading && departments.length === 0) {
+    return <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600"></div>
+    </div>;
+  }
+
+  if (canAdminView) {
     return (
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-primary-dark">
-            {selectedCollegeId ? 'Departments' : 'All Departments'}
-          </h1>
-          {user?.role === 'college' && (
-            <button
-              onClick={handleAddDepartment}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
-            >
-              Add Department
-            </button>
-          )}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {departments.map(department => (
-            <CollegeCard
-              key={department.id}
-              item={department}
-              parentCode={department.code}
-              onClick={handleDepartmentClick}
-              itemType="department"
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const showNavigation = (user?.role === 'university' || user?.role === 'admin' || user?.role === 'authority') && colleges.length > 0;
-
-  return (
-    <div className="flex max-h-screen bg-background-light overflow-hidden overflow-y-auto"> 
-      {showNavigation && (
-        <UniversityNav
-          itemsList={colleges}
-          selectedItemId={selectedCollegeId}
-          onSelectItem={handleCollegeSelect}
-          itemType="Colleges"
+      <>
+        <DepartmentAdminView
           loading={loading}
           error={error}
-          showAllOption={false}
+          departments={departments}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          universities={universities}
+          colleges={colleges}
+          selectedUniversity={selectedUniversity}
+          selectedCollege={selectedCollege}
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          onSelectedUniversityChange={setSelectedUniversity}
+          onSelectedCollegeChange={setSelectedCollege}
+          onFilter={handleFilter}
+          onReset={handleReset}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          hasPrevPage={hasPrevPage}
+          hasNextPage={hasNextPage}
+          onPageChange={handlePageChange}
+          onOpenDepartmentModal={openDepartmentModal}
+          itemsPerPage={itemsPerPage} // Pass itemsPerPage
+          onItemsPerPageChange={handleItemsPerPageChange} // Pass handler
         />
-      )}
-      
-      <main className={`flex-1 ${showNavigation ? 'ml-0' : 'w-full'}`}>
-        {renderContent()}
-      </main>
-
-      {/* Department Modal */}
-      {showDepartmentModal && selectedDepartment && (
-        <DepartmentModal
-          department={selectedDepartment}
-          isOpen={showDepartmentModal}
-          onClose={() => {
-            setShowDepartmentModal(false);
-            setSelectedDepartment(null);
-          }}
-        />
-      )}
-
-      {/* Add Department Modal */}
-      {showAddDepartmentModal && (
-        <AddDepartmentModal
-          collegeId={user?.college_id}
-          isOpen={showAddDepartmentModal}
-          onClose={() => setShowAddDepartmentModal(false)}
-          onDepartmentAdded={handleDepartmentAdded}
-        />
-      )}
-    </div>
-  );
+        {isEditModalOpen && currentDepartmentToEdit && (
+          <DepartmentEditModal
+            isOpen={isEditModalOpen}
+            department={currentDepartmentToEdit}
+            onClose={closeDepartmentModal}
+            onUpdate={handleUpdateDepartment}
+            userRole={userRole}
+            canEdit={true}
+          />
+        )}
+      </>
+    );
+  } else if (userRole === ROLES.DEPARTMENT) {
+    return (
+        <>
+            <DepartmentStaffView departmentData={currentDepartmentToEdit} />
+            {isEditModalOpen && currentDepartmentToEdit && (
+              <DepartmentEditModal
+                isOpen={isEditModalOpen}
+                department={currentDepartmentToEdit}
+                onClose={closeDepartmentModal}
+                onUpdate={handleUpdateDepartment}
+                userRole={userRole}
+                canEdit={true}
+              />
+            )}
+        </>
+    );
+  } else {
+    return <div className="p-6">Access Denied or Role View Not Implemented.</div>;
+  }
 };
 
 export default Department;

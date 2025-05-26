@@ -31,6 +31,7 @@ export const ENDPOINTS = {
       MY_DEPARTMENT: '/departments/me',
       BY_COLLEGE: '/departments/collegeAll',
       GET_BY_ID: (id) => `/departments/${id}`,
+      PAGINATION: (page, perPage) => `/departments/query?page=${page}&perPage=${perPage}`,
     },
     PROGRAMS: {
       LIST: '/programs',
