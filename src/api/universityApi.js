@@ -63,3 +63,16 @@ export const deleteUniversity = async (universityId) => {
     throw new Error(error.message || 'Failed to delete university');
   }
 };
+
+/**
+ * Fetches university names.
+ * @returns {Promise<Array>} List of university names
+ */
+export const fetchUniversityNames = async () => {
+  try {
+    const response = await apiFetch(ENDPOINTS.UNIVERSITIES.GET_UNI_NAMES);
+    return response; // Assumes response is an array of university names
+  } catch (error) {
+    throw new Error(error.message || 'Failed to fetch university names');
+  }
+};

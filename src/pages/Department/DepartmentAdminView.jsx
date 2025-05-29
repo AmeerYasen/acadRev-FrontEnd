@@ -18,7 +18,6 @@ const DepartmentAdminView = ({
   onSearchTermChange,
   onSelectedUniversityChange,
   onSelectedCollegeChange,
-  onFilter,
   onReset,
   // Pagination props
   currentPage,
@@ -29,52 +28,83 @@ const DepartmentAdminView = ({
   hasNextPage,
   // Action props
   onOpenDepartmentModal, // Function to open the edit/view modal
+  onOpenAddDepartmentModal, // Function to open the add modal
   // Items per page props
   itemsPerPage,
   onItemsPerPageChange,
+  // Role-based props
+  isUniversityFixed,
+  isCollegeUser,
+  userRole, // Added userRole to potentially control add button for other roles too
 }) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
+      {/* Header Section */} 
       <div className="bg-gray-50 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <h1 className="text-3xl font-bold text-gray-900">All Departments</h1>
-            {/* Mobile Filter Toggle Button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-4">
+              {isCollegeUser && ( // Show Add Department button for College Users
+                <button
+                  onClick={onOpenAddDepartmentModal}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+                >
+                  Add New Department
+                </button>
+              )}
+              {/* Mobile Filter Toggle Button - Hide if college user as sidebar is hidden */} 
+              {!isCollegeUser && (
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="lg:hidden bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
+          {/* Search bar for College User */} 
+          {isCollegeUser && (
+            <div className="mt-4 mb-6">
+              <input
+                type="text"
+                placeholder="Search departments by name..."
+                value={searchTerm}
+                onChange={(e) => onSearchTermChange(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content Area */} 
       <div className=" px-4 sm:px-6 lg:px-4 py-4">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className={`lg:w-70 ${sidebarOpen ? 'block' : 'hidden lg:block'}`}>
-            <DepartmentSidebar
-              universities={universities}
-              colleges={colleges}
-              selectedUniversity={selectedUniversity}
-              selectedCollege={selectedCollege}
-              searchTerm={searchTerm}
-              onSearchTermChange={onSearchTermChange}
-              onSelectedUniversityChange={onSelectedUniversityChange}
-              onSelectedCollegeChange={onSelectedCollegeChange}
-              onFilter={onFilter}
-              onReset={onReset}
-              itemsPerPage={itemsPerPage} // Pass itemsPerPage
-              onItemsPerPageChange={onItemsPerPageChange} // Pass handler
-            />
-          </div>
+        <div className={`flex flex-col ${!isCollegeUser ? 'lg:flex-row' : ''} gap-8`}>
+          {/* Sidebar - Conditionally render based on isCollegeUser */} 
+          {!isCollegeUser && (
+            <div className={`lg:w-70 ${sidebarOpen ? 'block' : 'hidden lg:block'}`}>
+              <DepartmentSidebar
+                universities={universities}
+                colleges={colleges}
+                selectedUniversity={selectedUniversity}
+                selectedCollege={selectedCollege}
+                searchTerm={searchTerm}
+                onSearchTermChange={onSearchTermChange}
+                onSelectedUniversityChange={onSelectedUniversityChange}
+                onSelectedCollegeChange={onSelectedCollegeChange}
+                onReset={onReset}
+                itemsPerPage={itemsPerPage} 
+                onItemsPerPageChange={onItemsPerPageChange} 
+                isUniversityFixed={isUniversityFixed}
+              />
+            </div>
+          )}
 
-          {/* Department Grid and Pagination */}
+          {/* Department Grid and Pagination */} 
           <div className="flex-1">
             {loading ? (
               <div className="flex justify-center items-center h-64">

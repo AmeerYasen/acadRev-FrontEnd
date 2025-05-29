@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }) => {
       const response = await login(credentials);
       if (response.success) {
         setUser(response.user);
+        console.log('User logged in:', response.user);
         setError(null);
         return { success: true, user: response.user };
       } else {

@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { fetchDepartmentsWithPagination, editDepartment } from '../../api/departmentAPI';
 import { useAuth } from '../../context/AuthContext';
-import {ROLES,getRoleWeight} from '../../constants';
+import { ROLES } from '../../constants';
+import { fetchDepartmentsWithPagination, editDepartment, addDepartment } from '../../api/departmentAPI';
+import { fetchUniversityNames } from '../../api/universityApi';
+import { fetchCollegeNamesByUniversity } from '../../api/collegeApi';
+import { useDebounce } from '../../hooks/useDebounce';
 import DepartmentAdminView from './DepartmentAdminView';
 import DepartmentStaffView from './DepartmentStaffView';
 import DepartmentEditModal from './components/DepartmentEditModal';
+import AddDepartmentModal from './components/AddDepartmentModal';
 
 // Main Department component
 const Department = () => {
-  const { user } = useAuth() || {};
+  const { user } = useAuth(); // Get user from AuthContext
   const userRole = user?.role || ROLES.GUEST;
 
   const [departments, setDepartments] = useState([]);
@@ -21,67 +25,121 @@ const Department = () => {
   const [totalPages, setTotalPages] = useState(0);
   
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  // Filter states
+    // Filter states
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUniversity, setSelectedUniversity] = useState(null);
-  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [selectedUniversity, setSelectedUniversity] = useState(''); // Initialize with empty string for <select>
+  const [selectedCollege, setSelectedCollege] = useState(''); // Initialize with empty string for <select>
+  
+  // Debounced search term with 500ms delay
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   
   const [itemsPerPage, setItemsPerPage] = useState(12); // Customizable items per page
 
   // Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentDepartmentToEdit, setCurrentDepartmentToEdit] = useState(null);
+  const [currentDepartmentToAdd, setCurrentDepartmentToAdd] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Pagination control flags
   const [hasPrevPage, setHasPrevPage] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
   
-  // Track if filters were applied to avoid unnecessary fetches
-  const [filtersChanged, setFiltersChanged] = useState(false);
+  // Determine if the university filter should be fixed for UNIVERSITY_ADMIN role
+  const isUniversityFixed = userRole === ROLES.UNIVERSITY && user?.university_id;
+  // Determine if the user is a COLLEGE role, which will also fix university and college
+  const isCollegeUser = userRole === ROLES.COLLEGE && user?.college_id;
 
-  const fetchUniversities = async () => {
+  const fetchUniversitiesList = useCallback(async () => {
     try {
-      const response = await fetchUniversities();
-      if (Array.isArray(response)) {
-        return response;
-      } else {
-        console.error("Invalid universities data format:", response);
-        return [];
-      }
+      const names = await fetchUniversityNames();
+      setUniversities(names.map(uni => ({ id: uni.id, name: uni.name })));
     } catch (err) {
-      console.error("Failed to fetch universities:", err);
-      return [];
+      setError(err.message);
+      setUniversities([]);
     }
-  };
+  }, []); // Assuming fetchUniversityNames is a stable import
 
-  const fetchColleges = async () => {
+  const fetchCollegesList = useCallback(async (universityId) => {
+    if (!universityId) {
+      setColleges([]);
+      setSelectedCollege(''); // Clear selected college if universityId is cleared
+      return;
+    }
     try {
-      const response = await fetchColleges();
-      if (Array.isArray(response)) {
-        return response;
-      } else {
-        console.error("Invalid colleges data format:", response);
-        return [];
-      }
+      const names = await fetchCollegeNamesByUniversity(universityId);
+      setColleges(names.map(col => ({ id: col.id, name: col.name })));
     } catch (err) {
-      console.error("Failed to fetch colleges:", err);
-      return [];
+      setError(err.message);
+      setColleges([]);
+      setSelectedCollege(''); // Clear selected college on error
     }
-  };
+  }, []); // Assuming fetchCollegeNamesByUniversity is a stable import
 
-  // Fetch departments with current filters and pagination
+  // Effect for initial university/college setup based on role and fixed status
+  useEffect(() => {
+    if (isCollegeUser && user?.college_id) {
+      // Case 1: User is a College User
+      setSelectedCollege(user.college_id.toString());
+    
+     
+    } else if (isUniversityFixed && user?.university_id) {
+      // Case 2: University is fixed for the user (e.g., user.role === ROLES.UNIVERSITY)
+      setSelectedUniversity(user.university_id.toString()); 
+      fetchCollegesList(user.university_id.toString());
+      setSelectedCollege(''); // Ensure college is not pre-selected unless it's a college user
+    } else {
+      // Case 3: University is NOT fixed (Admin/Authority)
+      if (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY) {
+        fetchUniversitiesList(); // Fetch all universities for Admin/Authority
+        setColleges([]); // Clear colleges initially
+        setSelectedCollege('');
+        setSelectedUniversity('');
+      } else {
+        // Other roles (not Admin/Authority, and not a fixed University/College Admin)
+        setUniversities([]);
+        setSelectedUniversity('');
+        setColleges([]);
+        setSelectedCollege('');
+      }
+    }
+  }, [isCollegeUser, isUniversityFixed, user?.university_id, user?.college_id, user?.university_name, user?.college_name, userRole, fetchUniversitiesList, fetchCollegesList]);
+
+  // Effect to fetch colleges when selectedUniversity changes (and university is NOT fixed and not a college user)
+  useEffect(() => {
+    if (!isUniversityFixed && !isCollegeUser) { // Only run if university is not fixed and not a college user
+      if (selectedUniversity) {
+        fetchCollegesList(selectedUniversity);
+      } else {
+        setColleges([]);
+        setSelectedCollege('');
+      }
+    }
+  }, [selectedUniversity, isUniversityFixed, isCollegeUser, fetchCollegesList]);
+
+  // Memoized fetchDepartments function
   const fetchDepartments = useCallback(async (pageToFetch) => {
     setLoading(true);
     setError(null);
-    let determinedPage = pageToFetch; // To store the page number confirmed by API or logic
+    let determinedPage = pageToFetch;
 
-    try {
-      const options = {};
-      if (searchTerm) options.search = searchTerm;
-      if (selectedUniversity) options.university_id = selectedUniversity.id;
-      if (selectedCollege) options.college_id = selectedCollege.id;
+    try {      const options = {};
+      if (debouncedSearchTerm) options.search = debouncedSearchTerm;
 
+      let universityToFilter = selectedUniversity;
+      let collegeToFilter = selectedCollege;
+
+      if (isCollegeUser && user?.college_id) {
+        collegeToFilter = user.college_id.toString();
+      } else if (isUniversityFixed && user?.university_id) {
+        universityToFilter = user.university_id.toString();
+      }
+      
+      if (universityToFilter) options.university_id = universityToFilter;
+      if (collegeToFilter) options.college_id = collegeToFilter;
+
+      console.log('universityToFilter:', universityToFilter);
+      console.log('collegeToFilter:', collegeToFilter);
       console.log(`Fetching departments: page ${pageToFetch}, items: ${itemsPerPage}, options:`, options);
 
       const response = await fetchDepartmentsWithPagination(pageToFetch, itemsPerPage, options);
@@ -125,17 +183,16 @@ const Department = () => {
       setHasNextPage(false);
     } finally {
       setLoading(false);
-    }
-    return determinedPage; // Return the page number that was effectively processed
-  }, [searchTerm, selectedUniversity, selectedCollege, itemsPerPage]); // Removed currentPage from dependencies
+    }    return determinedPage; // Return the page number that was effectively processed
+  }, [debouncedSearchTerm, selectedUniversity, selectedCollege, itemsPerPage]); // Removed currentPage from dependencies
 
   // Handle page changes from the pagination component
   const handlePageChange = (pageNumber) => {
     console.log(`Page change requested: ${pageNumber}`);
-    
-    if (pageNumber >= 1 && pageNumber <= totalPages && pageNumber !== currentPage) {
-      console.log(`Setting page to: ${pageNumber}`);
-      setCurrentPage(pageNumber);
+    // Ensure pageNumber is a number before using it
+    const numericPageNumber = Number(pageNumber);
+    if (numericPageNumber >= 1 && numericPageNumber <= totalPages && numericPageNumber !== currentPage) {
+      setCurrentPage(numericPageNumber);
     }
   };
 
@@ -156,54 +213,39 @@ const Department = () => {
     };
   }, [currentPage, itemsPerPage, fetchDepartments]); // Added itemsPerPage
 
-  // Handle filter button click
-  const handleFilter = () => {
-    if (currentPage === 1) {
-      // If we're already on page 1, just fetch.
-      // The `fetchDepartments` will return the page it loaded (should be 1).
-      // The useEffect won't run again if currentPage is already 1 unless fetchDepartments ref changes.
-      // This direct call ensures a refresh.
-      fetchDepartments(1).then(loadedPage => {
-        // If API somehow redirects from page 1 to another page (unlikely for page 1)
-        if (loadedPage !== 1) {
-            setCurrentPage(loadedPage);
-        }
-      });
-    } else {
-      // If not on page 1, setting currentPage to 1 will trigger the useEffect,
-      // which then calls fetchDepartments.
-      setCurrentPage(1);
-    }
-    
-    if (window.innerWidth < 1024) {
-      setSidebarOpen(false);
-    }
-  };
-
   // Handle filter reset
   const handleReset = () => {
     setSearchTerm('');
-    setSelectedUniversity(null);
-    setSelectedCollege(null);
-    // setItemsPerPage(12); // Optionally reset itemsPerPage here too
-    setFiltersChanged(true);
-    
-    if (currentPage === 1) {
-      fetchDepartments(1);
-    } else {
-      setCurrentPage(1); // This will trigger fetch via useEffect
+    // Only reset filters if not fixed by role
+    if (!isUniversityFixed && !isCollegeUser) {
+      setSelectedUniversity(''); 
+      setSelectedCollege(''); 
     }
+    if (isUniversityFixed && !isCollegeUser) {
+      // University admin can reset college filter
+      setSelectedCollege('');
+    }
+    // College user cannot reset university or college filters via this button
+    // Items per page can always be reset if desired, or handled separately
+    // setItemsPerPage(12); 
   };
 
   const handleItemsPerPageChange = (newSize) => {
     setItemsPerPage(Number(newSize));
     setCurrentPage(1); // Reset to page 1 when items per page changes
   };
-  
-  // Handle changes to filters
+    // Handle changes to filters - now resets to page 1 if not already there
   useEffect(() => {
-    setFiltersChanged(true);
-  }, [searchTerm, selectedUniversity, selectedCollege]);
+    if (currentPage !== 1 && (debouncedSearchTerm || selectedUniversity || selectedCollege)) {
+        // More precise check: if any of the actively settable filters changed, reset page.
+        // This logic might need refinement based on exact desired behavior for fixed roles.
+        setCurrentPage(1);
+    } else if (currentPage === 1 && (debouncedSearchTerm || selectedUniversity || selectedCollege)){
+        // If already on page 1, and filters changed, the fetchDepartments dependency change will trigger refetch.
+        // No explicit action needed here other than ensuring fetchDepartments has the right dependencies.
+    }
+
+  }, [debouncedSearchTerm, selectedUniversity, selectedCollege, isUniversityFixed, isCollegeUser]);
 
   const openDepartmentModal = (department) => {
     setCurrentDepartmentToEdit(department);
@@ -214,6 +256,33 @@ const Department = () => {
     setIsEditModalOpen(false);
     setCurrentDepartmentToEdit(null);
   };
+
+  const openAddDepartmentModal = () => {
+    setCurrentDepartmentToAdd({ name: '', university_id: selectedUniversity, college_id: selectedCollege });
+    setIsAddModalOpen(true);
+  };
+
+  const closeAddDepartmentModal = () => {
+    setIsAddModalOpen(false);
+    setCurrentDepartmentToAdd(null);
+  };  const handleAddDepartment = async (newData) => {
+    try { 
+      setLoading(true);
+      // Call the actual API to add the department
+      const addedDepartment = await addDepartment(newData);
+      console.log("Department added successfully!", addedDepartment); 
+      closeAddDepartmentModal();
+      // Refresh data to show the new department
+      await fetchDepartments(currentPage);
+    } catch (err) {
+      console.error("Failed to add department:", err);
+      setError(err.message || "Failed to add department");
+      // Don't close the modal on error so user can retry
+    } finally {
+      setLoading(false);
+    }
+  };
+  // Handle department update 
 
   const handleUpdateDepartment = async (updatedData) => {
     if (!currentDepartmentToEdit || !currentDepartmentToEdit.id) {
@@ -238,7 +307,7 @@ const Department = () => {
   };
   
   // Determine view based on user role
-  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY_ADMIN].includes(userRole);
+  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY,ROLES.COLLEGE].includes(userRole);
 
   // Show loading screen only on initial load
   if (loading && departments.length === 0) {
@@ -264,17 +333,19 @@ const Department = () => {
           onSearchTermChange={setSearchTerm}
           onSelectedUniversityChange={setSelectedUniversity}
           onSelectedCollegeChange={setSelectedCollege}
-          onFilter={handleFilter}
           onReset={handleReset}
           currentPage={currentPage}
           totalPages={totalPages}
           totalRecords={totalRecords}
-          hasPrevPage={hasPrevPage}
-          hasNextPage={hasNextPage}
           onPageChange={handlePageChange}
-          onOpenDepartmentModal={openDepartmentModal}
-          itemsPerPage={itemsPerPage} // Pass itemsPerPage
-          onItemsPerPageChange={handleItemsPerPageChange} // Pass handler
+          hasPrevPage={hasPrevPage}
+          hasNextPage={hasNextPage}          onOpenDepartmentModal={openDepartmentModal}
+          itemsPerPage={itemsPerPage}
+          onItemsPerPageChange={handleItemsPerPageChange}
+          isUniversityFixed={isUniversityFixed} 
+          isCollegeUser={isCollegeUser} // Pass isCollegeUser
+          onOpenAddDepartmentModal={openAddDepartmentModal}
+          userRole={userRole} // Pass userRole to control add button visibility
         />
         {isEditModalOpen && currentDepartmentToEdit && (
           <DepartmentEditModal
@@ -283,7 +354,15 @@ const Department = () => {
             onClose={closeDepartmentModal}
             onUpdate={handleUpdateDepartment}
             userRole={userRole}
-            canEdit={true}
+          />
+        )}        {isAddModalOpen && (
+          <AddDepartmentModal
+            isOpen={isAddModalOpen}
+            onClose={closeAddDepartmentModal}
+            onAddDepartment={handleAddDepartment}
+            userRole={userRole}
+            collegeId={isCollegeUser ? user?.college_id : selectedCollege}
+            universityId={isCollegeUser ? user?.university_id : selectedUniversity}
           />
         )}
       </>
@@ -291,7 +370,8 @@ const Department = () => {
   } else if (userRole === ROLES.DEPARTMENT) {
     return (
         <>
-            <DepartmentStaffView departmentData={currentDepartmentToEdit} />
+            <DepartmentStaffView departmentData={currentDepartmentToEdit} /> 
+            {/* TODO: Review departmentData prop for DepartmentStaffView. It likely needs the specific department's data, not currentDepartmentToEdit. */}
             {isEditModalOpen && currentDepartmentToEdit && (
               <DepartmentEditModal
                 isOpen={isEditModalOpen}
@@ -299,7 +379,6 @@ const Department = () => {
                 onClose={closeDepartmentModal}
                 onUpdate={handleUpdateDepartment}
                 userRole={userRole}
-                canEdit={true}
               />
             )}
         </>

@@ -9,6 +9,7 @@ export const ENDPOINTS = {
       CREATE: '/universities/add',
       UPDATE: '/universities/update',
       DELETE: (id) => `/universities/delete/${id}`,
+      GET_UNI_NAMES: '/universities/getUniNames',
     },
     USERS: {
       LIST: '/users',
@@ -22,9 +23,10 @@ export const ENDPOINTS = {
         DELETE: '/colleges/delete',
         MY_COLLEGE: '/colleges/me',
         BY_UNIVERSITY:'/colleges/uniAll',
+        GET_NAMES_BY_UNI: (universityId) => `/colleges/getNamesByUni/${universityId}`
     },
     DEPARTMENTS: {
-      GWT_ALL: '/departments/all',
+      GET_ALL: '/departments/all',
       CREATE: '/departments/add',
       UPDATE: '/departments/update',
       DELETE: '/departments/delete',
@@ -32,6 +34,7 @@ export const ENDPOINTS = {
       BY_COLLEGE: '/departments/collegeAll',
       GET_BY_ID: (id) => `/departments/${id}`,
       PAGINATION: (page, perPage) => `/departments/query?page=${page}&perPage=${perPage}`,
+      GET_NAMES_BY_COLLEGE_ID: (collegeId) => `/departments/getDepName/${collegeId}`
     },
     PROGRAMS: {
       LIST: '/programs',

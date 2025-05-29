@@ -113,3 +113,22 @@ export const fetchCollegesByUniversity = async () => {
     throw new Error(error.message || 'Failed to fetch university colleges');
   }
 };
+
+/**
+ * Fetches college names for a specific university ID.
+ * @param {string|number} universityId - University ID
+ * @returns {Promise<Array>} List of college names
+ */
+export const fetchCollegeNamesByUniversity = async (university_id) => {
+  try {
+    const response = await apiFetch(ENDPOINTS.COLLEGES.GET_NAMES_BY_UNI(university_id), {
+      method: 'GET',
+    });
+    if (!Array.isArray(response)) {
+      throw new Error('Invalid data format received from server for college names');
+    }
+    return response;
+  } catch (error) {
+    throw new Error(error.message || 'Failed to fetch college names by university');
+  }
+};

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ROLES } from '../../../constants'; // Ensure ROLES is correctly imported
 
-const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole, canEdit = false }) => {
+const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole }) => { // Removed canEdit from props
   const [editedDepartment, setEditedDepartment] = useState({
     name: '',
     code: '',
@@ -37,15 +37,18 @@ const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole, 
         logo: department.logo || '',
         head_name: department.head_name || '',
         description: department.description || '',
-        established: department.created_at || '',
+        established: department.created_at || '', // Assuming created_at is the source for established year
       });
       setPrograms(getPrograms(department.programs_info));
+      setIsEditing(false); // Reset editing mode when department changes
     }
   }, [department]);
 
   if (!isOpen || !department) return null;
 
-  const hasEditPermission = userRole === ROLES.DEPARTMENT && canEdit;
+  // Determine if the current user has permission to initiate editing.
+  // This controls the visibility of the "Edit Department" button.
+  const showEditButton = userRole === ROLES.DEPARTMENT; // Simplified: only DEPARTMENT role can see the edit button
 
   const formattedDate = department.created_at
     ? new Intl.DateTimeFormat('en-US', {
@@ -62,10 +65,9 @@ const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole, 
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
-    if (!hasEditPermission && !(userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY)) {
-      console.warn("User does not have permission to update.");
-      return;
-    }
+    // Permission to submit is implicitly handled by `isEditing` being true,
+    // which can only be set if `showEditButton` was true.
+    if (!isEditing) return;
     
     const updatedDepartmentData = {
       ...department,
@@ -75,11 +77,12 @@ const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole, 
     if (onUpdate) {
       await onUpdate(updatedDepartmentData);
     }
-    setIsEditing(false);
+    setIsEditing(false); // Exit editing mode after submit
   };
 
   const toggleEditMode = () => {
-    if (canEdit) {
+    // Only allow toggling to edit mode if the user has permission (showEditButton is true)
+    if (showEditButton) {
       setIsEditing(!isEditing);
     }
   };
@@ -256,7 +259,8 @@ const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole, 
               </div>
             </div>
             
-            {canEdit && (
+            {/* Show Edit button only if the user has permission */}
+            {showEditButton && (
               <div className="pt-4 mt-6 border-t border-gray-200 flex justify-end">
                 <button
                   onClick={toggleEditMode}

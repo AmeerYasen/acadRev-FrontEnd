@@ -118,11 +118,26 @@ export const fetchDepartmentsByCollege = async () => {
   }
 };
 
+export const fetchDepNamesByCollege = async (collegeId) => {
+  try {
+    if (!collegeId) {
+      throw new Error('College ID is required to fetch departments');
+    }
+    const endpoint = `${ENDPOINTS.DEPARTMENTS.GET_NAMES_BY_COLLEGE_ID}/college_id=${collegeId}`;
+    const response = await apiFetch(endpoint);
+    if (!Array.isArray(response)) {
+      throw new Error('Invalid data format received from server for departments Names list');
+    }
+    return response;
+  } catch (error) {
+    throw new Error(error.message || 'Failed to fetch college departments by ID');
+  }
+};
+
 export const fetchDepartmentsWithPagination = async (page = 1, perPage = 20, options = {}) => {
   try {
     let endpoint = ENDPOINTS.DEPARTMENTS.PAGINATION(page, perPage);
     const queryParams = new URLSearchParams();
-
     if (options.college_id) {
       queryParams.append('college_id', options.college_id);
     }
