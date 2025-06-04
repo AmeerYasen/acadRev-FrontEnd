@@ -92,4 +92,87 @@ body{
   min-height: 100vh;
 }
 
+/* Custom Slim Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-lighter);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-main);
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-dark);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-main) var(--bg-lighter);
+}
+
+/* Dark mode scrollbar styles */
+.darkmode ::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+.darkmode ::-webkit-scrollbar-thumb {
+  background: var(--border-dark);
+}
+
+.darkmode ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-medium);
+}
+
+.darkmode * {
+  scrollbar-color: var(--border-dark) var(--bg-main);
+}
+
+/* Ultra-slim custom scrollbar for specific components */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* Dark mode for custom scrollbar */
+.darkmode .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.darkmode .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.darkmode .custom-scrollbar {
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
 

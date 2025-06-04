@@ -366,23 +366,8 @@ const Department = () => {
           />
         )}
       </>
-    );
-  } else if (userRole === ROLES.DEPARTMENT) {
-    return (
-        <>
-            <DepartmentStaffView departmentData={currentDepartmentToEdit} /> 
-            {/* TODO: Review departmentData prop for DepartmentStaffView. It likely needs the specific department's data, not currentDepartmentToEdit. */}
-            {isEditModalOpen && currentDepartmentToEdit && (
-              <DepartmentEditModal
-                isOpen={isEditModalOpen}
-                department={currentDepartmentToEdit}
-                onClose={closeDepartmentModal}
-                onUpdate={handleUpdateDepartment}
-                userRole={userRole}
-              />
-            )}
-        </>
-    );
+    );  } else if (userRole === ROLES.DEPARTMENT) {
+    return <DepartmentStaffView />;
   } else {
     return <div className="p-6">Access Denied or Role View Not Implemented.</div>;
   }

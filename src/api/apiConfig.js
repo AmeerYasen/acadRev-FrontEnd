@@ -52,7 +52,6 @@ export const apiFetch = async (endpoint, options = {}) => {
           });
         case 401:
           localStorage.removeItem('authToken');
-          window.location.href = '/auth/login'; // Redirect to Auth page
           throw new Error('Unauthorized: Please log in again', {
             cause: { status: 401, details: errorData },
           });

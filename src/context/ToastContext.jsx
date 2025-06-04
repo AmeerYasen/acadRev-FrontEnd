@@ -41,9 +41,8 @@ export const ToastProvider = ({ children }) => {
   const closeToast = useCallback((id) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
   }, []);
-
   return (
-    <ToastContext.Provider value={{ showToast, showSuccess, showError, showWarning, showInfo }}>
+    <ToastContext.Provider value={{ showToast, showSuccess, showError, showWarning, showInfo, closeToast }}>
       {children}
       <div className="toast-container" style={{ position: 'fixed', top: 0, right: 0, padding: '1rem', zIndex: 9999 }}>
         {toasts.map((toast) => (

@@ -42,7 +42,7 @@ export const addDepartment = async (departmentData) => {
  */
 export const editDepartment = async (departmentData) => {
   try {
-    if (!departmentData.id) {
+    if (!departmentData) {
       throw new Error('Department ID is required for editing');
     }
     const response = await apiFetch(ENDPOINTS.DEPARTMENTS.UPDATE, {
@@ -123,7 +123,7 @@ export const fetchDepNamesByCollege = async (collegeId) => {
     if (!collegeId) {
       throw new Error('College ID is required to fetch departments');
     }
-    const endpoint = `${ENDPOINTS.DEPARTMENTS.GET_NAMES_BY_COLLEGE_ID}/college_id=${collegeId}`;
+    const endpoint = ENDPOINTS.DEPARTMENTS.GET_NAMES_BY_COLLEGE_ID(collegeId);
     const response = await apiFetch(endpoint);
     if (!Array.isArray(response)) {
       throw new Error('Invalid data format received from server for departments Names list');

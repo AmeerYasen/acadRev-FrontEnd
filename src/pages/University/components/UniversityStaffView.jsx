@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react"; // Added useCallback
-import { fetchMyUniversity, editUniversity } from "../functions";
+import { fetchMyUniversity, editUniversity } from "../../../api/universityApi";
 import { 
   Building2, Mail, Globe, MapPin, Phone, User, FileText, Calendar,
   Pencil, X, Save, Loader2, AlertCircle, Shield, Briefcase
