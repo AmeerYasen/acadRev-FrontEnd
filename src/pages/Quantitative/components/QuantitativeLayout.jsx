@@ -3,17 +3,17 @@ import QuantitativeHeader from "./QuantitativeHeader";
 import { NotificationBar } from "../../../components";
 import { LoadingSpinner } from "../../../components";
 
-const QuantitativeLayout = ({ 
+const QuantitativeLayout = React.memo(({ 
   programId, 
   loading, 
   error, 
-  success, 
   setError, 
-  setSuccess, 
   children 
-}) => {  if (loading.initial) {
+}) => {
+  if (loading.initial) {
     return <LoadingSpinner message="Loading quantitative indicators..." />;
   }
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <QuantitativeHeader programId={programId} />
@@ -25,12 +25,6 @@ const QuantitativeLayout = ({
           onDismiss={() => setError(null)}
           dismissible={true}
         />
-        <NotificationBar 
-          type="success"
-          message={success}
-          onDismiss={() => setSuccess(null)}
-          dismissible={true}
-        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -38,6 +32,6 @@ const QuantitativeLayout = ({
       </div>
     </div>
   );
-};
+});
 
 export default QuantitativeLayout;

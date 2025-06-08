@@ -84,7 +84,7 @@ export const QUANTITATIVE_ENDPOINTS = {
   GET_AREAS: '/qnt/areas',
   GET_HEADERS: (areaId) => `/qnt/headers/${areaId}`,
   GET_ITEMS: (areaId) => `/qnt/items/${areaId}`, 
-  GET_PROGRAM_RESPONSES: (programId) => `/qnt/responses/${programId}`,
+  GET_PROGRAM_RESPONSES: (area_id,programId) => `/qnt/responses/${programId}/area/${area_id}`,
   GET_ALL_RESPONSES: '/qnt/responses',
   GET_AREA_SUMMARY_BY_ID: (areaId) => `/qnt/summary/${areaId}`,
   GET_USER_SUBMITTED_AREAS: (userId, programId) => `/qnt/submitted/${userId}/${programId}`,
@@ -99,20 +99,13 @@ export const QUANTITATIVE_ENDPOINTS = {
 };
 
 export const QUALITATIVE_ENDPOINTS = {
-  GET_DOMAINS: '/qlt/domains',
-  GET_INDICATORS: (domainId) => `/qlt/indicators/${domainId}`,
-  GET_RESPONSES: (programId) => `/qlt/responses/${programId}`,
-  GET_UNANSWERED: (programId) => `/qlt/unanswered/${programId}`,
-  GET_DOMAIN_SUMMARY: (programId) => `/qlt/summary/${programId}`,
-  SUBMIT_RESPONSE: '/qlt/responses',
-  REMOVE_RESPONSE: (id) => `/qlt/responses/${id}`,
-  
-  // Evidence Management Endpoints
-  UPLOAD_EVIDENCE: '/qlt/evidence/upload',
-  GET_EVIDENCE: (programId, indicatorId) => `/qlt/evidence/${programId}/${indicatorId}`,
-  DELETE_EVIDENCE: (evidenceId) => `/qlt/evidence/${evidenceId}`,
-  ADD_URL_EVIDENCE: '/qlt/evidence/url',
-  GET_ALL_EVIDENCE: (programId) => `/qlt/evidence/program/${programId}`,
+  GET_DOMAINS: '/qual/domains',
+  GET_INDICATORS: (domainId) => `/qual/indicators/${domainId}`,
+  GET_RESPONSES: (programId) => `/qual/responses/${programId}`,
+  GET_UNANSWERED: (programId) => `/qual/unanswered/${programId}`,
+  GET_DOMAIN_SUMMARY: (programId) => `/qual/summary/${programId}`,
+  SUBMIT_RESPONSE: '/qual/responses',
+  REMOVE_RESPONSE: (id) => `/qual/responses/${id}`,
 };
 
 

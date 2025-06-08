@@ -3,7 +3,7 @@ import AreasSidebar from "./AreasSidebar";
 import QuickStats from "./QuickStats";
 import AreaTable from "./AreaTable";
 
-const QuantitativeContainer = ({ 
+const QuantitativeContainer = React.memo(({ 
   areas, 
   selectedArea, 
   headers, 
@@ -12,10 +12,10 @@ const QuantitativeContainer = ({
   completedAreas,   loading, 
   handleAreaSelect, 
   getAreaStatus, 
-  calculateOverallProgress,
+  OverallProgress,
   setIsTableModalOpen, 
   handleSaveArea 
-}) => {  return (
+}) => {return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-5">
         <AreasSidebar
@@ -30,7 +30,7 @@ const QuantitativeContainer = ({
         <QuickStats
           areas={areas}
           completedAreas={completedAreas}
-          calculateOverallProgress={calculateOverallProgress}
+          OverallProgress={OverallProgress}
         />      </div>
 
       <div className="lg:col-span-7">
@@ -46,8 +46,7 @@ const QuantitativeContainer = ({
           handleSaveArea={handleSaveArea}
         />
       </div>
-    </div>
-  );
-};
+    </div>  );
+});
 
 export default QuantitativeContainer;

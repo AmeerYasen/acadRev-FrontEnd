@@ -1,4 +1,4 @@
-// src/api/universityApi.js
+  // src/api/universityApi.js
 import { apiFetch } from './apiConfig';
 import { QUANTITATIVE_ENDPOINTS } from '../constants';
 
@@ -48,9 +48,9 @@ export const fetchItems = async (areaID) => {
  * fetch program Responses
  * @returns {Promise<Array>} List of program responses
  */
-export const fetchProgramResponses = async (programID) => {
+export const fetchProgramResponses = async (area_id,programID) => {
   try {
-    const data = await apiFetch(QUANTITATIVE_ENDPOINTS.GET_PROGRAM_RESPONSES(programID), {
+    const data = await apiFetch(QUANTITATIVE_ENDPOINTS.GET_PROGRAM_RESPONSES(area_id,programID), {
       method: 'GET',
     });
     return data;

@@ -11,16 +11,14 @@ import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Progress } from "../../../components/ui/progress";
 
-const AreaTable = ({ 
+const AreaTable = React.memo(({ 
   selectedArea, 
   areas, 
   headers, 
   items, 
   progress, 
-  loading, 
-  getAreaStatus, 
-  setIsTableModalOpen, 
-  handleSaveArea 
+  loading,   getAreaStatus, 
+  setIsTableModalOpen 
 }) => {
   const [activeTab, setActiveTab] = useState('items'); // items selected by default
   if (!selectedArea) {
@@ -201,8 +199,7 @@ const AreaTable = ({
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
-};
+    </div>  );
+});
 
 export default AreaTable;

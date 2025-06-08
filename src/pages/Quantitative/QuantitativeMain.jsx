@@ -15,7 +15,8 @@ import { useQuantitative } from "./hooks/useQuantitative";
 const QuantitativeMain = () => {
   const { programId } = useParams();
   const { user } = useAuth();
-  const userRole = user?.role; // Default to 'guest' if user is not defined  
+  const userRole = user?.role;
+  
   const {
     // State
     areas,
@@ -28,27 +29,23 @@ const QuantitativeMain = () => {
     isTableModalOpen,
     loading,
     error,
-    success,
-    
     // Actions
     handleAreaSelect,
     handleInputChange,
     handleSaveArea,
     setIsTableModalOpen,
     setError,
-    setSuccess,
-      // Utils
+    // Utils
     getAreaStatus,
-    calculateOverallProgress,
+    OverallProgress,
   } = useQuantitative(programId);
+  
   return (
     <QuantitativeLayout
       programId={programId}
       loading={loading}
       error={error}
-      success={success}
       setError={setError}
-      setSuccess={setSuccess}
     >
       <QuantitativeContainer
         areas={areas}
@@ -57,12 +54,14 @@ const QuantitativeMain = () => {
         items={items}
         progress={progress}
         completedAreas={completedAreas}
-        loading={loading}        handleAreaSelect={handleAreaSelect}
+        loading={loading}        
+        handleAreaSelect={handleAreaSelect}
         getAreaStatus={getAreaStatus}
-        calculateOverallProgress={calculateOverallProgress}
+        OverallProgress={OverallProgress}
         setIsTableModalOpen={setIsTableModalOpen}
         handleSaveArea={handleSaveArea}
-      />      <TableModal
+      />      
+      <TableModal
         isTableModalOpen={isTableModalOpen}
         selectedArea={selectedArea}
         areas={areas}

@@ -7,11 +7,9 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
 
-const AreasSidebar = ({ 
-  areas, 
+const AreasSidebar = React.memo(({   areas, 
   selectedArea, 
   progress, 
-  completedAreas, 
   handleAreaSelect, 
   getAreaStatus 
 }) => {
@@ -25,7 +23,8 @@ const AreasSidebar = ({
         <CardDescription>{areas.length} areas available</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">          {areas.map((area) => {
+        <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
+            {areas.map((area) => {
             const areaStatus = getAreaStatus(area.id);
             const StatusIcon = areaStatus.icon;
             const isSelected = selectedArea === area.id;
@@ -59,8 +58,7 @@ const AreasSidebar = ({
           })}
         </div>
       </CardContent>
-    </Card>
-  );
-};
+    </Card>  );
+});
 
 export default AreasSidebar;

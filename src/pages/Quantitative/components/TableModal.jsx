@@ -1,11 +1,11 @@
-import React, { use } from "react";
+import React from "react";
 import { BarChart3, AlertTriangle, Download, X } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
 import { ROLES } from "../../../constants";
 import DataTable from "./DataTable";
 
-const TableModal = ({ 
+const TableModal = React.memo(({ 
   isTableModalOpen, 
   selectedArea, 
   areas, 
@@ -79,9 +79,7 @@ const TableModal = ({
                   <span className="text-sm text-gray-600">{progress[selectedArea] || 0}% complete</span>
                 </div>
                 <Progress value={progress[selectedArea] || 0} className="h-2" />
-              </div>
-
-              {/* Scrollable Table Container */}
+              </div>              {/* Scrollable Table Container */}
               <div className="h-full overflow-auto custom-scrollbar">                
                 <DataTable
                   selectedArea={selectedArea}
@@ -130,11 +128,10 @@ const TableModal = ({
                 </Button>
               )}
             </div>
-          </div>
-        </div>
+          </div>        </div>
       </div>
     </div>
   );
-};
+});
 
 export default TableModal;

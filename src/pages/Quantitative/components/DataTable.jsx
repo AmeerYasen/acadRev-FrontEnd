@@ -1,7 +1,7 @@
 import React from "react";
 import { ROLES } from "../../../constants";
 
-const DataTable = ({ 
+const DataTable = React.memo(({ 
   selectedArea, 
   headers, 
   items, 
@@ -10,8 +10,10 @@ const DataTable = ({
   handleInputChange, 
   isModal = false 
 }) => {
-  const areaHeaders = headers[selectedArea] || [];
-  const areaItems = items[selectedArea] || [];
+
+
+
+  console.log('responses:', responses);
   const canEdit = userRole === ROLES.DEPARTMENT;
   
     return (
@@ -23,7 +25,7 @@ const DataTable = ({
             <th className="border border-gray-200 p-3 text-left font-semibold text-gray-900 min-w-[200px]">
             Item / البند
             </th>
-            {areaHeaders.map((header) => (
+            {headers[selectedArea].map((header) => (
               <th
                 key={header.id}
                 className="border border-gray-200 p-3 text-center font-semibold text-gray-900 min-w-[120px]"
@@ -34,25 +36,26 @@ const DataTable = ({
               </th>
             ))}
           </tr>
-        </thead>        <tbody>
-          {areaItems.length > 0 ? (
-            areaItems.map((item, index) => (
+        </thead>        
+          <tbody>
+          {items[selectedArea].length > 0 ? (
+            items[selectedArea].map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                 <td className="border border-gray-200 p-3 text-center text-gray-600 font-medium">{index + 1}</td>
                 <td className="border border-gray-200 p-3">
                   <div className="space-y-1">
                     <div className="font-medium text-gray-900">{item.name}</div>
                   </div>
-                </td>
-                {areaHeaders.map((header) => {
-                  const inputKey = `${selectedArea}-${item.id}-${header.id}`;
+                </td>                
+                {headers[selectedArea].map((header) => {
                   const isNumeric =
                     header.text.includes("عدد") ||
                     header.text.includes("النسبة");
 
+                  const inputKey = `${selectedArea}-${item.id}-${header.id}`;
                   return (
                     <td key={header.id} className="border border-gray-200 p-2">                      
-                    <input
+                      <input
                         type={isNumeric ? "number" : "text"}
                         placeholder={isNumeric ? "0" : "Enter value"}
                         className={`w-full px-3 py-2 border border-gray-300 rounded-md 
@@ -63,7 +66,7 @@ const DataTable = ({
                                      ? 'bg-white' 
                                      : 'bg-gray-100 cursor-not-allowed'
                                  }`}
-                        value={responses[inputKey] || ""}
+                        value={responses[selectedArea]?.grid?.[header.id]?.[item.id] || ""}
                         onChange={(e) => canEdit && handleInputChange(inputKey, e.target.value)}
                         readOnly={!canEdit}
                         disabled={!canEdit}
@@ -75,10 +78,11 @@ const DataTable = ({
                 })}
               </tr>
             ))
-          ) : areaHeaders.length > 0 ? (
+          ) : headers[selectedArea].length > 0 ? (
             // Show one row of input fields when there are headers but no items
-            <tr className="hover:bg-gray-50 transition-colors">
-              <td className="border border-gray-200 p-3 text-center text-gray-600 font-medium">1</td>              <td className="border border-gray-200 p-3">
+            <tr key={1} className="hover:bg-gray-50 transition-colors">
+              <td className="border border-gray-200 p-3 text-center text-gray-600 font-medium">1</td>
+                <td className="border border-gray-200 p-3">
                 <input
                   type="text"
                   placeholder={canEdit ? "Enter item name" : "Item name"}
@@ -94,11 +98,12 @@ const DataTable = ({
                   disabled={!canEdit}
                 />
               </td>
-              {areaHeaders.map((header) => {
+              {headers[selectedArea].map((header) => {
                 const isNumeric =
                   header.text.includes("عدد") ||
                   header.text.includes("النسبة");
 
+                const inputKey = `${selectedArea}-${1}-${header.id}`;
                 return (
                   <td key={header.id} className="border border-gray-200 p-2">
                     <input
@@ -112,8 +117,11 @@ const DataTable = ({
                                    ? 'bg-white' 
                                    : 'bg-gray-100 cursor-not-allowed'
                                }`}
+                      value={responses[selectedArea]?.grid?.[header.id]?.[1] || ""}
+                      onChange={(e) => canEdit && handleInputChange(inputKey, e.target.value)}
                       readOnly={!canEdit}
                       disabled={!canEdit}
+                      
                       min={isNumeric ? "0" : undefined}
                       step={isNumeric ? "1" : undefined}
                     />
@@ -123,9 +131,8 @@ const DataTable = ({
             </tr>
           ) : null}
         </tbody>
-      </table>
-    </div>
+      </table>    </div>
   );
-};
+});
 
 export default DataTable;

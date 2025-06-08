@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "../../../components/ui/card";
 import AreaTable from "./AreaTable";
 
-const MainContentSection = ({ 
+const MainContentSection = React.memo(({ 
   selectedArea, 
   areas, 
   headers, 
@@ -30,8 +30,7 @@ const MainContentSection = ({
           />
         </CardContent>
       </Card>
-    </div>
-  );
-};
+    </div>  );
+});
 
 export default MainContentSection;
