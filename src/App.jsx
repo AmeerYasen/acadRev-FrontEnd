@@ -22,6 +22,7 @@ const UsersPage = lazy(() => import(/* @vite-ignore */ './pages/Users'));
 const College = lazy(() => import(/* @vite-ignore */ './pages/college'));
 const Quantitative = lazy(() => import(/* @vite-ignore */ './pages/Quantitative'));
 const Qualitative = lazy(() => import(/* @vite-ignore */ './pages/Qualitative'));
+const QualitativeTest = lazy(() => import(/* @vite-ignore */ './pages/Qualitative/QualitativeTest'));
 const Report = lazy(() => import(/* @vite-ignore */ './pages/Report'));
 
 // ErrorBoundary component to handle errors during lazy loading
@@ -185,9 +186,9 @@ function App() {
             { path: 'college', element: <College /> },
             { path: 'profile', element: <Profile /> },
             { path: 'departments', element: <Department /> },
-            { path: 'programs', element: <Program /> },
-            { path: 'quantitative/:programId', element: <Quantitative /> },
+            { path: 'programs', element: <Program /> },            { path: 'quantitative/:programId', element: <Quantitative /> },
             { path: 'qualitative/:programId', element: <Qualitative /> },
+            { path: 'qualitative-test', element: <QualitativeTest /> },
             { path: 'report/:programId', element: <Report /> },
           ],
         },

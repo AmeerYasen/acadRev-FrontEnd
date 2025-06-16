@@ -82,6 +82,7 @@ function Login() {
 
     try {
       setIsLoading(true);
+      console.log("Attempting login with login page:", { username, password });
       const loginResponse = await login({ username, password });
       if (loginResponse.success) {
         navigate(ROUTES.MAIN);

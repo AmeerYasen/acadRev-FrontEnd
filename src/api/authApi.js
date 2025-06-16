@@ -8,10 +8,11 @@ import { ENDPOINTS, STORAGE_KEYS } from '../constants';
  * @returns {Promise<Object>} - { success: boolean, user: Object, token: string, error: string }
  */
 export const login = async (credentials) => {
+
   try {
     const response = await apiFetch(ENDPOINTS.AUTH.LOGIN, {
       method: 'POST',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({ ...credentials }),
     });
 
     if (response.user && response.token) {

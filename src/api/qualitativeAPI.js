@@ -220,3 +220,42 @@ export const removeResponse = async (id) => {
     throw new Error(error.message || 'Failed to remove response');
   }
 };
+
+/**
+ * Upload evidence file for a response
+ * @param {string|number} responseId - Response ID
+ * @param {File} file - File to upload
+ * @returns {Promise<Object>} Upload result
+ */
+export const uploadEvidence = async (responseId, file) => {
+  try {
+    if (!responseId) {
+      throw new Error('Response ID is required to upload evidence');
+    }
+    
+    if (!file) {
+      throw new Error('File is required to upload evidence');
+    }
+    
+    console.log('uploadEvidence: Making API call for response:', responseId);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    // Use apiFetch but without Content-Type header to let browser set it with boundary
+    const data = await apiFetch(QUALITATIVE_ENDPOINTS.UPLOAD_EVIDENCE(responseId), {
+      method: 'POST',
+      body: formData,
+      headers: {
+        // Don't set Content-Type - let browser set it with multipart boundary
+        'Content-Type': undefined
+      }
+    });
+    
+    console.log('uploadEvidence: Response received:', data);
+    return data;
+  } catch (error) {
+    console.error('uploadEvidence: API call failed:', error);
+    throw new Error(error.message || 'Failed to upload evidence');
+  }
+};
