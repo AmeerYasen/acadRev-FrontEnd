@@ -4,11 +4,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui
 import { Progress } from "../../../components/ui/progress";
 
 const QuickStats = React.memo(({ 
-  domains, 
-  completedDomains, 
-  responses, 
-  overallProgress 
+  domains = [], 
+  completedDomains = [], 
+  responses = {}, 
+  overallProgress = 0 
 }) => {
+  // Debug logging
+  console.log('QuickStats props:', { domains, completedDomains, responses, overallProgress });
+  
+  // Ensure we have valid data
+  const totalDomains = Array.isArray(domains) ? domains.length : 0;
+  const completedCount = Array.isArray(completedDomains) ? completedDomains.length : 0;
+  const inProgressCount = Math.max(0, totalDomains - completedCount);
+  const totalResponses = responses && typeof responses === 'object' ? Object.keys(responses).length : 0;
+  const progressValue = Math.min(100, Math.max(0, overallProgress || 0));
+
+  console.log('QuickStats calculated values:', { 
+    totalDomains, 
+    completedCount, 
+    inProgressCount, 
+    totalResponses, 
+    progressValue 
+  });
+
   return (
     <Card className="mt-6">
       <CardHeader>
@@ -17,33 +35,28 @@ const QuickStats = React.memo(({
           <span>Quick Stats</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-between items-center">
+      <CardContent className="space-y-4">        <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Total Domains</span>
-          <span className="font-semibold">{domains.length}</span>
+          <span className="font-semibold">{totalDomains}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Completed</span>
-          <span className="font-semibold text-green-600">{completedDomains.length}</span>
+          <span className="font-semibold text-green-600">{completedCount}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">In Progress</span>
-          <span className="font-semibold text-blue-600">
-            {domains.length - completedDomains.length}
-          </span>
+          <span className="font-semibold text-blue-600">{inProgressCount}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Total Responses</span>
-          <span className="font-semibold text-purple-600">
-            {Object.keys(responses).length}
-          </span>
+          <span className="font-semibold text-purple-600">{totalResponses}</span>
         </div>
         <div className="pt-2 border-t">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">Overall Progress</span>
-            <span className="font-semibold">{overallProgress}%</span>
+            <span className="font-semibold">{progressValue}%</span>
           </div>
-          <Progress value={overallProgress} className="h-2" />
+          <Progress value={progressValue} className="h-2" />
         </div>
       </CardContent>
     </Card>

@@ -38,10 +38,8 @@ export const apiFetch = async (endpoint, options = {}) => {
       ...options,
       headers: finalHeaders,
       signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
+    });    clearTimeout(timeoutId);
+    
     if (!response.ok) {
       let errorMessage = 'Unknown error occurred';
       let errorData = {};
@@ -53,9 +51,21 @@ export const apiFetch = async (endpoint, options = {}) => {
       } catch {
         // If response is not JSON, use generic message
         errorMessage = `HTTP error! Status: ${response.status}`;
+      }      // Handle 401 errors by redirecting to login
+      if (response.status === 401) {
+        // Clear any stored auth tokens
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authUser');
+        // Redirect to login page
+        window.location.href = '/login';
+        return; // Don't throw error since we're redirecting
       }
 
-    
+      // Throw error with details
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.details = errorData;
+      throw error;
     }
 
     // Parse successful response

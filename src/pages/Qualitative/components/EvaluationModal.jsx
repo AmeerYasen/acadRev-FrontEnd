@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { MessageSquare, X, AlertTriangle, Send, StickyNote, Upload, ExternalLink, FolderOpen } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
+import { uploadEvidence } from "../../../api/qualitativeAPI";
+import EvidencePopup from "./EvidencePopup";
+import { useToast } from "../../../context/ToastContext";
 
-const EvaluationModal = React.memo(({ 
+const EvaluationModal = React.memo(({
   isOpen,
   onClose,
   selectedDomain,
@@ -16,9 +19,12 @@ const EvaluationModal = React.memo(({
   handleResponseChange,
   handleSaveResponses,
   handleRemoveResponse
-}) => {const [showNotesFor, setShowNotesFor] = useState({}); // Track which indicators have notes visible
+}) => {  const { showToast } = useToast();
+  const [showNotesFor, setShowNotesFor] = useState({}); // Track which indicators have notes visible
   const [selectedFiles, setSelectedFiles] = useState({}); // Track multiple selected files per indicator
-  const [dragOver, setDragOver] = useState({}); // Track drag state per indicator
+  const [uploadStatus, setUploadStatus] = useState({}); // Track upload status per indicator
+  const [evidencePopupOpen, setEvidencePopupOpen] = useState(false); // Track if evidence popup is open
+  const [currentIndicatorId, setCurrentIndicatorId] = useState(null);
   
   // Add keyboard shortcut for saving (Ctrl+S)
   useEffect(() => {
@@ -36,64 +42,68 @@ const EvaluationModal = React.memo(({
       return () => {
         document.removeEventListener('keydown', handleKeyDown);
       };
-    }
-  }, [isOpen, handleSaveResponses, unsavedChanges]);
+    }  }, [isOpen, handleSaveResponses, unsavedChanges]);
   
   if (!isOpen || !selectedDomain) return null;
-
   const selectedDomainData = domains.find(d => d.id === selectedDomain);
   const domainIndicators = indicators[selectedDomain] || [];
+
   const evaluationOptions = [
     { value: "Yes", label: "Yes", color: "bg-blue-600 hover:bg-blue-700" },
     { value: "No", label: "No", color: "bg-red-600 hover:bg-red-700" },
     { value: "Maybe", label: "Maybe", color: "bg-green-600 hover:bg-green-700" }
   ];
-
   // Helper function to check if an indicator has unsaved changes
   const hasUnsavedChanges = (indicatorId) => {
     const key = `${selectedDomain}-${indicatorId}`;
-    return unsavedChanges && unsavedChanges[key];
-  };
+    return unsavedChanges && unsavedChanges[key];  };
 
   const toggleNotes = (indicatorId) => {
     setShowNotesFor(prev => ({
       ...prev,
       [indicatorId]: !prev[indicatorId]
     }));
-  };
-  const handleFileUpload = (indicatorId, event) => {
+  };  const handleFileUpload = async (indicatorId, event) => {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
+      // Update local state to show selected files
       setSelectedFiles(prev => ({
         ...prev,
         [indicatorId]: [...(prev[indicatorId] || []), ...files]
       }));
-    }
-  };
 
-  const handleDragOver = (e, indicatorId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(prev => ({ ...prev, [indicatorId]: true }));
-  };
+      // Upload each file if we have a response ID for this indicator
+      const responseKey = `${selectedDomain}-${indicatorId}`;
+      const response = responses[responseKey];
+      
+      if (response && response.id) {
+        for (const file of files) {
+          try {
+            setUploadStatus(prev => ({
+              ...prev,
+              [`${indicatorId}-${file.name}`]: 'uploading'
+            }));
 
-  const handleDragLeave = (e, indicatorId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(prev => ({ ...prev, [indicatorId]: false }));
-  };
+            await uploadEvidence(response.id, file);
+            
+            setUploadStatus(prev => ({
+              ...prev,
+              [`${indicatorId}-${file.name}`]: 'success'
+            }));            showToast(`Evidence "${file.name}" uploaded successfully`, 'success');
 
-  const handleDrop = (e, indicatorId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(prev => ({ ...prev, [indicatorId]: false }));
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      setSelectedFiles(prev => ({
-        ...prev,
-        [indicatorId]: [...(prev[indicatorId] || []), ...files]
-      }));
+          } catch (error) {
+            console.error('Error uploading file:', error);
+            setUploadStatus(prev => ({
+              ...prev,
+              [`${indicatorId}-${file.name}`]: 'error'
+            }));
+
+            showToast(`Failed to upload "${file.name}": ${error.message}`, 'error');
+          }
+        }
+      } else {
+        showToast('Please save your response first before uploading evidence', 'warning');
+      }
     }
   };
 
@@ -101,166 +111,9 @@ const EvaluationModal = React.memo(({
     setSelectedFiles(prev => ({
       ...prev,
       [indicatorId]: prev[indicatorId]?.filter((_, index) => index !== fileIndex) || []
-    }));
-  };  const openEvidencePage = (indicatorId) => {
-    // Create a popup window with evidence content
-    const evidenceWindow = window.open(
-      '', 
-      `evidence-${selectedDomain}-${indicatorId}`,
-      'width=1000,height=700,scrollbars=yes,resizable=yes'
-    );
-    
-    // Get selected files for this indicator
-    const indicatorFiles = selectedFiles[indicatorId] || [];
-    
-    // Inject the evidence page content into the popup
-    evidenceWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Evidence Repository - Domain ${selectedDomain} - Indicator ${indicatorId}</title>
-          <script src="https://cdn.tailwindcss.com"></script>
-          <style>
-            body { font-family: 'Inter', system-ui, sans-serif; }
-          </style>
-        </head>
-        <body class="bg-gray-50">
-          <div class="p-6">
-            <div class="max-w-4xl mx-auto">
-              <div class="flex items-center justify-between mb-6">
-                <div>
-                  <h1 class="text-2xl font-bold text-gray-900">Evidence Repository</h1>
-                  <p class="text-gray-600">Domain: ${selectedDomainData?.name || selectedDomain} | Indicator: ${indicatorId}</p>
-                </div>
-                <button onclick="window.close()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                  Close
-                </button>
-              </div>
-              
-              <div class="space-y-4" id="evidence-list">
-                ${indicatorFiles.length > 0 ? 
-                  indicatorFiles.map((file, index) => `
-                    <div class="bg-white rounded-lg border p-4">
-                      <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                          <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                          </svg>
-                          <div>
-                            <h3 class="font-medium text-gray-900">${file.name}</h3>
-                            <div class="text-sm text-gray-600">
-                              <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                              <span> • </span>
-                              <span>Selected in current session</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="text-blue-600 text-sm font-medium">
-                          Ready to Upload
-                        </div>
-                      </div>
-                    </div>
-                  `).join('') :
-                  `<div class="bg-white rounded-lg border p-8 text-center">
-                    <svg class="h-16 w-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Evidence Found</h3>
-                    <p class="text-gray-600 mb-4">No evidence files have been uploaded for this indicator yet.</p>
-                  </div>`
-                }
-              </div>
-              
-              <!-- Upload Section -->
-              <div class="mt-6 bg-white rounded-lg border p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Upload New Evidence</h2>
-                <div 
-                  id="dropZone"
-                  class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-300 transition-colors"
-                  ondragover="handleDragOver(event)"
-                  ondragleave="handleDragLeave(event)"
-                  ondrop="handleDrop(event)"
-                >
-                  <svg class="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                  </svg>
-                  <p class="text-gray-600 mb-4">Drag and drop files here, or click to browse</p>
-                  <label class="inline-flex items-center px-4 py-2 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 cursor-pointer">
-                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    Choose Files
-                    <input type="file" class="hidden" onchange="handleFileUpload(this)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt" multiple>
-                  </label>
-                  <p class="text-xs text-gray-500 mt-2">Supports: PDF, DOC, DOCX, JPG, PNG, TXT</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <script>
-            function handleDragOver(event) {
-              event.preventDefault();
-              event.stopPropagation();
-              document.getElementById('dropZone').classList.add('border-blue-400', 'bg-blue-50');
-            }
-            
-            function handleDragLeave(event) {
-              event.preventDefault();
-              event.stopPropagation();
-              document.getElementById('dropZone').classList.remove('border-blue-400', 'bg-blue-50');
-            }
-            
-            function handleDrop(event) {
-              event.preventDefault();
-              event.stopPropagation();
-              document.getElementById('dropZone').classList.remove('border-blue-400', 'bg-blue-50');
-              
-              const files = Array.from(event.dataTransfer.files);
-              displayUploadedFiles(files);
-            }
-            
-            function handleFileUpload(input) {
-              const files = Array.from(input.files);
-              displayUploadedFiles(files);
-            }
-            
-            function displayUploadedFiles(files) {
-              const evidenceList = document.getElementById('evidence-list');
-              
-              if (files.length > 0) {
-                files.forEach((file, index) => {
-                  const fileDiv = document.createElement('div');
-                  fileDiv.className = 'bg-white rounded-lg border p-4';
-                  fileDiv.innerHTML = \`
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center space-x-4">
-                        <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <div>
-                          <h3 class="font-medium text-gray-900">\${file.name}</h3>
-                          <div class="text-sm text-gray-600">
-                            <span>\${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                            <span> • </span>
-                            <span>Just uploaded</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="text-green-600 text-sm font-medium">
-                        Uploaded Successfully
-                      </div>
-                    </div>
-                  \`;
-                  evidenceList.appendChild(fileDiv);
-                });
-              }
-            }
-          </script>
-        </body>
-      </html>
-    `);
-    evidenceWindow.document.close();
+    }));  };    const openEvidencePage = (indicatorId) => {
+    setCurrentIndicatorId(indicatorId);
+    setEvidencePopupOpen(true);
   };
 
   return (
@@ -340,7 +193,8 @@ const EvaluationModal = React.memo(({
                             </span>
                           )}
                         </div>
-                      </div>                      {/* Evaluation Options */}
+                      </div>                      
+                      {/* Evaluation Options */}
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Evaluation
@@ -371,7 +225,8 @@ const EvaluationModal = React.memo(({
                             );
                           })}
                         </div>
-                      </div>{/* Evidence Upload and Notes Section */}
+                      </div>
+                      {/* Evidence Upload and Notes Section */}
                       <div className="mb-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
@@ -442,93 +297,96 @@ const EvaluationModal = React.memo(({
                           </div>
                         </div>
 
-                        {/* Conditional Content: Notes OR Drag and Drop Zone */}
-                        {showNotesFor[indicator.id] ? (
-                          /* Notes Section - Shows when notes button is clicked */
-                          <div className="bg-white border border-gray-300 rounded-lg p-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Notes & Comments
-                            </label>
-                            <textarea
-                              placeholder="Add notes and observations..."
-                              value={response?.notes || ""}
-                              onChange={(e) => {
-                                const notes = e.target.value;
-                                if (response?.evaluation) {
-                                  handleResponseChange(
-                                    selectedDomain, 
-                                    indicator.id, 
-                                    response.evaluation, 
-                                    notes
-                                  );
-                                }
-                              }}
-                              className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg 
-                                       bg-white text-gray-900 text-sm resize-none
-                                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                                       transition-all duration-200"
-                            />
-                          </div>
-                        ) : (
-                          /* Drag and Drop Zone - Shows when notes are hidden */
-                          <div
-                            onDragOver={(e) => handleDragOver(e, indicator.id)}
-                            onDragLeave={(e) => handleDragLeave(e, indicator.id)}
-                            onDrop={(e) => handleDrop(e, indicator.id)}
-                            className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                              dragOver[indicator.id]
-                                ? 'border-blue-400 bg-blue-50'
-                                : 'border-gray-300 hover:border-blue-300'
-                            }`}
-                          >
-                            <Upload className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-                            <p className="text-sm text-gray-600 mb-2">
-                              Drag and drop files here, or{' '}
-                              <button
-                                onClick={() => document.getElementById(`file-${indicator.id}`).click()}
-                                className="text-blue-600 hover:text-blue-700 underline"
-                              >
-                                browse files
-                              </button>
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Supports: PDF, DOC, DOCX, JPG, PNG, TXT
-                            </p>
-                          </div>
-                        )}
+                        {/* Conditional Content: Notes */}
+                                    {showNotesFor[indicator.id] && (
+                                      /* Notes Section - Shows when notes button is clicked */
+                                      <div className="bg-white border border-gray-300 rounded-lg p-4">
+                                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Notes & Comments
+                                      </label>
+                                      <textarea
+                                        placeholder="Add notes and observations..."
+                                        value={response?.notes || ""}
+                                        onChange={(e) => {
+                                        const notes = e.target.value;
+                                        if (response?.evaluation) {
+                                          handleResponseChange(
+                                          selectedDomain, 
+                                          indicator.id, 
+                                          response.evaluation, 
+                                          notes
+                                          );
+                                        }
+                                        }}
+                                        className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg 
+                                             bg-white text-gray-900 text-sm resize-none
+                                             focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                                             transition-all duration-200"
+                                      />
+                                      </div>
+                                    )}
 
-                        {/* Selected Files Display - Always visible when files are selected */}
+                                    {/* Selected Files Display - Always visible when files are selected */}
                         {selectedFiles[indicator.id] && selectedFiles[indicator.id].length > 0 && (
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium text-gray-700">
                               Selected Files ({selectedFiles[indicator.id].length})
                             </h4>
-                            <div className="space-y-1 max-h-32 overflow-y-auto">
-                              {selectedFiles[indicator.id].map((file, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center justify-between bg-blue-50 p-2 rounded text-sm"
-                                >
-                                  <div className="flex items-center space-x-2">
-                                    <Upload className="h-4 w-4 text-blue-600" />
-                                    <span className="text-gray-700 truncate">
-                                      {file.name}
-                                    </span>
-                                    <span className="text-gray-500">
-                                      ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                                    </span>
-                                  </div>
-                                  <button
-                                    onClick={() => removeFile(indicator.id, index)}
-                                    className="text-red-500 hover:text-red-700 ml-2"
+                            <div className="space-y-1 max-h-32 overflow-y-auto">                              {selectedFiles[indicator.id].map((file, index) => {
+                                const uploadStatusKey = `${indicator.id}-${file.name}`;
+                                const fileUploadStatus = uploadStatus[uploadStatusKey];
+                                
+                                return (
+                                  <div
+                                    key={index}
+                                    className={`flex items-center justify-between p-2 rounded text-sm ${
+                                      fileUploadStatus === 'success' ? 'bg-green-50 border border-green-200' :
+                                      fileUploadStatus === 'error' ? 'bg-red-50 border border-red-200' :
+                                      fileUploadStatus === 'uploading' ? 'bg-yellow-50 border border-yellow-200' :
+                                      'bg-blue-50'
+                                    }`}
                                   >
-                                    <X className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              ))}
+                                    <div className="flex items-center space-x-2">
+                                      {fileUploadStatus === 'uploading' ? (
+                                        <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                                      ) : fileUploadStatus === 'success' ? (
+                                        <div className="h-4 w-4 text-green-600">✓</div>
+                                      ) : fileUploadStatus === 'error' ? (
+                                        <div className="h-4 w-4 text-red-600">✗</div>
+                                      ) : (
+                                        <Upload className="h-4 w-4 text-blue-600" />
+                                      )}
+                                      <span className="text-gray-700 truncate">
+                                        {file.name}
+                                      </span>
+                                      <span className="text-gray-500">
+                                        ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                                      </span>
+                                      {fileUploadStatus === 'uploading' && (
+                                        <span className="text-yellow-600 text-xs">Uploading...</span>
+                                      )}
+                                      {fileUploadStatus === 'success' && (
+                                        <span className="text-green-600 text-xs">Uploaded</span>
+                                      )}
+                                      {fileUploadStatus === 'error' && (
+                                        <span className="text-red-600 text-xs">Failed</span>
+                                      )}
+                                    </div>
+                                    <button
+                                      onClick={() => removeFile(indicator.id, index)}
+                                      className="text-red-500 hover:text-red-700 ml-2"
+                                      disabled={fileUploadStatus === 'uploading'}
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
                         )}
+
+                 
                       </div>
 
                       {/* Actions */}
@@ -588,10 +446,20 @@ const EvaluationModal = React.memo(({
                   </>
                 )}
               </Button>
-            </div>
-          </div>
+            </div>          </div>
         </div>
-      </div>
+      </div>      {/* Evidence Popup */}
+      <EvidencePopup
+        isOpen={evidencePopupOpen}
+        onClose={() => {
+          setEvidencePopupOpen(false);
+          setCurrentIndicatorId(null);
+        }}
+        selectedDomain={selectedDomain}
+        indicatorId={currentIndicatorId}
+        selectedDomainData={selectedDomainData}
+        responseId={currentIndicatorId ? responses[`${selectedDomain}-${currentIndicatorId}`]?.id : null}
+      />
     </div>
   );
 });

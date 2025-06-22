@@ -182,7 +182,7 @@ export const fetchProgramsWithPagination = async (page = 1, perPage = 20, option
       };
     } else {
       // Log the unexpected structure for debugging
-      console.warn('Paginated programs response structure was unexpected or request failed:', response);
+      console.log('Paginated programs response structure was unexpected or request failed:', response);
       // Throw an error or return a default structure
       throw new Error(response?.message || 'Invalid data format received from server for paginated programs');
     }

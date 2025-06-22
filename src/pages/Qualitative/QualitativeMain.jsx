@@ -34,7 +34,8 @@ import { useQualitative } from "./hooks/useQualitative";const QualitativeMain = 
       error={qualitativeState.error}
       setError={qualitativeState.setError}
     >
-      <QualitativeContainer {...qualitativeState} />      <EvaluationModal 
+      <QualitativeContainer {...qualitativeState} />      
+      <EvaluationModal 
         {...qualitativeState}
         isOpen={qualitativeState.isEvaluationModalOpen}
         onClose={() => qualitativeState.setIsEvaluationModalOpen(false)}

@@ -1,0 +1,192 @@
+/* src/pages/Results/Results.css */
+
+.results-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* Final Score Display */
+.final-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.score-value {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+
+/* Statistics */
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Weight Cards */
+.weight-card {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #e5e7eb;
+}
+
+.weight-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Summary Cards */
+.summary-card {
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Color Classes for Scores */
+.text-red-600 {
+  color: #dc2626;
+}
+
+.text-yellow-600 {
+  color: #d97706;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-green-600 {
+  color: #059669;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+
+.bg-yellow-50 {
+  background-color: #fffbeb;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+.bg-green-50 {
+  background-color: #ecfdf5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .results-page .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .score-value {
+    font-size: 2rem;
+  }
+  
+  .stat-item {
+    margin-bottom: 1rem;
+  }
+  
+  .weight-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Loading States */
+.loading-overlay {
+  position: relative;
+}
+
+.loading-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+/* Print Styles */
+@media print {
+  .results-page {
+    background: white;
+  }
+  
+  .export-actions,
+  .view-toggle,
+  .program-selector {
+    display: none;
+  }
+  
+  .final-score-display {
+    color: black !important;
+  }
+}
+
+/* Animation for score display */
+@keyframes scoreAnimation {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.final-score-container {
+  animation: scoreAnimation 0.5s ease-out;
+}
+
+/* Accessibility */
+.results-page [role="button"]:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.results-page .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

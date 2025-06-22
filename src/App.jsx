@@ -22,8 +22,8 @@ const UsersPage = lazy(() => import(/* @vite-ignore */ './pages/Users'));
 const College = lazy(() => import(/* @vite-ignore */ './pages/college'));
 const Quantitative = lazy(() => import(/* @vite-ignore */ './pages/Quantitative'));
 const Qualitative = lazy(() => import(/* @vite-ignore */ './pages/Qualitative'));
-const QualitativeTest = lazy(() => import(/* @vite-ignore */ './pages/Qualitative/QualitativeTest'));
 const Report = lazy(() => import(/* @vite-ignore */ './pages/Report'));
+const Results = lazy(() => import(/* @vite-ignore */ './pages/Results'));
 
 // ErrorBoundary component to handle errors during lazy loading
 class ErrorBoundary extends React.Component {
@@ -104,7 +104,7 @@ function ProtectedRoute() {
   return (
     <div className="flex h-screen overflow-hidden">
       <aside 
-        className="fixed left-0 top-0 h-full bg-white border-r border-gray-200 shadow-sm z-20 transition-all duration-300 ease-in-out"
+        className="fixed left-0 top-0 h-full bg-white border-r border-gray-200 shadow-sm z-200 transition-all duration-300 ease-in-out"
         style={{ 
           width: isSidebarExpanded ? sidebarExpandedWidth : sidebarCollapsedWidth,
           transform: isMobile && !isSidebarExpanded ? 'translateX(-100%)' : 'translateX(0)'
@@ -186,10 +186,11 @@ function App() {
             { path: 'college', element: <College /> },
             { path: 'profile', element: <Profile /> },
             { path: 'departments', element: <Department /> },
-            { path: 'programs', element: <Program /> },            { path: 'quantitative/:programId', element: <Quantitative /> },
+            { path: 'programs', element: <Program /> },            
+            { path: 'quantitative/:programId', element: <Quantitative /> },
             { path: 'qualitative/:programId', element: <Qualitative /> },
-            { path: 'qualitative-test', element: <QualitativeTest /> },
             { path: 'report/:programId', element: <Report /> },
+            { path: 'results/', element: <Results /> },
           ],
         },
         { path: 'login', element: <Login /> },

@@ -15,42 +15,62 @@ function InputField({ label, name, type = "text", value, onChange, required = fa
 function AddEditUserModal({ isOpen, onClose, onSave, userToEdit, loggedInUserRole }) {
   const [formData, setFormData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [formError, setFormError] = useState('');
 
   const isEditMode = !!userToEdit; // This will always be false based on previous changes, but keeping logic for clarity
-
   useEffect(() => {
     if (isOpen) {
       setFormError(''); 
+      setPasswordsMatch(true);
       // Since edit mode is effectively removed, we only set up for adding new 'authority' users
       setFormData({
         username: '',
         email: '',
         password: '',
+        confirmPassword: '',
         role: 'authority', // Default and only role
         authority_id: null, // Explicitly null for non-applicable fields
         university_id: null,
         college_id: null,
         department_id: null,
-        is_active: true,
       });
     }
   }, [isOpen, isEditMode]); // isEditMode is kept for logical consistency, though it's always false
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (name === 'role') return; // Role is fixed
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+      
+      // Check password match when either password field changes
+      if (name === 'password' || name === 'confirmPassword') {
+        const password = name === 'password' ? value : newData.password;
+        const confirmPassword = name === 'confirmPassword' ? value : newData.confirmPassword;
+        setPasswordsMatch(password === confirmPassword || confirmPassword === '');
+      }
+      
+      return newData;
+    });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
+    
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setFormError("Passwords do not match.");
+      return;
+    }
+    
     const dataToSend = { ...formData };
+    // Remove confirmPassword from data sent to backend
+    delete dataToSend.confirmPassword;
 
     // Ensure IDs are numbers or null. Since we only add 'authority', these might not be relevant.
     // However, if your backend expects them as null, this is fine.
@@ -84,12 +104,21 @@ function AddEditUserModal({ isOpen, onClose, onSave, userToEdit, loggedInUserRol
         <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
           {formError && <p className="text-red-500 text-sm bg-red-50 p-2 rounded">{formError}</p>}
           <InputField label="Username" name="username" value={formData.username} onChange={handleChange} required />
-          <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} required />
-          <div className="relative">
+          <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} required />          <div className="relative">
             <InputField label="Password" name="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handleChange} required />
             <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 text-gray-500">
               {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
             </button>
+          </div>
+          
+          <div className="relative">
+            <InputField label="Confirm Password" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handleChange} required />
+            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-9 text-gray-500">
+              {showConfirmPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+            </button>
+            {!passwordsMatch && formData.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+            )}
           </div>
           
           <div>
@@ -108,10 +137,7 @@ function AddEditUserModal({ isOpen, onClose, onSave, userToEdit, loggedInUserRol
               For now, they are part of formData but not rendered as input fields.
           */}
 
-          <div className="flex items-center">
-            <input id="is_active" name="is_active" type="checkbox" checked={!!formData.is_active} onChange={handleChange} className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
-            <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">Is Active</label>
-          </div>
+       
 
           <div className="pt-4 flex justify-end space-x-3">
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">Cancel</button>

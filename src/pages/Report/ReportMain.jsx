@@ -1,52 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import ReportSidebar from './components/ReportSidebar';
+import ReportHeader from './components/ReportHeader';
+import ReportPromptCard from './components/ReportPromptCard';
+import ReportEditorSection from './components/ReportEditorSection';
+import ReportPagination from './components/ReportPagination';
+import ReportSaveButton from './components/ReportSaveButton';
+
+import { useReportData } from './hooks/useReportData';
+import { useReportState } from './hooks/useReportState';
+import { useReportSave } from './hooks/useReportSave';
+import { editorSections } from './utils/reportHelpers';
 
 const ReportMain = () => {
   const { programId } = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Custom hooks for managing state and data
+  const {
+    domains,
+    currentDomain,
+    prompts,
+    promptsPagination,
+    loading,
+    handleDomainChange,
+    handlePromptsPageChange
+  } = useReportData(programId);
+
+  const reportState = useReportState();
+  
+  const { saving, handleSaveReport } = useReportSave(
+    programId,
+    currentDomain,
+    prompts,
+    reportState.reportData,
+    reportState
+  );
+
+  // Handle domain change with state reset
+  const handleDomainChangeWithReset = (domain) => {
+    handleDomainChange(domain);
+    if (currentDomain?.id !== domain.id) {
+      reportState.resetReportData();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">
-              Self-Assessment Report
-            </h1>
-            {programId && (
-              <span className="text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-medium">
-                Program ID: {programId}
-              </span>
-            )}
-          </div>
-          
-          <div className="border-l-4 border-purple-500 bg-purple-50 p-4 rounded-r-lg">
-            <p className="text-purple-800">
-              This page will contain self-assessment reports and documentation for program {programId}.
-            </p>
-          </div>
-          
-          {/* Placeholder content */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-700 mb-2">Assessment Reports</h3>
-              <p className="text-gray-600">Generate comprehensive assessment reports</p>
+    <div className="min-h-screen bg-gray-50" dir="rtl">
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex gap-6">
+          <ReportSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            domains={domains}
+            currentDomain={currentDomain}
+            handleDomainChange={handleDomainChangeWithReset}
+          />
+
+          <div className="flex-1">            <ReportHeader
+              setSidebarOpen={setSidebarOpen}
+              programId={programId}
+              currentReportId={reportState.currentReportId}
+              prompts={prompts}
+              hasUnsavedChanges={reportState.hasUnsavedChanges}
+              lastSaved={reportState.lastSaved}
+              saving={saving}
+              onSave={handleSaveReport}
+            />
+
+            <ReportPromptCard
+              currentDomain={currentDomain}
+              prompts={prompts}
+            />
+
+            {/* Editor Sections */}
+            <div className="space-y-6 mt-6">
+              {editorSections.map((section, index) => (
+                <ReportEditorSection
+                  key={section.key}
+                  section={section}
+                  value={reportState.reportData[section.key]}
+                  onChange={reportState.handleSectionChange}
+                  index={index}
+                />
+              ))}
             </div>
-            
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-700 mb-2">Documentation</h3>
-              <p className="text-gray-600">Manage assessment documentation</p>
-            </div>
-            
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-700 mb-2">Progress Tracking</h3>
-              <p className="text-gray-600">Track assessment progress and milestones</p>
-            </div>
+
+            <ReportPagination
+              pagination={promptsPagination}
+              onPageChange={handlePromptsPageChange}
+            />
+
+            <ReportSaveButton
+              onSave={handleSaveReport}
+              saving={saving}
+              disabled={saving || !currentDomain || !prompts.length}
+              hasUnsavedChanges={reportState.hasUnsavedChanges}
+              currentReportId={reportState.currentReportId}
+              showNoIndicatorsMessage={!prompts.length && currentDomain}
+            />
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 
 export default ReportMain;

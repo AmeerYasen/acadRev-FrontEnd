@@ -106,17 +106,17 @@ export const QUALITATIVE_ENDPOINTS = {
   GET_DOMAIN_SUMMARY: (programId) => `/qual/summary/${programId}`,
   SUBMIT_RESPONSE: '/qual/responses',
   REMOVE_RESPONSE: (id) => `/qual/responses/${id}`,
+  UPLOAD_EVIDENCE: (responseId) => `/qual/responses/${responseId}/evidence`,
+  GET_EVIDENCE: (responseId) => `/qual/responses/${responseId}/evidence`,
+  // Scoring endpoints for Results page
+  GET_DOMAIN_WEIGHTS: '/qualitative/wi',
+  GET_DOMAIN_SCORES: (programId) => `/qualitative/si/${programId}`,
+  GET_WEIGHTED_RESULTS: (programId) => `/qualitative/wisi/${programId}`,
 };
 
-
-
-// الجميع يمكنهم الاطلاع
-// router.get('/domains', authenticateToken, qlt.getDomains);
-// router.get('/indicators/:domainId', authenticateToken, qlt.getIndicators);
-// router.get('/responses/:programId', authenticateToken, qlt.getResponses);
-// router.get('/unanswered/:programId', authenticateToken, qlt.getUnanswered);
-// router.get('/summary/:programId', authenticateToken, qlt.getDomainSummary);
-
-// // فقط رئيس القسم يستطيع التعديل
-// router.post('/responses', authenticateToken, authorizeRole(['department']), qlt.submitResponse);
-// router.delete('/responses/:id', authenticateToken, authorizeRole(['department']), qlt.removeResponse);
+export const REPORT_ENDPOINTS = {
+  GET_DOMAINS:'/qual/domains',
+  GET_PROMPTS: (page, perPage,domainId) => `/report/prompts/${domainId}?page=${page}&perPage=${perPage}`,
+  GET_RESULTS: (programId) => `/report/results/${programId}`,
+  SAVE_REPORT: '/report/save',
+};
