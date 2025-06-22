@@ -28,7 +28,7 @@ const getNavItems=(user) => {
   { path: "/programs", icon: <BookOpen size={20} />, label: "Programs" },
   user?.role === "admin"? { path: "/users", icon: <Users size={20} />, label: "Users" } :
   { path: "/profile", icon: <UserCircle size={20} />, label: "Profile" },
-  { path: "/reports", icon: <BarChart3 size={20} />, label: "Reports" }
+  { path: "/results", icon: <BarChart3 size={20} />, label: "Results" }
 ];
 return navItems;
 }

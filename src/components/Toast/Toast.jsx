@@ -1,71 +1,82 @@
-// src/components/Toast/Toast.jsx
-import React, { useState, useEffect } from 'react';
-import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import './Toast.css';
 
-// Mapping of toast types to their respective colors and icons
-const toastConfig = {
-  success: {
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-500',
-    textColor: 'text-green-800',
-    icon: <CheckCircle className="w-5 h-5 text-green-500" />
-  },
-  error: {
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-500',
-    textColor: 'text-red-800',
-    icon: <AlertCircle className="w-5 h-5 text-red-500" />
-  },
-  warning: {
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-500',
-    textColor: 'text-amber-800',
-    icon: <AlertTriangle className="w-5 h-5 text-amber-500" />
-  },
-  info: {
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-500',
-    textColor: 'text-blue-800',
-    icon: <Info className="w-5 h-5 text-blue-500" />
-  }
-};
-
-const Toast = ({ message, type = 'info', onClose, duration = 5000 }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  const config = toastConfig[type] || toastConfig.info;
+const Toast = ({ message, type = 'info', duration = 5000, onClose }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
-    if (!duration) return;
-    
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      setTimeout(() => onClose && onClose(), 300); // Allow time for exit animation
-    }, duration);
-    
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
+    // Show toast with animation
+    setIsVisible(true);
+
+    // Auto close timer
+    if (duration > 0) {
+      const timer = setTimeout(() => {
+        handleClose();
+      }, duration);
+
+      return () => clearTimeout(timer);
+    }
+  }, [duration]);
+
+  const handleClose = () => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Animation duration
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case 'success':
+        return (
+          <svg className="toast-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'error':
+        return (
+          <svg className="toast-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'warning':
+        return (
+          <svg className="toast-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'info':
+      default:
+        return (
+          <svg className="toast-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+        );
+    }
+  };
 
   return (
     <div 
-      className={`fixed top-4 right-4 z-50 transform transition-all duration-300 ${
-        isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-      }`}
+      className={`toast toast--${type} ${isVisible ? 'toast--visible' : ''} ${isLeaving ? 'toast--leaving' : ''}`}
+      role="alert"
+      aria-live="polite"
     >
-      <div className={`${config.bgColor} ${config.textColor} border-l-4 ${config.borderColor} p-4 rounded shadow-md flex items-start w-80`}>
-        <div className="flex-shrink-0 mr-3">
-          {config.icon}
+      <div className="toast__content">
+        <div className="toast__icon">
+          {getIcon()}
         </div>
-        <div className="flex-grow mr-2">
-          <p className="text-sm font-medium">{message}</p>
+        <div className="toast__message">
+          {message}
         </div>
         <button 
-          onClick={() => {
-            setIsVisible(false);
-            setTimeout(() => onClose && onClose(), 300);
-          }}
-          className="flex-shrink-0 p-1 rounded-full hover:bg-gray-200 transition-colors"
+          className="toast__close"
+          onClick={handleClose}
+          aria-label="Close notification"
         >
-          <X className="w-4 h-4 text-gray-500" />
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
         </button>
       </div>
     </div>

@@ -5,9 +5,15 @@ import { fetchUniversities, addUniversity, editUniversity, deleteUniversity } fr
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { ROUTES, ROLES } from '../../constants';
-import UniversityTable from './components/UniversityTable';
-import UniversityModalManager from './components/UniversityModalManager';
-import UniversityStaffView from './components/UniversityStaffView';
+import { lazy, Suspense } from 'react';
+// import UniversityTable from './components/UniversityTable';
+// import UniversityModalManager from './components/UniversityModalManager';
+// import UniversityStaffView from './components/UniversityStaffView';
+
+const UniversityTable = lazy(() => import('./components/UniversityTable'));
+const UniversityModalManager = lazy(() => import('./components/UniversityModalManager'));
+const UniversityStaffView = lazy(() => import('./components/UniversityStaffView'));
+
 
 // Custom Debounce Hook for Search Optimization
 function useDebounce(value, delay) {

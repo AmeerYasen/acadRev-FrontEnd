@@ -75,7 +75,7 @@ const baseNavCards = [
     color: "from-amber-500 to-amber-700",
     stats: { count: 284, label: "programs" },
     description: "Review academic programs and curriculum structures",
-    destination: "program"
+    destination: "programs"
   },
   // User-specific card will be added dynamically
   { 

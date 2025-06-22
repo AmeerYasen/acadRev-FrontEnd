@@ -76,3 +76,18 @@ export const fetchUniversityNames = async () => {
     throw new Error(error.message || 'Failed to fetch university names');
   }
 };
+
+/**
+ * Fetches the current user's university information (for university accounts).
+ * This uses the /universities/me endpoint that identifies the university from the auth token.
+ * @returns {Promise<Object>} A promise that resolves to the user's university object.
+ * @throws {Error} If the API request fails, returns invalid data, or user isn't associated with a university.
+ */
+export const fetchMyUniversity = async () => {
+  try {
+    const response = await apiFetch(ENDPOINTS.UNIVERSITIES.GET_MY_UNIVERSITY);
+    return response; // Assumes response is the university object
+  } catch (error) {
+    throw new Error(error.message || 'Failed to fetch your university information');
+  }
+};

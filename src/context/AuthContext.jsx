@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async (credentials) => {
     setError(null);
     setIsLoading(true);
+          console.log("Attempting login with:", { credentials});
 
     try {
       const response = await login(credentials);
