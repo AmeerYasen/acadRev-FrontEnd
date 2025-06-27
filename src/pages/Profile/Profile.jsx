@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentUser,updateUser } from './function'; // Adjust path as needed
 import { UserCircle, Mail, Shield, Briefcase, University, School, Building, CheckCircle, XCircle, CalendarDays, AlertTriangle, Info } from 'lucide-react';
-import { useAuth } from '../../context/authContext'; // Assuming you have an auth context
+import { useAuth } from '../../context/AuthContext'; // Assuming you have an auth context
 
 
 

@@ -1,7 +1,8 @@
 // src/components/Navbar.jsx
 "use client";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
 import {
   Home,
@@ -77,12 +78,6 @@ const logoutTextVariants = {
     },
     transitionEnd: { display: "none" }
   }
-};
-
-// Enhanced logo animation
-const logoVariants = {
-  expanded: { scale: 1, opacity: 1 },
-  collapsed: { scale: 0.9, opacity: 0.8 }
 };
 
 // Accept isExpanded and toggleSidebar as props

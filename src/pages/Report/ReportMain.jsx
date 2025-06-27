@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import ReportSidebar from './components/ReportSidebar';
 import ReportHeader from './components/ReportHeader';
 import ReportPromptCard from './components/ReportPromptCard';

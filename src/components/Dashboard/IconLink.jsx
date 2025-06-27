@@ -1,8 +1,9 @@
 "use client"
 
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion"
 
-function IconLink({ url, enName, arName }) {
+function IconLink({ url, enName, arName, gradientColor = "from-blue-500 to-purple-600", imageUrl }) {
 
   return (
     <motion.div

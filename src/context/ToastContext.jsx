@@ -1,7 +1,7 @@
 // src/context/ToastContext.jsx
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // You'll need to install this package
-import Toast from '../components/Toast/Toast';
+import Toast from '../components/Toast';
 
 const ToastContext = createContext(null);
 
