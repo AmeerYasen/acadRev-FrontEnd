@@ -1,4 +1,5 @@
 "use client"
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion"
 import { Building2, Landmark, BookOpen, Users, BarChart3, University, UserCircle } from "lucide-react" // Added UserCircle
 import { DashboardCard } from "./dashboard-card"

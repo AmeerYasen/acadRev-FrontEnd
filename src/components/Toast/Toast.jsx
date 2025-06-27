@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Toast.css';
 
 const Toast = ({ message, type = 'info', duration = 5000, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
+  const handleClose = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Animation duration
+  }, [onClose]);
+
   useEffect(() => {
-    // Show toast with animation
     setIsVisible(true);
 
     // Auto close timer
@@ -17,14 +23,7 @@ const Toast = ({ message, type = 'info', duration = 5000, onClose }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsLeaving(true);
-    setTimeout(() => {
-      onClose();
-    }, 300); // Animation duration
-  };
+  }, [duration, handleClose]);
 
   const getIcon = () => {
     switch (type) {

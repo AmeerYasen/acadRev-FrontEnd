@@ -204,7 +204,7 @@ const College = () => {
     }
   };
 
-  const handleCollegeAdded = (newCollege) => {
+  const handleCollegeAdded = () => {
     const loadCollegesData = async () => {
       try {
         setLoading(true);

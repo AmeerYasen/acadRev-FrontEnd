@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AlertTriangle, CheckCircle, Info, AlertCircle, X } from "lucide-react";
 
 const NotificationBar = ({ 
