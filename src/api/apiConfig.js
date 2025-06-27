@@ -1,4 +1,6 @@
-export const API_BASE_URL = import.meta.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+import {loadEnv } from "vite";
+const env = loadEnv(mode, process.cwd(), '');
+export const API_BASE_URL = env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 export const apiFetch = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
