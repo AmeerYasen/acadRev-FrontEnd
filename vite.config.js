@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_BASE_PATH || '/', // Use env variable or default to '/'
     server: {
       port: parseInt(env.VITE_PORT) || 5000, // Use env variable or default to 5000
-      open: env.VITE_SERVER_OPEN === 'true', // Convert string to boolean
+      open: env.VITE_SERVER_OPEN === 'false', // Convert string to boolean
     },
   };
 });
