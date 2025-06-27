@@ -4,7 +4,7 @@ import React, { lazy, Suspense } from 'react';
 import Header from "./components/Header"; 
 import Footer from "./components/Footer"; 
 import { useAuth } from "./context/AuthContext.jsx";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/NavBar";
 import { useState, useEffect } from "react";
 import { GraduationCap } from "lucide-react";
 import { ToastProvider } from "./context/ToastContext";
