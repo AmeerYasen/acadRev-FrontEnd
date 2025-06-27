@@ -15,7 +15,7 @@ const QualitativeContainer = ({
   handleDomainSelect,
   getDomainStatus,
   setIsEvaluationModalOpen,
-  overallProgress
+  OverallProgress
 }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -29,12 +29,11 @@ const QualitativeContainer = ({
             handleDomainSelect={handleDomainSelect}
             getDomainStatus={getDomainStatus}
           />
-          
-          <QuickStats
+            <QuickStats
             domains={domains}
             completedDomains={completedDomains}
             responses={responses}
-            overallProgress={overallProgress}
+            overallProgress={OverallProgress}
           />
         </div>
 

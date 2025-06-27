@@ -105,15 +105,6 @@ const ProgramEditModal = ({ program, isOpen, onClose, onUpdate, userRole }) => {
               <option value="Arabic">Arabic</option>
               <option value="French">French</option>
               <option value="German">German</option>
-              <option value="Spanish">Spanish</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Japanese">Japanese</option>
-              <option value="Korean">Korean</option>
-              <option value="Russian">Russian</option>
-              <option value="Italian">Italian</option>
-              <option value="Portuguese">Portuguese</option>
-              <option value="Dutch">Dutch</option>
-              <option value="Other">Other</option>
             </select>
           </div>
         );
@@ -160,7 +151,7 @@ const ProgramEditModal = ({ program, isOpen, onClose, onUpdate, userRole }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn"
+      className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex justify-center items-center z-100 p-4 animate-fadeIn"
       onClick={onClose}
     >
       <div

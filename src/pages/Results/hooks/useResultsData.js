@@ -6,6 +6,7 @@ import {
   fetchWeightedResults,
   fetchCompleteQualitativeAnalysis 
 } from '../../../api/resultsAPI';
+import { fetchProgramById } from '../../../api/programAPI';
 import { useToast } from '../../../context/ToastContext';
 
 /**
@@ -21,14 +22,16 @@ export const useResultsData = (programId) => {
     weights: false,
     scores: false,
     weighted: false,
-    complete: false
+    complete: false,
+    program: false
   });
   
   const [data, setData] = useState({
     weights: [],
     scores: [],
     weightedResults: null,
-    completeAnalysis: null
+    completeAnalysis: null,
+    programInfo: null
   });
   
   const [error, setError] = useState(null);
@@ -113,7 +116,6 @@ export const useResultsData = (programId) => {
       setLoading(prev => ({ ...prev, weighted: false }));
     }
   };
-
   /**
    * Load complete analysis (all endpoints combined)
    */
@@ -126,17 +128,23 @@ export const useResultsData = (programId) => {
       setLoading(prev => ({ ...prev, complete: true }));
       setError(null);
       
-      const completeAnalysis = await fetchCompleteQualitativeAnalysis(targetProgramId);
+      // Load both complete analysis and program info
+      const [completeAnalysis, programInfo] = await Promise.all([
+        fetchCompleteQualitativeAnalysis(targetProgramId),
+        fetchProgramById(targetProgramId)
+      ]);
       
       // Update all data at once
       setData({
         weights: completeAnalysis.weights,
         scores: completeAnalysis.scores,
         weightedResults: completeAnalysis.weightedResults,
-        completeAnalysis
+        completeAnalysis,
+        programInfo
       });
       
       console.log('useResultsData - Complete analysis loaded for program:', targetProgramId, completeAnalysis);
+      console.log('useResultsData - Program info loaded:', programInfo);
       return completeAnalysis;
     } catch (err) {
       const errorMessage = err.message || 'Failed to load complete analysis';
@@ -150,6 +158,34 @@ export const useResultsData = (programId) => {
   };
 
   /**
+   * Load program information by ID
+   */
+  const loadProgramInfo = async (targetProgramId = programId) => {
+    if (!targetProgramId) {
+      throw new Error('Program ID is required to load program information');
+    }
+    
+    try {
+      setLoading(prev => ({ ...prev, program: true }));
+      setError(null);
+      
+      const programInfo = await fetchProgramById(targetProgramId);
+      setData(prev => ({ ...prev, programInfo }));
+      
+      console.log('useResultsData - Program info loaded for program:', targetProgramId, programInfo);
+      return programInfo;
+    } catch (err) {
+      const errorMessage = err.message || 'Failed to load program information';
+      setError(errorMessage);
+      showToast(errorMessage, 'error');
+      console.error('useResultsData - Error loading program info:', err);
+      throw err;
+    } finally {
+      setLoading(prev => ({ ...prev, program: false }));
+    }
+  };
+
+  /**
    * Refresh all data
    */
   const refreshData = async () => {
@@ -157,7 +193,6 @@ export const useResultsData = (programId) => {
       await loadCompleteAnalysis(programId);
     }
   };
-
   /**
    * Reset all data
    */
@@ -166,7 +201,8 @@ export const useResultsData = (programId) => {
       weights: [],
       scores: [],
       weightedResults: null,
-      completeAnalysis: null
+      completeAnalysis: null,
+      programInfo: null
     });
     setError(null);
   };
@@ -198,7 +234,6 @@ export const useResultsData = (programId) => {
 
     initializeData();
   }, [programId]);
-
   // Computed values
   const hasData = data.weights.length > 0;
   const hasProgramData = programId && data.weightedResults;
@@ -206,6 +241,8 @@ export const useResultsData = (programId) => {
   const finalScore = data.weightedResults?.final_program_score || 0;
   const totalDomains = data.completeAnalysis?.summary?.totalDomains || 0;
   const totalIndicators = data.completeAnalysis?.summary?.totalIndicators || 0;
+  const programName = data.programInfo?.name || '';
+  const programInfo = data.programInfo;
 
   return {
     // Data
@@ -215,19 +252,21 @@ export const useResultsData = (programId) => {
     // Loading states
     loading,
     isLoading,
-    
-    // Computed values
+      // Computed values
     hasData,
     hasProgramData,
     finalScore,
     totalDomains,
     totalIndicators,
+    programName,
+    programInfo,
     
     // Actions
     loadDomainWeights,
     loadDomainScores,
     loadWeightedResults,
     loadCompleteAnalysis,
+    loadProgramInfo,
     refreshData,
     resetData
   };

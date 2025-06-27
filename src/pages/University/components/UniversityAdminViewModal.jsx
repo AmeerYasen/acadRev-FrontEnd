@@ -31,7 +31,7 @@ export default function UniversityAdminViewModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-100 p-4 overflow-y-auto">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl overflow-auto h-full max-h-screen animate-fadeIn">
         {/* Header with university logo and name */}
         <div className="relative">

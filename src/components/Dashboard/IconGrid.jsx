@@ -81,12 +81,12 @@ const baseNavCards = [
   { 
     id: 6, // Adjusted ID to avoid conflict
     icon: <BarChart3 className="w-6 h-6" />, 
-    title: "Reports", 
-    subtitle: "التقارير",
+    title: "Results", 
+    subtitle: "النتائج",
     color: "from-cyan-500 to-cyan-700",
-    stats: { count: 53, label: "reports" },
-    description: "Generate analytics and assessment reports",
-    destination: "reports"
+    stats: { count: 53, label: "results" },
+    description: "Generate analytics and assessment results",
+    destination: "results"
   },
 ];
 

@@ -62,7 +62,7 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn"
+      className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm flex justify-center items-center z-100 p-4 animate-fadeIn"
       onClick={handleClose}
     >
       <div

@@ -171,7 +171,7 @@ export const fetchDomainSummary = async (programId) => {
  */
 export const submitResponse = async (response) => {
   try {
-    if (!response || !response.programId || !response.domainId || !response.indicatorId || !response.evaluation) {
+    if (!response || !response.programId || !response.domainId || !response.indicatorId || response.evaluation === undefined || response.evaluation === null) {
       throw new Error('Response object with programId, domainId, indicatorId, and evaluation is required');
     }
     
