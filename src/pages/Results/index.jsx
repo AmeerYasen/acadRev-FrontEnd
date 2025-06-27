@@ -22,8 +22,7 @@ import './Results.css';
 const Results = () => {
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [activeView, setActiveView] = useState('overview'); // 'overview', 'detailed', 'charts'
-  
-  // Load results data using the custom hook
+    // Load results data using the custom hook
   const {
     data,
     loading,
@@ -34,17 +33,23 @@ const Results = () => {
     finalScore,
     totalDomains,
     totalIndicators,
+    programName,
+    programInfo,
     loadCompleteAnalysis,
     refreshData
-  } = useResultsData(selectedProgramId);
-    // Export functionality
+  } = useResultsData(selectedProgramId);    // Export functionality
   const {
     exporting,
     exportToCSV,
     exportToJSON,
     exportToPDF,
     printReport
-  } = useResultsExport(data.completeAnalysis);
+  } = useResultsExport({
+    ...data.completeAnalysis,
+    programId: selectedProgramId,
+    programName: programName,
+    programInfo: programInfo
+  });
 
   /**
    * Handle program selection
@@ -124,6 +129,7 @@ const Results = () => {
       <div className="container mx-auto px-4 py-8">        {/* Results Header */}
         <ResultsHeader 
           programId={selectedProgramId}
+          programName={programName}
           finalScore={finalScore}
           totalDomains={totalDomains}
           totalIndicators={totalIndicators}
@@ -134,11 +140,12 @@ const Results = () => {
             else if (type === 'print') printReport();
           }}
           isLoading={isLoading}
-        />        {/* Program Selector */}
+        />{/* Program Selector */}
         <ProgramSelector 
           selectedProgramId={selectedProgramId}
           onProgramSelect={handleProgramSelect}
           isLoading={loading.complete}
+          programTitle={data.programTitle}
           showBackButton={false}
           onBack={() => {
             // Add back functionality if needed (e.g., navigate to dashboard)

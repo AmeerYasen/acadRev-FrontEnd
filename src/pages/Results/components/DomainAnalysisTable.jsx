@@ -131,7 +131,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
                       </div>
                     </td>
                     <td className="border border-gray-200 px-4 py-3 text-center font-mono text-sm">
-                      {domain.domain_weighted_score.toFixed(4)}
+                      {domain.domain_weighted_score.toFixed(2)}
                     </td>
                     <td className="border border-gray-200 px-4 py-3 text-center">
                       {getPerformanceBadge(domain.domain_score)}

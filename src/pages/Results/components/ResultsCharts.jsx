@@ -181,7 +181,7 @@ const ResultsCharts = ({ data, summary }) => {
           <div className="mt-3 p-2 bg-white rounded border">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium">الدرجة المرجحة (Wi × Si)</span>
-              <Badge variant="default">{domain.domain_weighted_score.toFixed(4)}</Badge>
+              <Badge variant="default">{domain.domain_weighted_score.toFixed(2)}</Badge>
             </div>
           </div>
         </div>

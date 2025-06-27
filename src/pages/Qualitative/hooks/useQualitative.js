@@ -65,6 +65,7 @@ export const useQualitative = (programId) => {  // State management (domains are
 
       setDomains(domainsData || []);
       setResponses(responsesData || {});
+      console.log("Responses loaded:", responsesData);
 
       // Process domain summary to calculate progress
       const progressMap = {};

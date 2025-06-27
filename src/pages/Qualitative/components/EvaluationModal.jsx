@@ -46,13 +46,21 @@ const EvaluationModal = React.memo(({
   
   if (!isOpen || !selectedDomain) return null;
   const selectedDomainData = domains.find(d => d.id === selectedDomain);
-  const domainIndicators = indicators[selectedDomain] || [];
-
-  const evaluationOptions = [
-    { value: "Yes", label: "Yes", color: "bg-blue-600 hover:bg-blue-700" },
-    { value: "No", label: "No", color: "bg-red-600 hover:bg-red-700" },
-    { value: "Maybe", label: "Maybe", color: "bg-green-600 hover:bg-green-700" }
+  const domainIndicators = indicators[selectedDomain] || [];  const evaluationOptions = [
+    { value: 2, label: "Yes", color: "bg-green-600 hover:bg-green-700" },
+    { value: 1, label: "Maybe", color: "bg-yellow-600 hover:bg-yellow-700" },
+    { value: 0, label: "No", color: "bg-red-600 hover:bg-red-700" }
   ];
+
+  // Helper function to convert numeric score to display text
+  const getEvaluationDisplay = (score) => {
+    switch(score) {
+      case 2: return "Yes";
+      case 1: return "Maybe";
+      case 0: return "No";
+      default: return "Unknown";
+    }
+  };
   // Helper function to check if an indicator has unsaved changes
   const hasUnsavedChanges = (indicatorId) => {
     const key = `${selectedDomain}-${indicatorId}`;
@@ -117,7 +125,7 @@ const EvaluationModal = React.memo(({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-center justify-center">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -177,13 +185,15 @@ const EvaluationModal = React.memo(({
                   const responseKey = `${selectedDomain}-${indicator.id}`;
                   const response = responses[responseKey];
 
-                  return (                    <div
+                  return (
+                  <div
                       key={indicator.id}
                       className={`bg-gray-50 rounded-lg p-6 border border-gray-200 ${
                         hasUnsavedChanges(indicator.id) ? 'ring-2 ring-orange-200 bg-orange-50' : ''
                       }`}
                     >
-                      <div className="mb-4">                        <div className="flex items-center justify-between">
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
                             {indicator.text}
                           </h3>
@@ -198,10 +208,9 @@ const EvaluationModal = React.memo(({
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Evaluation
-                        </label>
-                        <div className="flex flex-wrap gap-2">
+                        </label>                        <div className="flex flex-wrap gap-2">
                           {evaluationOptions.map((option) => {
-                            const isSelected = response?.evaluation === option.value;
+                            const isSelected = response?.evaluation == option.value;
                             return (
                               <button
                                 key={option.value}
@@ -306,10 +315,9 @@ const EvaluationModal = React.memo(({
                                       </label>
                                       <textarea
                                         placeholder="Add notes and observations..."
-                                        value={response?.notes || ""}
-                                        onChange={(e) => {
+                                        value={response?.notes || ""}                                        onChange={(e) => {
                                         const notes = e.target.value;
-                                        if (response?.evaluation) {
+                                        if (response?.evaluation !== undefined) {
                                           handleResponseChange(
                                           selectedDomain, 
                                           indicator.id, 
@@ -387,10 +395,8 @@ const EvaluationModal = React.memo(({
                         )}
 
                  
-                      </div>
-
-                      {/* Actions */}
-                      {response?.evaluation && (
+                      </div>                      {/* Actions */}
+                      {response?.evaluation !== undefined && (
                         <div className="flex justify-end">
                           <Button
                             variant="outline"

@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { exportAnalysisToCSV } from '../../../api/resultsAPI';
 import { useToast } from '../../../context/ToastContext';
 import jsPDF from 'jspdf';
+// Import html2pdf for better Arabic support
+import html2pdf from 'html2pdf.js';
 
 /**
  * Custom hook for handling Results page export functionality
@@ -27,15 +29,18 @@ export const useResultsExport = (analysisData) => {
       
       // Generate CSV content
       const csvContent = exportAnalysisToCSV(analysisData);
+        // Create and download file
+      const programTitle = analysisData.programName ? 
+        `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
+        `program_${analysisData.programId}`;
       
-      // Create and download file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       
       if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `qualitative-analysis-program-${analysisData.programId}.csv`);
+        link.setAttribute('download', `qualitative-analysis-${programTitle}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -75,8 +80,11 @@ export const useResultsExport = (analysisData) => {
           finalScore: analysisData.weightedResults?.final_program_score || 0
         }
       };
+        // Create and download file
+      const programTitle = analysisData.programName ? 
+        `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
+        `program_${analysisData.programId}`;
       
-      // Create and download file
       const jsonContent = JSON.stringify(jsonData, null, 2);
       const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
       const link = document.createElement('a');
@@ -84,7 +92,7 @@ export const useResultsExport = (analysisData) => {
       if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `qualitative-analysis-program-${analysisData.programId}.json`);
+        link.setAttribute('download', `qualitative-analysis-${programTitle}.json`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -95,13 +103,14 @@ export const useResultsExport = (analysisData) => {
       showToast('تم تصدير البيانات بنجاح', 'success');
     } catch (error) {
       console.error('Export to JSON failed:', error);
-      showToast('فشل في تصدير البيانات', 'error');    } finally {
+      showToast('فشل في تصدير البيانات', 'error');
+    } finally {
       setExporting(false);
     }
   };
 
   /**
-   * Export analysis data as PDF file
+   * Export analysis data as PDF file using html2pdf (Better Arabic support)
    */
   const exportToPDF = async () => {
     if (!analysisData || !analysisData.weightedResults) {
@@ -111,130 +120,119 @@ export const useResultsExport = (analysisData) => {
 
     try {
       setExporting(true);
+
+      // Create HTML content for PDF
+      const htmlContent = generateEnhancedPrintHTML(analysisData);
       
-      // Create new PDF document
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Create a temporary div element
+      const element = document.createElement('div');
+      element.innerHTML = htmlContent;
+      element.style.width = '210mm'; // A4 width
+      element.style.minHeight = '297mm'; // A4 height
+      element.style.padding = '20mm';
+      element.style.fontFamily = 'Arial, sans-serif';
+      element.style.fontSize = '12px';
+      element.style.lineHeight = '1.4';
+      element.style.color = '#000';
+      element.style.backgroundColor = '#fff';
       
-      // Title
-      pdf.setFontSize(20);
-      pdf.text('Qualitative Analysis Report', 105, 20, { align: 'center' });
+      // Append to body temporarily
+      document.body.appendChild(element);
+        // Configure html2pdf options
+      const programTitle = analysisData.programName ? 
+        `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
+        `program_${analysisData.programId || 'unknown'}`;
       
-      // Program ID
-      pdf.setFontSize(16);
-      pdf.text(`Program ID: ${analysisData.programId}`, 105, 35, { align: 'center' });
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `qualitative-analysis-${programTitle}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          allowTaint: true,
+          scrollX: 0,
+          scrollY: 0
+        },
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'portrait',
+          compress: true
+        }
+      };
       
-      // Date
-      pdf.setFontSize(12);
-      pdf.text(`Report Date: ${new Date().toLocaleDateString()}`, 105, 45, { align: 'center' });
+      // Generate and save PDF
+      await html2pdf().set(opt).from(element).save();
       
-      // Summary section
-      let yPosition = 65;
-      pdf.setFontSize(14);
-      pdf.text('Analysis Summary', 20, yPosition);
-      
-      yPosition += 10;
-      pdf.setFontSize(10);
-      pdf.text(`Total Domains: ${analysisData.summary?.totalDomains || 0}`, 20, yPosition);
-      
-      yPosition += 6;
-      pdf.text(`Total Indicators: ${analysisData.summary?.totalIndicators || 0}`, 20, yPosition);
-      
-      yPosition += 6;
-      pdf.text(`Final Score: ${analysisData.weightedResults?.final_program_score?.toFixed(2) || 0}%`, 20, yPosition);
-      
-      // Domain analysis table
-      yPosition += 20;
-      pdf.setFontSize(14);
-      pdf.text('Domain Analysis', 20, yPosition);
-      
-      // Table headers
-      yPosition += 15;
-      pdf.setFontSize(10);
-      const headers = ['Domain', 'Indicators', 'Weight (Wi)', 'Score (Si)', 'Weighted Score'];
-      const columnWidths = [60, 25, 25, 25, 35];
-      let xPosition = 20;
-      
-      // Draw header background
-      pdf.setFillColor(0, 123, 255);
-      pdf.rect(20, yPosition - 4, 170, 8, 'F');
-      
-      // Header text
-      pdf.setTextColor(255, 255, 255);
-      headers.forEach((header, index) => {
-        pdf.text(header, xPosition + 2, yPosition, { maxWidth: columnWidths[index] - 4 });
-        xPosition += columnWidths[index];
-      });
-      
-      // Reset text color
-      pdf.setTextColor(0, 0, 0);
-      yPosition += 10;
-      
-      // Table rows
-      if (analysisData.weightedResults.result_by_domain) {
-        analysisData.weightedResults.result_by_domain.forEach((domain) => {
-          xPosition = 20;
-          
-          // Check if we need a new page
-          if (yPosition > 270) {
-            pdf.addPage();
-            yPosition = 20;
-          }
-          
-          const rowData = [
-            domain.domain_name || '',
-            domain.indicator_count?.toString() || '0',
-            `${domain.domain_weight?.toFixed(2) || '0'}%`,
-            `${domain.domain_score?.toFixed(2) || '0'}%`,
-            domain.domain_weighted_score?.toFixed(6) || '0'
-          ];
-          
-          // Draw row background (alternating)
-          const rowIndex = analysisData.weightedResults.result_by_domain.indexOf(domain);
-          if (rowIndex % 2 === 0) {
-            pdf.setFillColor(248, 249, 250);
-            pdf.rect(20, yPosition - 4, 170, 8, 'F');
-          }
-          
-          rowData.forEach((data, index) => {
-            pdf.text(data, xPosition + 2, yPosition, { maxWidth: columnWidths[index] - 4 });
-            xPosition += columnWidths[index];
-          });
-          
-          yPosition += 8;
-        });
-      }
-      
-      // Final score section
-      yPosition += 15;
-      if (yPosition > 270) {
-        pdf.addPage();
-        yPosition = 20;
-      }
-      
-      pdf.setFontSize(14);
-      pdf.text('Final Program Score', 20, yPosition);
-      
-      yPosition += 10;
-      pdf.setFontSize(16);
-      pdf.setTextColor(0, 123, 255);
-      pdf.text(`${analysisData.weightedResults?.final_program_score?.toFixed(2) || 0}%`, 20, yPosition);
-      
-      // Footer
-      pdf.setFontSize(8);
-      pdf.setTextColor(128, 128, 128);
-      pdf.text('Generated by Academic Self-Assessment System', 105, 285, { align: 'center' });
-      pdf.text(`Generated on: ${new Date().toLocaleString()}`, 105, 290, { align: 'center' });
-      
-      // Save the PDF
-      pdf.save(`qualitative-analysis-program-${analysisData.programId}.pdf`);
+      // Remove temporary element
+      document.body.removeChild(element);
       
       showToast('تم تصدير ملف PDF بنجاح', 'success');
     } catch (error) {
-      console.error('Export to PDF failed:', error);
+      console.error('Enhanced PDF export failed:', error);
       showToast('فشل في تصدير ملف PDF', 'error');
     } finally {
       setExporting(false);
     }
+  };
+  /**
+   * Generate enhanced HTML content for PDF export
+   */
+  const generateEnhancedPrintHTML = (data) => {
+    const { weightedResults, summary, programName, programId } = data;
+    
+    return `
+      <div style="font-family: Arial, sans-serif; direction: ltr; text-align: left;">
+        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 15px;">
+          <h1 style="color: #007bff; margin: 0; font-size: 24px;">Qualitative Analysis Report</h1>
+          <h2 style="margin: 10px 0; font-size: 18px;">
+            ${programName ? `Program: ${programName}` : `Program ID: ${programId || 'N/A'}`}
+          </h2>
+          ${programName && programId ? `<p style="margin: 5px 0; color: #666;">Program ID: ${programId}</p>` : ''}
+          <p style="margin: 5px 0; color: #666;">Report Date: ${new Date().toLocaleDateString('en-US')}</p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #007bff; margin-top: 0;">Analysis Summary</h3>
+          <p><strong>Total Domains:</strong> ${summary?.totalDomains || 0}</p>
+          <p><strong>Total Indicators:</strong> ${summary?.totalIndicators || 0}</p>
+          <p style="font-size: 18px; font-weight: bold; color: #007bff;">
+            Final Score: ${weightedResults?.final_program_score?.toFixed(2) || 0}%
+          </p>
+        </div>
+        
+        <h3 style="color: #007bff;">Domain Analysis</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background-color: #007bff; color: white;">
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Domain ID</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Indicators</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Weight (Wi)</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Score (Si)</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">Weighted Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${weightedResults?.result_by_domain?.map((domain, index) => `
+              <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_id || `D${index + 1}`}</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.indicator_count || 0}</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_weight?.toFixed(2) || 0}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_score?.toFixed(2) || 0}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_weighted_score?.toFixed(6) || 0}</td>
+              </tr>
+            `).join('') || ''}
+          </tbody>
+        </table>
+        
+        <div style="margin-top: 30px; text-align: center; font-size: 11px; color: #666; border-top: 1px solid #ddd; padding-top: 15px;">
+          <p>Generated by Academic Self-Assessment System</p>
+          <p>Generated on: ${new Date().toLocaleString('en-US')}</p>
+        </div>
+      </div>
+    `;
   };
 
   /**
@@ -267,19 +265,18 @@ export const useResultsExport = (analysisData) => {
     
     showToast('تم إعداد التقرير للطباعة', 'success');
   };
-
   /**
-   * Generate HTML content for printing
+   * Generate HTML content for printing (Arabic version)
    */
   const generatePrintHTML = (data) => {
-    const { weightedResults, summary } = data;
+    const { weightedResults, summary, programName, programId } = data;
     
     return `
       <!DOCTYPE html>
       <html lang="ar" dir="rtl">
       <head>
         <meta charset="UTF-8">
-        <title>تقرير التحليل النوعي - برنامج ${data.programId}</title>
+        <title>تقرير التحليل النوعي - ${programName || `برنامج ${programId}`}</title>
         <style>
           body { 
             font-family: Arial, sans-serif; 
@@ -328,10 +325,10 @@ export const useResultsExport = (analysisData) => {
           }
         </style>
       </head>
-      <body>
-        <div class="header">
+      <body>        <div class="header">
           <h1>تقرير التحليل النوعي</h1>
-          <h2>برنامج رقم: ${data.programId}</h2>
+          <h2>${programName ? `برنامج: ${programName}` : `برنامج رقم: ${programId}`}</h2>
+          ${programName && programId ? `<p>رقم البرنامج: ${programId}</p>` : ''}
           <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p>
         </div>
         
@@ -355,7 +352,7 @@ export const useResultsExport = (analysisData) => {
           <tbody>
             ${weightedResults?.result_by_domain?.map(domain => `
               <tr>
-                <td>${domain.domain_name}</td>
+                <td>Domain ${domain.domain_id}</td>
                 <td>${domain.indicator_count}</td>
                 <td>${domain.domain_weight?.toFixed(2)}%</td>
                 <td>${domain.domain_score?.toFixed(2)}%</td>
@@ -373,6 +370,7 @@ export const useResultsExport = (analysisData) => {
       </html>
     `;
   };
+  
   return {
     exporting,
     exportToCSV,

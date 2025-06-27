@@ -13,7 +13,16 @@ const MainContentSection = React.memo(({
   loading,
   getDomainStatus,
   setIsEvaluationModalOpen
-}) => {
+}) => {  // Helper function to convert numeric score to display text
+  const getEvaluationDisplay = (score) => {
+    switch(score) {
+      case 2: return "Yes";
+      case 1: return "Maybe";
+      case 0: return "No";
+      default: return "Unknown";
+    }
+  };
+
   if (!selectedDomain) {
     return (
       <div className="flex flex-col items-center justify-center h-96 text-gray-500">
@@ -85,21 +94,21 @@ const MainContentSection = React.memo(({
           {domainIndicators.slice(0, 5).map((indicator) => {
             const responseKey = `${selectedDomain}-${indicator.id}`;
             const response = responses[responseKey];
-            const hasResponse = response && response.evaluation;
-
+            const hasResponse = response;
             return (
               <Card key={indicator.id} className={`transition-all duration-200 ${
                 hasResponse ? 'border-green-200 bg-green-50' : 'border-gray-200'
               }`}>
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between">                    <div className="flex-1">
+                  <div className="flex items-start justify-between">                    
+                    <div className="flex-1">
                       <h4 className="font-medium text-gray-900 mb-2">
                         {indicator.text}
                       </h4>
                       {hasResponse && (
                         <div className="text-sm">
                           <span className="font-medium text-green-700">Evaluation: </span>
-                          <span className="text-green-600">{response.evaluation}</span>
+                          <span className="text-green-600">{getEvaluationDisplay(response.evaluation-0)}</span>
                         </div>
                       )}
                     </div>

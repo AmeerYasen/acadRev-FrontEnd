@@ -6,6 +6,7 @@ import { BarChart3, Download, FileText, Printer, RefreshCw, FileDown } from "luc
 
 const ResultsHeader = ({ 
   programId, 
+  programName,
   finalScore, 
   totalDomains, 
   totalIndicators,
@@ -35,9 +36,13 @@ const ResultsHeader = ({
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-blue-600" />
             نتائج التقويم النوعي
-          </h1>
-          <p className="text-gray-600 mt-1">
-            {programId ? `نتائج تحليل البرنامج رقم: ${programId}` : 'نتائج التحليل النوعي'}
+          </h1>          <p className="text-gray-600 mt-1">
+            {programId ? (
+              <>
+                {programName ? `برنامج: ${programName}` : `البرنامج رقم: ${programId}`}
+                {programName && <span className="text-gray-400 ml-2">(#{programId})</span>}
+              </>
+            ) : 'نتائج التحليل النوعي'}
           </p>
         </div>
 
