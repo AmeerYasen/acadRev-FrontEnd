@@ -19,7 +19,7 @@ const Program = lazy(() => import(/* @vite-ignore */ './pages/Programs'));
 const Profile = lazy(() => import(/* @vite-ignore */ './pages/Profile'));
 const SettingsPage = lazy(() => import(/* @vite-ignore */ './pages/Settings'));
 const UsersPage = lazy(() => import(/* @vite-ignore */ './pages/Users'));
-const College = lazy(() => import(/* @vite-ignore */ './pages/college'));
+const College = lazy(() => import(/* @vite-ignore */ './pages/College'));
 const Quantitative = lazy(() => import(/* @vite-ignore */ './pages/Quantitative'));
 const Qualitative = lazy(() => import(/* @vite-ignore */ './pages/Qualitative'));
 const Report = lazy(() => import(/* @vite-ignore */ './pages/Report'));
