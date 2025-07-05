@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalRecords, hasPrevPage, hasNextPage }) => {
+  const {translateDepartment} = useNamespacedTranslation('pages.department');
+  
   if (totalPages <= 1) return null;
 
   const getPageNumbers = () => {
@@ -54,7 +57,7 @@ const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalReco
         <button
           onClick={() => onPageChange(1)}
           disabled={!hasPrevPage || currentPage === 1}
-          title="First Page"
+          title={translateDepartment('pagination.firstPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -65,7 +68,7 @@ const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalReco
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!hasPrevPage}
-          title="Previous Page"
+          title={translateDepartment('pagination.previousPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -98,7 +101,7 @@ const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalReco
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!hasNextPage}
-          title="Next Page"
+          title={translateDepartment('pagination.nextPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -109,7 +112,7 @@ const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalReco
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={!hasNextPage || currentPage === totalPages}
-          title="Last Page"
+          title={translateDepartment('pagination.lastPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -118,7 +121,11 @@ const DepartmentPagination = ({ currentPage, totalPages, onPageChange, totalReco
         </button>
       </div>
       <div className="text-sm text-gray-600">
-        <span className="font-medium text-gray-800">{totalRecords}</span> departments • Page <span className="font-medium text-gray-800">{currentPage}</span> of <span className="font-medium text-gray-800">{totalPages}</span>
+        {translateDepartment('pagination.summary', { 
+          totalRecords, 
+          currentPage, 
+          totalPages 
+        })}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import {
 } from '../../../api/resultsAPI';
 import { fetchProgramById } from '../../../api/programAPI';
 import { useToast } from '../../../context/ToastContext';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 /**
  * Custom hook for managing Results page data
@@ -16,6 +17,8 @@ import { useToast } from '../../../context/ToastContext';
  * @returns {Object} Results data and loading states
  */
 export const useResultsData = (programId) => {
+  const { translateResults } = useNamespacedTranslation();
+  
   // State management
   const [loading, setLoading] = useState({
     initial: true,
@@ -51,7 +54,7 @@ export const useResultsData = (programId) => {
       console.log('useResultsData - Domain weights loaded:', weights);
       return weights;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to load domain weights';
+      const errorMessage = err.message || translateResults('messages.error.loadingWeights');
       setError(errorMessage);
       showToast(errorMessage, 'error');
       console.error('useResultsData - Error loading domain weights:', err);
@@ -79,7 +82,7 @@ export const useResultsData = (programId) => {
       console.log('useResultsData - Domain scores loaded for program:', targetProgramId, scores);
       return scores;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to load domain scores';
+      const errorMessage = err.message || translateResults('messages.error.loadingScores');
       setError(errorMessage);
       showToast(errorMessage, 'error');
       console.error('useResultsData - Error loading domain scores:', err);
@@ -107,7 +110,7 @@ export const useResultsData = (programId) => {
       console.log('useResultsData - Weighted results loaded for program:', targetProgramId, weightedResults);
       return weightedResults;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to load weighted results';
+      const errorMessage = err.message || translateResults('messages.error.loadingResults');
       setError(errorMessage);
       showToast(errorMessage, 'error');
       console.error('useResultsData - Error loading weighted results:', err);
@@ -147,7 +150,7 @@ export const useResultsData = (programId) => {
       console.log('useResultsData - Program info loaded:', programInfo);
       return completeAnalysis;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to load complete analysis';
+      const errorMessage = err.message || translateResults('messages.error.loadingAnalysis');
       setError(errorMessage);
       showToast(errorMessage, 'error');
       console.error('useResultsData - Error loading complete analysis:', err);
@@ -175,7 +178,7 @@ export const useResultsData = (programId) => {
       console.log('useResultsData - Program info loaded for program:', targetProgramId, programInfo);
       return programInfo;
     } catch (err) {
-      const errorMessage = err.message || 'Failed to load program information';
+      const errorMessage = err.message || translateResults('messages.error.loadingProgram');
       setError(errorMessage);
       showToast(errorMessage, 'error');
       console.error('useResultsData - Error loading program info:', err);

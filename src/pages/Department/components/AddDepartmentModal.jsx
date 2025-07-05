@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ROLES } from '../../../constants'; // Assuming ROLES are defined here
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+
 
 const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, collegeId, universityId }) => {
+  const { translateDepartment } = useNamespacedTranslation();
+  
   const [newDepartment, setNewDepartment] = useState({
     name: '',
     username: '', // For the department admin account
@@ -31,15 +35,15 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newDepartment.name || !newDepartment.username || !newDepartment.email || !newDepartment.password) {
-      setError('All fields are required.');
+      setError(translateDepartment('addModal.errors.allFieldsRequired'));
       return;
     }
     if (newDepartment.password !== newDepartment.confirmPassword) {
-      setError('Passwords do not match.');
+      setError(translateDepartment('addModal.errors.passwordsDoNotMatch'));
       return;
     }
     if (newDepartment.password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+      setError(translateDepartment('addModal.errors.passwordTooShort'));
       return;
     }
     setError('');
@@ -57,7 +61,7 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
       });
       onClose(); // Close modal on successful add
     } catch (err) {
-      setError(err.message || 'Failed to add department. Please try again.');
+      setError(err.message || translateDepartment('addModal.errors.addFailed'));
       console.error("Error adding department:", err);
     }
   };
@@ -71,14 +75,14 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
   // For now, we assume if it's open, the user has permission.
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-100 p-4 transition-opacity duration-300 ease-in-out">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8 transform transition-all duration-300 ease-in-out scale-100">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Add New Department</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">{translateDepartment('addModal.title')}</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
-            aria-label="Close modal"
+            aria-label={translateDepartment('addModal.accessibility.closePopup')}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -93,7 +97,7 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
         )}        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="departmentName" className="block text-sm font-medium text-gray-700 mb-1">
-              Department Name <span className="text-red-500">*</span>
+              {translateDepartment('addModal.departmentName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -103,15 +107,15 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               onChange={handleChange}
               required
               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-150"
-              placeholder="e.g., Computer Science"
+              placeholder={translateDepartment('addModal.departmentNamePlaceholder')}
             />
           </div>
 
-          <h3 className="text-lg font-medium text-gray-700 pt-2 border-t mt-4">Department Admin Account</h3>
+          <h3 className="text-lg font-medium text-gray-700 pt-2 border-t mt-4">{translateDepartment('addModal.adminUserDetails')}</h3>
           
           <div>
             <label htmlFor="adminUsername" className="block text-sm font-medium text-gray-700 mb-1">
-              Admin Username <span className="text-red-500">*</span>
+              {translateDepartment('addModal.adminUsername')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -121,13 +125,13 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               onChange={handleChange}
               required
               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-150"
-              placeholder="admin.username"
+              placeholder={translateDepartment('addModal.adminUsernamePlaceholder')}
             />
           </div>
 
           <div>
             <label htmlFor="adminEmail" className="block text-sm font-medium text-gray-700 mb-1">
-              Admin Email <span className="text-red-500">*</span>
+              {translateDepartment('addModal.adminEmail')} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -137,13 +141,13 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               onChange={handleChange}
               required
               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-150"
-              placeholder="admin@department.com"
+              placeholder={translateDepartment('addModal.adminEmailPlaceholder')}
             />
           </div>
 
           <div>
             <label htmlFor="adminPassword" className="block text-sm font-medium text-gray-700 mb-1">
-              Password <span className="text-red-500">*</span>
+              {translateDepartment('addModal.adminPassword')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -153,14 +157,14 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               onChange={handleChange}
               required
               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-150"
-              placeholder="Min. 8 characters"
+              placeholder={translateDepartment('addModal.adminPasswordPlaceholder')}
               minLength="8"
             />
           </div>
 
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password <span className="text-red-500">*</span>
+              {translateDepartment('addModal.confirmPassword')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -170,7 +174,7 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               onChange={handleChange}
               required
               className="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-150"
-              placeholder="Confirm password"
+              placeholder={translateDepartment('addModal.confirmPasswordPlaceholder')}
               minLength="8"
             />
           </div>
@@ -180,14 +184,14 @@ const AddDepartmentModal = ({ isOpen, onClose, onAddDepartment, userRole, colleg
               type="submit"
               className="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2.5 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
             >
-              Add Department
+              {translateDepartment('addModal.createDepartment')}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="w-full sm:w-auto inline-flex justify-center items-center px-6 py-2.5 border border-gray-300 text-base font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-150"
             >
-              Cancel
+              {translateDepartment('addModal.cancel')}
             </button>
           </div>
         </form>

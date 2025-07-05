@@ -1,5 +1,6 @@
 import React from "react";
 import { AlertTriangle, CheckCircle, Info, AlertCircle, X } from "lucide-react";
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 
 const NotificationBar = ({ 
   type = "info", 
@@ -9,6 +10,8 @@ const NotificationBar = ({
   showIcon = true,
   dismissible = true
 }) => {
+  const { translateNotification } = useNamespacedTranslation();
+  
   if (!message) return null;
 
   // Configuration for different notification types
@@ -66,7 +69,7 @@ const NotificationBar = ({
             <button 
               onClick={onDismiss} 
               className={`ml-auto ${config.buttonColor} text-lg font-bold hover:scale-110 transition-all duration-200 flex-shrink-0`}
-              aria-label="Dismiss notification"
+              aria-label={translateNotification('dismissNotification')}
             >
               <X className="h-4 w-4" />
             </button>

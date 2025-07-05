@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Building2, Landmark, BookOpen, Users, BarChart3, University, UserCircle } from "lucide-react" // Added UserCircle
 import { DashboardCard } from "./dashboard-card"
 import { useState } from "react"
+import  useNamespacedTranslation  from "../../hooks/useNamespacedTranslation"
 
 
 // Animation variants for staggered children
@@ -37,84 +38,90 @@ const itemVariants = {
 }
 
 // Base card data
-const baseNavCards = [
+const getBaseNavCards = (translateDashboard) => [
   { 
     id: 1, 
     icon: <University className="w-6 h-6" />, 
-    title: "University", 
-    subtitle: "الجامعات",
+    title: translateDashboard('cards.university.title'), 
+    subtitle: translateDashboard('cards.university.subtitle'),
     color: "from-blue-500 to-blue-700",
-    stats: { count: 12, label: "universities" },
-    description: "Manage university profiles and accreditation status",
+    stats: { count: 12, label: translateDashboard('cards.university.stats.label') },
+    description: translateDashboard('cards.university.description'),
     destination: "university"
   },
   { 
     id: 2, 
     icon: <Building2 className="w-6 h-6" />, 
-    title: "College", 
-    subtitle: "الكليات",
+    title: translateDashboard('cards.college.title'), 
+    subtitle: translateDashboard('cards.college.subtitle'),
     color: "from-purple-500 to-purple-700",
-    stats: { count: 48, label: "colleges" },
-    description: "Oversee college structures and academic units",
+    stats: { count: 48, label: translateDashboard('cards.college.stats.label') },
+    description: translateDashboard('cards.college.description'),
     destination: "college"
   },
   { 
     id: 3, 
     icon: <Landmark className="w-6 h-6" />, 
-    title: "Department", 
-    subtitle: "الاقسام",
+    title: translateDashboard('cards.department.title'), 
+    subtitle: translateDashboard('cards.department.subtitle'),
     color: "from-green-500 to-green-700",
-    stats: { count: 126, label: "departments" },
-    description: "Monitor departmental performance and metrics",
-    destination: "department"
+    stats: { count: 126, label: translateDashboard('cards.department.stats.label') },
+    description: translateDashboard('cards.department.description'),
+    destination: "departments"
   },
   { 
     id: 4, 
     icon: <BookOpen className="w-6 h-6" />, 
-    title: "Program", 
-    subtitle: "البرامج",
+    title: translateDashboard('cards.program.title'), 
+    subtitle: translateDashboard('cards.program.subtitle'),
     color: "from-amber-500 to-amber-700",
-    stats: { count: 284, label: "programs" },
-    description: "Review academic programs and curriculum structures",
+    stats: { count: 284, label: translateDashboard('cards.program.stats.label') },
+    description: translateDashboard('cards.program.description'),
     destination: "programs"
   },
   // User-specific card will be added dynamically
   { 
     id: 6, // Adjusted ID to avoid conflict
     icon: <BarChart3 className="w-6 h-6" />, 
-    title: "Results", 
-    subtitle: "النتائج",
+    title: translateDashboard('cards.results.title'), 
+    subtitle: translateDashboard('cards.results.subtitle'),
     color: "from-cyan-500 to-cyan-700",
-    stats: { count: 53, label: "results" },
-    description: "Generate analytics and assessment results",
+    stats: { count: 53, label: translateDashboard('cards.results.stats.label') },
+    description: translateDashboard('cards.results.description'),
     destination: "results"
   },
 ];
 
-const adminUserCard = {
+const getAdminUserCard = (translateDashboard) => ({
   id: 5, 
   icon: <Users className="w-6 h-6" />, 
-  title: "Users", 
-  subtitle: "المستخدمون",
+  title: translateDashboard('cards.users.title'), 
+  subtitle: translateDashboard('cards.users.subtitle'),
   color: "from-red-500 to-red-700",
-  stats: { count: 1840, label: "active users" }, // Example stats
-  description: "Manage user accounts and access permissions",
+  stats: { count: 1840, label: translateDashboard('cards.users.stats.label') },
+  description: translateDashboard('cards.users.description'),
   destination: "users"
-};
+});
 
-const nonAdminUserProfileCard = {
+const getNonAdminUserProfileCard = (translateDashboard) => ({
   id: 5, // Same ID for consistent placement if desired, or different
   icon: <UserCircle className="w-6 h-6" />, 
-  title: "User Profile", 
-  subtitle: "الملف الشخصي",
+  title: translateDashboard('cards.profile.title'), 
+  subtitle: translateDashboard('cards.profile.subtitle'),
   color: "from-teal-500 to-teal-700",
-  stats: { count: 1, label: "profile" },
-  description: "View and manage your personal profile",
+  stats: { count: 1, label: translateDashboard('cards.profile.stats.label') },
+  description: translateDashboard('cards.profile.description'),
   destination: "profile"
-};
+});
 
 function IconGrid({ userLevel }) { // Expect a user object e.g., { role: 'admin' } or { role: 'authority' }
   const [hoveredCard, setHoveredCard] = useState(null);
+  const { translateDashboard } = useNamespacedTranslation();
+  
+  const baseNavCards = getBaseNavCards(translateDashboard);
+  const adminUserCard = getAdminUserCard(translateDashboard);
+  const nonAdminUserProfileCard = getNonAdminUserProfileCard(translateDashboard);
+  
   const navCards = [
     ...baseNavCards.slice(0, 4), // Cards before user-specific one
     userLevel && userLevel === 'admin' ? adminUserCard : nonAdminUserProfileCard,
@@ -131,8 +138,8 @@ function IconGrid({ userLevel }) { // Expect a user object e.g., { role: 'admin'
   return (
     <div className="py-4">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Academic Management</h2>
-        <p className="text-gray-600">Select a module to access its features and data</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">{translateDashboard('header.title')}</h2>
+        <p className="text-gray-600">{translateDashboard('header.subtitle')}</p>
       </div>
       
       <motion.div

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+import { getLocalizedText, getLocalizedName } from '../../../utils/translationUtils';
 
 const ProgramFilterSidebar = ({
   universities,
@@ -17,6 +19,7 @@ const ProgramFilterSidebar = ({
   onItemsPerPageChange,
   userRoleWeight,
 }) => {
+  const { translateResults, currentLanguage } = useNamespacedTranslation();
   const itemsPerPageOptions = [3,6,9,12,15,21];
 
   const handleUniversitySelect = (universityId) => {
@@ -46,18 +49,18 @@ const ProgramFilterSidebar = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-6  top-4">
       <h2 className="text-lg font-semibold text-gray-900 mb-6 border-b pb-3">
-        Filter Programs
+        {translateResults('programSelector.filterPrograms')}
       </h2>
       
       {/* Search */}
       <div className="mb-6">
         <label htmlFor="programSearch" className="block text-sm font-medium text-gray-700 mb-1">
-          Search by Name or ID
+          {translateResults('programSelector.searchByName')}
         </label>
         <input
           type="text"
           id="programSearch"
-          placeholder="Enter program name or ID..."
+          placeholder={translateResults('programSelector.enterProgram')}
           value={searchTerm}
           onChange={(e) => onSearchTermChange(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -66,7 +69,7 @@ const ProgramFilterSidebar = ({
       {userRoleWeight <= 2 && universities.length > 0 && (
         <div className="mb-6">
           <label htmlFor="universitySelect" className="block text-sm font-medium text-gray-700 mb-1">
-            University
+            {translateResults('programSelector.university')}
           </label>
           <select
             id="universitySelect"
@@ -74,10 +77,10 @@ const ProgramFilterSidebar = ({
             onChange={(e) => handleUniversitySelect(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
-            <option value="">Select University</option>
+            <option value="">{translateResults('programSelector.selectUniversity')}</option>
             {universities.map((university) => (
               <option key={university.id} value={university.id}>
-                {university.name}
+                {getLocalizedName(university, currentLanguage, 'university_name') || getLocalizedText(university, currentLanguage)}
               </option>
             ))}
           </select>
@@ -88,7 +91,7 @@ const ProgramFilterSidebar = ({
       {userRoleWeight <= 3 && colleges.length > 0 && (
         <div className="mb-6">
           <label htmlFor="collegeSelect" className="block text-sm font-medium text-gray-700 mb-1">
-            College
+            {translateResults('programSelector.college')}
           </label>
           <select
             id="collegeSelect"
@@ -96,10 +99,10 @@ const ProgramFilterSidebar = ({
             onChange={(e) => handleCollegeSelect(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
-            <option value="">Select College</option>
+            <option value="">{translateResults('programSelector.selectCollege')}</option>
             {colleges.map((college) => (
               <option key={college.id} value={college.id}>
-                {college.name}
+                {getLocalizedName(college, currentLanguage, 'college_name') || getLocalizedText(college, currentLanguage)}
               </option>
             ))}
           </select>
@@ -110,7 +113,7 @@ const ProgramFilterSidebar = ({
       {userRoleWeight <= 4 && departments.length > 0 && (
         <div className="mb-6">
           <label htmlFor="departmentSelect" className="block text-sm font-medium text-gray-700 mb-1">
-            Department
+            {translateResults('programSelector.department')}
           </label>
           <select
             id="departmentSelect"
@@ -118,10 +121,10 @@ const ProgramFilterSidebar = ({
             onChange={(e) => handleDepartmentSelect(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
-            <option value="">Select Department</option>
+            <option value="">{translateResults('programSelector.selectDepartment')}</option>
             {departments.map((department) => (
               <option key={department.id} value={department.id}>
-                {department.name}
+                {getLocalizedName(department, currentLanguage, 'department_name') || getLocalizedText(department, currentLanguage)}
               </option>
             ))}
           </select>
@@ -131,7 +134,7 @@ const ProgramFilterSidebar = ({
       {/* Items per page */}
       <div className="mb-6">
         <label htmlFor="itemsPerPageSelect" className="block text-sm font-medium text-gray-700 mb-1">
-          Items per Page
+          {translateResults('programSelector.itemsPerPage')}
         </label>
         <select
           id="itemsPerPageSelect"
@@ -152,7 +155,7 @@ const ProgramFilterSidebar = ({
           onClick={onReset}
           className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 font-medium"
         >
-          Reset Filters
+          {translateResults('programSelector.resetFilters')}
         </button>
       </div>
     </div>

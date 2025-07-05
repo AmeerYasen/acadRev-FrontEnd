@@ -1,5 +1,7 @@
 import React from "react";
 import { ROLES } from "../../../constants";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText } from "../../../utils/translationUtils";
 
 const DataTable = React.memo(({ 
   selectedArea, 
@@ -10,8 +12,7 @@ const DataTable = React.memo(({
   handleInputChange, 
   isModal = false 
 }) => {
-
-
+  const { translateQuantitative, currentLanguage } = useNamespacedTranslation();
 
   console.log('responses:', responses);
   const canEdit = userRole === ROLES.DEPARTMENT;
@@ -23,7 +24,7 @@ const DataTable = React.memo(({
           <tr className="bg-gray-50">
             <th className="border border-gray-200 p-3 text-left font-semibold text-gray-900 min-w-[50px]">#</th>
             <th className="border border-gray-200 p-3 text-left font-semibold text-gray-900 min-w-[200px]">
-            Item / البند
+            {translateQuantitative('item')} / البند
             </th>
             {headers[selectedArea].map((header) => (
               <th
@@ -31,7 +32,7 @@ const DataTable = React.memo(({
                 className="border border-gray-200 p-3 text-center font-semibold text-gray-900 min-w-[120px]"
               >
                 <div className="space-y-1">
-                  <div className="text-sm">{header.text}</div>
+                  <div className="text-sm">{getLocalizedText(header, currentLanguage)}</div>
                 </div>
               </th>
             ))}
@@ -44,20 +45,22 @@ const DataTable = React.memo(({
                 <td className="border border-gray-200 p-3 text-center text-gray-600 font-medium">{index + 1}</td>
                 <td className="border border-gray-200 p-3">
                   <div className="space-y-1">
-                    <div className="font-medium text-gray-900">{item.name}</div>
+                    <div className="font-medium text-gray-900">{getLocalizedText(item, currentLanguage)}</div>
                   </div>
                 </td>                
                 {headers[selectedArea].map((header) => {
                   const isNumeric =
-                    header.text.includes("عدد") ||
-                    header.text.includes("النسبة");
+                    getLocalizedText(header, currentLanguage).includes("عدد") ||
+                    getLocalizedText(header, currentLanguage).includes("النسبة") ||
+                    getLocalizedText(header, currentLanguage).toLowerCase().includes("number") ||
+                    getLocalizedText(header, currentLanguage).toLowerCase().includes("percentage");
 
                   const inputKey = `${selectedArea}-${item.id}-${header.id}`;
                   return (
                     <td key={header.id} className="border border-gray-200 p-2">                      
                       <input
                         type={isNumeric ? "number" : "text"}
-                        placeholder={isNumeric ? "0" : "Enter value"}
+                        placeholder={isNumeric ? "0" : translateQuantitative('enterValue')}
                         className={`w-full px-3 py-2 border border-gray-300 rounded-md 
                                  text-gray-900 text-sm
                                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
@@ -85,7 +88,7 @@ const DataTable = React.memo(({
                 <td className="border border-gray-200 p-3">
                 <input
                   type="text"
-                  placeholder={canEdit ? "Enter item name" : "Item name"}
+                  placeholder={canEdit ? translateQuantitative('itemPlaceholder') : translateQuantitative('item')}
                   className={`w-full px-3 py-2 border border-gray-300 rounded-md 
                            text-gray-900 text-sm
                            focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
@@ -100,15 +103,17 @@ const DataTable = React.memo(({
               </td>
               {headers[selectedArea].map((header) => {
                 const isNumeric =
-                  header.text.includes("عدد") ||
-                  header.text.includes("النسبة");
+                  getLocalizedText(header, currentLanguage).includes("عدد") ||
+                  getLocalizedText(header, currentLanguage).includes("النسبة") ||
+                  getLocalizedText(header, currentLanguage).toLowerCase().includes("number") ||
+                  getLocalizedText(header, currentLanguage).toLowerCase().includes("percentage");
 
                 const inputKey = `${selectedArea}-${1}-${header.id}`;
                 return (
                   <td key={header.id} className="border border-gray-200 p-2">
                     <input
                       type={isNumeric ? "number" : "text"}
-                      placeholder={canEdit ? (isNumeric ? "0" : "Enter value") : (isNumeric ? "0" : "Value")}
+                      placeholder={canEdit ? (isNumeric ? "0" : translateQuantitative('enterValue')) : (isNumeric ? "0" : translateQuantitative('value'))}
                       className={`w-full px-3 py-2 border border-gray-300 rounded-md 
                                text-gray-900 text-sm
                                focus:ring-2 focus:ring-blue-500 focus:border-blue-500 

@@ -5,6 +5,8 @@ import { Progress } from "../../../components/ui/progress";
 import { uploadEvidence } from "../../../api/qualitativeAPI";
 import EvidencePopup from "./EvidencePopup";
 import { useToast } from "../../../context/ToastContext";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText, getEvaluationDisplay } from "../../../utils/translationUtils";
 
 const EvaluationModal = React.memo(({
   isOpen,
@@ -20,6 +22,7 @@ const EvaluationModal = React.memo(({
   handleSaveResponses,
   handleRemoveResponse
 }) => {  const { showToast } = useToast();
+  const { translateQualitative, currentLanguage } = useNamespacedTranslation();
   const [showNotesFor, setShowNotesFor] = useState({}); // Track which indicators have notes visible
   const [selectedFiles, setSelectedFiles] = useState({}); // Track multiple selected files per indicator
   const [uploadStatus, setUploadStatus] = useState({}); // Track upload status per indicator
@@ -47,20 +50,13 @@ const EvaluationModal = React.memo(({
   if (!isOpen || !selectedDomain) return null;
   const selectedDomainData = domains.find(d => d.id === selectedDomain);
   const domainIndicators = indicators[selectedDomain] || [];  const evaluationOptions = [
-    { value: 2, label: "Yes", color: "bg-green-600 hover:bg-green-700" },
-    { value: 1, label: "Maybe", color: "bg-yellow-600 hover:bg-yellow-700" },
-    { value: 0, label: "No", color: "bg-red-600 hover:bg-red-700" }
+    { value: 2, label: translateQualitative('evaluationOptions.yes'), color: "bg-green-600 hover:bg-green-700" },
+    { value: 1, label: translateQualitative('evaluationOptions.maybe'), color: "bg-yellow-600 hover:bg-yellow-700" },
+    { value: 0, label: translateQualitative('evaluationOptions.no'), color: "bg-red-600 hover:bg-red-700" }
   ];
 
   // Helper function to convert numeric score to display text
-  const getEvaluationDisplay = (score) => {
-    switch(score) {
-      case 2: return "Yes";
-      case 1: return "Maybe";
-      case 0: return "No";
-      default: return "Unknown";
-    }
-  };
+  const getEvaluationDisplayText = (score) => getEvaluationDisplay(score, translateQualitative);
   // Helper function to check if an indicator has unsaved changes
   const hasUnsavedChanges = (indicatorId) => {
     const key = `${selectedDomain}-${indicatorId}`;
@@ -139,8 +135,8 @@ const EvaluationModal = React.memo(({
           <div className="flex items-center space-x-3">
             <MessageSquare className="h-6 w-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Quality Evaluation Panel</h2>
-              <p className="text-sm text-gray-600">{selectedDomainData?.name}</p>
+              <h2 className="text-xl font-bold text-gray-900">{translateQualitative('modal.title')}</h2>
+              <p className="text-sm text-gray-600">{getLocalizedText(selectedDomainData, currentLanguage)}</p>
             </div>
           </div>
           <button
@@ -157,15 +153,15 @@ const EvaluationModal = React.memo(({
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading indicators...</p>
+                <p className="mt-4 text-gray-600">{translateQualitative('loading.indicators')}</p>
               </div>
             </div>
           ) : domainIndicators.length === 0 ? (
             <div className="flex items-center justify-center h-full text-gray-500">
               <div className="text-center">
                 <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-lg font-medium">No indicators available</p>
-                <p className="text-sm">Please contact your administrator</p>
+                <p className="text-lg font-medium">{translateQualitative('modal.noDataAvailable')}</p>
+                <p className="text-sm">{translateQualitative('modal.contactAdmin')}</p>
               </div>
             </div>
           ) : (
@@ -173,8 +169,8 @@ const EvaluationModal = React.memo(({
               {/* Progress Bar */}
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Progress</span>
-                  <span className="text-sm text-gray-600">{progress[selectedDomain] || 0}% complete</span>
+                  <span className="text-sm font-medium text-gray-700">{translateQualitative('modal.progress')}</span>
+                  <span className="text-sm text-gray-600">{progress[selectedDomain] || 0}% {translateQualitative('complete')}</span>
                 </div>
                 <Progress value={progress[selectedDomain] || 0} className="h-2" />
               </div>
@@ -195,7 +191,7 @@ const EvaluationModal = React.memo(({
                       <div className="mb-4">
                         <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            {indicator.text}
+                            {getLocalizedText(indicator, currentLanguage)}
                           </h3>
                           {hasUnsavedChanges(indicator.id) && (
                             <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">
@@ -207,7 +203,7 @@ const EvaluationModal = React.memo(({
                       {/* Evaluation Options */}
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Evaluation
+                          {translateQualitative('evaluation')}
                         </label>                        <div className="flex flex-wrap gap-2">
                           {evaluationOptions.map((option) => {
                             const isSelected = response?.evaluation == option.value;
@@ -250,7 +246,7 @@ const EvaluationModal = React.memo(({
                               }`}
                             >
                               <StickyNote className="h-4 w-4 mr-1" />
-                              {showNotesFor[indicator.id] ? 'Hide Notes' : 'Show Notes'}
+                              {showNotesFor[indicator.id] ? translateQualitative('hideNotes') : translateQualitative('showNotes')}
                             </Button>
                             
                             <Button
@@ -260,7 +256,7 @@ const EvaluationModal = React.memo(({
                               className="border-blue-200 text-blue-600 hover:bg-blue-50"
                             >
                               <FolderOpen className="h-4 w-4 mr-1" />
-                              View Evidence
+                              {translateQualitative('viewEvidence')}
                             </Button>
                           </div>
 

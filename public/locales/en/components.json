@@ -1,0 +1,193 @@
+{
+
+  "navbar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "university": "University",
+    "colleges": "Colleges",
+    "departments": "Departments",
+    "programs": "Programs",
+    "qualitative": "Qualitative",
+    "quantitative": "Quantitative",
+    "results": "Results",
+    "reports": "Reports",
+    "users": "Users",
+    "settings": "Settings",
+    "profile": "Profile",
+    "help": "Help",
+    "support": "Support"
+  },
+  "footer": {
+    "copyright": "© 2024 Academic Review System. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "contact": "Contact Us",
+    "about": "About",
+    "version": "Version"
+  },
+  
+  "languageSwitcher": {
+    "selectLanguage": "Select Language",
+    "currentLanguage": "Current Language",
+    "changeLanguage": "Change Language",
+    "english": "English",
+    "arabic": "العربية",
+    "languageChanged": "Language changed successfully"
+  },
+  "loadingSpinner": {
+    "loading": "Loading...",
+    "pleaseWait": "Please wait",
+    "processing": "Processing"
+  },
+  "toast": {
+    "closeNotification": "Close notification",
+    "dismiss": "Dismiss",
+    "success": "Success",
+    "error": "Error", 
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "notificationBar": {
+    "dismissNotification": "Dismiss notification",
+    "close": "Close"
+  },
+  "ui": {
+    "loading": {
+      "default": "Loading...",
+      "please_wait": "Please wait...",
+      "processing": "Processing...",
+      "saving": "Saving...",
+      "deleting": "Deleting...",
+      "uploading": "Uploading...",
+      "downloading": "Downloading..."
+    },
+    "badge": {
+      "new": "New",
+      "updated": "Updated",
+      "pending": "Pending",
+      "completed": "Completed",
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "button": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "success": "Success",
+      "danger": "Danger",
+      "warning": "Warning",
+      "info": "Info",
+      "light": "Light",
+      "dark": "Dark",
+      "link": "Link"
+    },
+    "card": {
+      "header": "Header",
+      "body": "Body",
+      "footer": "Footer",
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "expand": "Expand",
+      "collapse": "Collapse"
+    },
+    "progress": {
+      "loading": "Loading",
+      "complete": "Complete",
+      "inProgress": "In Progress",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "separator": {
+      "or": "Or",
+      "and": "And",
+      "divider": "Divider"
+    }
+  },
+  "forms": {
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "minLength": "Minimum {{count}} characters required",
+      "maxLength": "Maximum {{count}} characters allowed",
+      "pattern": "Invalid format",
+      "numeric": "Please enter a valid number",
+      "alphanumeric": "Only letters and numbers allowed",
+      "phone": "Please enter a valid phone number",
+      "url": "Please enter a valid URL",
+      "date": "Please enter a valid date",
+      "time": "Please enter a valid time",
+      "passwordStrength": "Password must contain at least 8 characters with uppercase, lowercase, number and special character"
+    },
+    "placeholders": {
+      "enterEmail": "Enter your email",
+      "enterPassword": "Enter your password",
+      "enterName": "Enter your name",
+      "enterPhone": "Enter your phone number",
+      "selectOption": "Select an option",
+      "chooseFile": "Choose a file",
+      "enterDescription": "Enter description",
+      "searchHere": "Search here...",
+      "typeMessage": "Type your message..."
+    }
+  },
+  "tables": {
+    "headers": {
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "of": "of",
+      "results": "results",
+      "page": "Page",
+      "rowsPerPage": "Rows per page",
+      "first": "First",
+      "last": "Last",
+      "next": "Next",
+      "previous": "Previous"
+    },
+    "empty": {
+      "noData": "No data available",
+      "noResults": "No results found",
+      "emptyTable": "This table is empty"
+    }
+  },
+  "modals": {
+    "confirm": {
+      "title": "Confirm Action",
+      "message": "Are you sure you want to proceed?",
+      "yes": "Yes",
+      "no": "No",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "delete": {
+      "title": "Delete Item",
+      "message": "Are you sure you want to delete this item? This action cannot be undone.",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "save": {
+      "title": "Save Changes",
+      "message": "Do you want to save your changes?",
+      "save": "Save",
+      "discard": "Discard",
+      "cancel": "Cancel"
+    }
+  }
+}

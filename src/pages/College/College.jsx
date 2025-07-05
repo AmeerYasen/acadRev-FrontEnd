@@ -4,6 +4,7 @@ import { fetchColleges, editCollege, fetchMyCollege, fetchCollegesByUniversity }
 import { fetchUniversities } from '../../api/universityApi';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import { ROUTES, ROLES, getRoleWeight } from '../../constants';
 import CollegeAdminView from './CollegeAdminView';
 import CollegeStaffView from './CollegeStaffView';
@@ -23,7 +24,8 @@ function useDebounce(value, delay) {
 
 const College = () => {
   const { user, isLoggedIn } = useAuth();
-  const { showError } = useToast();
+  const { showError, showSuccess } = useToast();
+  const { translateCollege } = useNamespacedTranslation();
   const navigate = useNavigate();
   const userRole = user?.role;
   const userRoleWeight = getRoleWeight(userRole);
@@ -58,10 +60,9 @@ const College = () => {
           setUniversitiesError(null);
           const data = await fetchUniversities();
           setUniversitiesList(data);
-        } catch (err) {
-          setUniversitiesError(err.message || 'Failed to fetch universities.');
-          setUniversitiesList([]);
-          showError(err.message || 'Failed to fetch universities.');
+        } catch (err) {        setUniversitiesError(err.message || translateCollege('errors.fetchUniversitiesFailed'));
+        setUniversitiesList([]);
+        showError(err.message || translateCollege('errors.fetchUniversitiesFailed'));
         } finally {
           setUniversitiesLoading(false);
         }
@@ -90,7 +91,7 @@ const College = () => {
           const myCollegeData = await fetchMyCollege();
           data = myCollegeData ? [myCollegeData] : [];
         } else {
-          showError(`No specific college fetching logic for role: ${userRole}. Fetching general list.`);
+          showError(translateCollege('errors.noFetchLogicForRole', { role: userRole }));
           data = await fetchColleges({});
         }
 
@@ -150,24 +151,24 @@ const College = () => {
   }, [selectedUniversityForContext, userRole, user]);
 
   const countMessage = useMemo(() => {
-    const baseCountText = `${filteredColleges.length} ${filteredColleges.length === 1 ? 'College' : 'Colleges'}`;
+    const baseCountText = `${filteredColleges.length} ${filteredColleges.length === 1 ? translateCollege('countMessage.college') : translateCollege('countMessage.colleges')}`;
     if (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY) {
-      const locationText = selectedUniversityForContext ? `in ${selectedUniversityForContext.name}` : 'Across All Universities';
+      const locationText = selectedUniversityForContext ? translateCollege('countMessage.inUniversity', { university: selectedUniversityForContext.name }) : translateCollege('countMessage.acrossAllUniversities');
       return debouncedSearchTerm.trim()
-        ? `${filteredColleges.length} ${filteredColleges.length === 1 ? 'Result' : 'Results'} Found ${locationText}`
+        ? translateCollege('countMessage.resultsFound', { count: filteredColleges.length, location: locationText })
         : `${baseCountText} ${locationText}`;
     }
     return debouncedSearchTerm.trim()
-      ? `${filteredColleges.length} ${filteredColleges.length === 1 ? 'Result' : 'Results'} Found`
+      ? translateCollege('countMessage.resultsFound', { count: filteredColleges.length, location: '' })
       : baseCountText;
-  }, [filteredColleges.length, debouncedSearchTerm, selectedUniversityForContext, userRole]);
+  }, [filteredColleges.length, debouncedSearchTerm, selectedUniversityForContext, userRole, translateCollege]);
 
   const searchPlaceholderText = useMemo(() => {
     if (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY) {
-      return selectedUniversityForContext ? `Search in ${selectedUniversityForContext.name}...` : 'Search all colleges...';
+      return selectedUniversityForContext ? translateCollege('searchPlaceholder.inUniversity', { university: selectedUniversityForContext.name }) : translateCollege('searchPlaceholder.allColleges');
     }
-    return 'Search colleges...';
-  }, [selectedUniversityForContext, userRole]);
+    return translateCollege('searchPlaceholder.colleges');
+  }, [selectedUniversityForContext, userRole, translateCollege]);
 
   const handleUniversitySelect = (universityId) => {
     setSelectedUniversityId(universityId);
@@ -192,15 +193,24 @@ const College = () => {
   const handleUpdateCollege = async (updatedCollegeData) => {
     try {
       const savedCollege = await editCollege(updatedCollegeData);
-      setCurrentColleges(prevColleges =>
-        prevColleges.map(college =>
-          college.id === savedCollege.id ? savedCollege : college
-        )
-      );
+      
+      // Refetch the college data for college users to ensure fresh data
+      if (userRole === ROLES.COLLEGE || userRole === ROLES.DEPARTMENT) {
+        const myCollegeData = await fetchMyCollege();
+        setCurrentColleges(myCollegeData ? [myCollegeData] : []);
+      } else {
+        // For other roles, update the local state
+        setCurrentColleges(prevColleges =>
+          prevColleges.map(college =>
+            college.id === savedCollege.id ? savedCollege : college
+          )
+        );
+      }
+      
       closePopup();
-      showError('College updated successfully!', 'success');
+      showSuccess(translateCollege('messages.collegeUpdatedSuccess'));
     } catch (err) {
-      showError(`Failed to update college: ${err.message}`);
+      showError(translateCollege('errors.updateCollegeFailed', { message: err.message }));
     }
   };
 
@@ -237,7 +247,7 @@ const College = () => {
   if (isOverallLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl text-text-muted">Loading data...</p>
+        <p className="text-xl text-text-muted">{translateCollege('loading.loadingData')}</p>
       </div>
     );
   }
@@ -264,6 +274,13 @@ const College = () => {
           openCollegePopup={openPopup}
           onCollegeAdded={handleCollegeAdded}
         />
+      ) : userRole === ROLES.COLLEGE || userRole === ROLES.DEPARTMENT ? (
+        <CollegeStaffView
+          user={user}
+          colleges={currentColleges}
+          onUpdateCollege={handleUpdateCollege}
+          openCollegePopup={openPopup}
+        />
       ) : (
         <main className="flex-grow p-6 md:p-8 overflow-y-auto w-full">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200">
@@ -288,8 +305,7 @@ const College = () => {
     {searchTerm && (
       <button
         onClick={() => setSearchTerm('')}
-        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-        aria-label="Clear search"
+        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"                    aria-label={translateCollege('actions.clearSearch')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -302,7 +318,7 @@ const College = () => {
 
           {error && (
             <div className="mb-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-md">
-              <p>Error: {error}</p>
+              <p>{translateCollege('errors.errorLabel')}: {error}</p>
             </div>
           )}
 
@@ -312,11 +328,11 @@ const College = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <p className="text-center text-text-muted text-lg">
-                {debouncedSearchTerm ? 'No colleges found matching your search criteria.' : 'No colleges available.'}
+                {debouncedSearchTerm ? translateCollege('emptyStates.noCollegesMatchingSearch') : translateCollege('emptyStates.noCollegesAvailable')}
               </p>
               {debouncedSearchTerm && (
                 <button onClick={() => setSearchTerm('')} className="mt-4 text-primary hover:text-primary-dark font-medium">
-                  Clear search
+                  {translateCollege('actions.clearSearch')}
                 </button>
               )}
             </div>
@@ -337,7 +353,6 @@ const College = () => {
         <CollegePopup
           college={selectedCollege}
           onClose={closePopup}
-          onUpdate={handleUpdateCollege}
           userRole={userRole}
         />
       )}

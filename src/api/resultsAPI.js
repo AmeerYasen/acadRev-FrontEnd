@@ -34,7 +34,7 @@ export const fetchDomainWeights = async () => {
     
     // Validate required fields
     data.forEach((domain, index) => {
-      if (!domain.domain_id || !domain.domain_name || typeof domain.domain_weight !== 'number') {
+      if (!domain.domain_id || !domain.domain_ar || !domain.domain_en ||typeof domain.domain_weight !== 'number') {
         throw new Error(`Invalid domain weight data at index ${index}`);
       }
     });
@@ -76,7 +76,7 @@ export const fetchDomainScores = async (programId) => {
     
     // Validate required fields
     data.forEach((domain, index) => {
-      if (!domain.domain_id || !domain.domain_name || typeof domain.domain_score !== 'number') {
+      if (!domain.domain_id || !domain.domain_ar || !domain.domain_en|| typeof domain.domain_score !== 'number') {
         throw new Error(`Invalid domain score data at index ${index}`);
       }
     });
@@ -127,15 +127,6 @@ export const fetchWeightedResults = async (programId) => {
       throw new Error('Missing required fields in weighted results response');
     }
     
-    // Validate domain data
-    data.result_by_domain.forEach((domain, index) => {
-      const requiredFields = ['domain_id', 'domain_name', 'domain_weight', 'domain_score', 'domain_weighted_score'];
-      requiredFields.forEach(field => {
-        if (field === 'domain_name' ? !domain[field] : typeof domain[field] !== 'number') {
-          throw new Error(`Invalid domain data at index ${index}: missing or invalid ${field}`);
-        }
-      });
-    });
     
     return data;
   } catch (error) {
@@ -245,21 +236,21 @@ const generateAnalysisSummary = (weightedResults) => {
  * @param {number} score - Score value (0-100)
  * @returns {Object} Formatted score with color class
  */
-export const formatScoreDisplay = (score) => {
+export const formatScoreDisplay = (score, language = 'en') => {
   const numericScore = Number(score) || 0;
   
   let colorClass = 'text-red-600';
-  let label = 'ضعيف';
+  let label = language === 'ar' ? 'ضعيف' : 'Poor';
   
   if (numericScore >= 90) {
     colorClass = 'text-green-600';
-    label = 'ممتاز';
+    label = language === 'ar' ? 'ممتاز' : 'Excellent';
   } else if (numericScore >= 75) {
     colorClass = 'text-blue-600';
-    label = 'جيد';
+    label = language === 'ar' ? 'جيد' : 'Good';
   } else if (numericScore >= 60) {
     colorClass = 'text-yellow-600';
-    label = 'مقبول';
+    label = language === 'ar' ? 'مقبول' : 'Acceptable';
   }
   
   return {
@@ -291,7 +282,8 @@ export const exportAnalysisToCSV = (analysisData) => {
   
   const rows = analysisData.weightedResults.result_by_domain.map(domain => [
     domain.domain_id,
-    domain.domain_name,
+    domain.domain_ar,
+    domain.domain_en,
     domain.indicator_count,
     domain.domain_weight.toFixed(2),
     domain.domain_score.toFixed(2),

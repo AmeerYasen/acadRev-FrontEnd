@@ -4,6 +4,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useLocation } from "react-router-dom";
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation";
 import {
   Home,
   Building2,
@@ -20,16 +21,16 @@ import {
 } from "lucide-react"
 
 // Icons used in dashboard/IconGrid
-const getNavItems=(user) => {
+const getNavItems=(user, translateNavbar) => {
   const navItems= [
-  { path: "/main", icon: <Home size={20} />, label: "Dashboard" },
-  { path: "/university", icon: <University size={20} />, label: "Universities" },
-  { path: "/college", icon: <Building2 size={20} />, label: "Colleges" },
-  { path: "/departments", icon: <Landmark size={20} />, label: "Departments" },
-  { path: "/programs", icon: <BookOpen size={20} />, label: "Programs" },
-  user?.role === "admin"? { path: "/users", icon: <Users size={20} />, label: "Users" } :
-  { path: "/profile", icon: <UserCircle size={20} />, label: "Profile" },
-  { path: "/results", icon: <BarChart3 size={20} />, label: "Results" }
+  { path: "/main", icon: <Home size={20} />, label: translateNavbar('menu.dashboard') },
+  { path: "/university", icon: <University size={20} />, label: translateNavbar('menu.universities') },
+  { path: "/college", icon: <Building2 size={20} />, label: translateNavbar('menu.colleges') },
+  { path: "/departments", icon: <Landmark size={20} />, label: translateNavbar('menu.departments') },
+  { path: "/programs", icon: <BookOpen size={20} />, label: translateNavbar('menu.programs') },
+  user?.role === "admin"? { path: "/users", icon: <Users size={20} />, label: translateNavbar('menu.users') } :
+  { path: "/profile", icon: <UserCircle size={20} />, label: translateNavbar('menu.profile') },
+  { path: "/results", icon: <BarChart3 size={20} />, label: translateNavbar('menu.results') }
 ];
 return navItems;
 }
@@ -84,7 +85,8 @@ const logoutTextVariants = {
 function Navbar({ isExpanded, toggleSidebar, onLogout }) {
   const location = useLocation();
   const { user } = useAuth(); // Get user from context
-  const NAV_ITEMS = getNavItems(user);
+  const { translateNavbar } = useNamespacedTranslation();
+  const NAV_ITEMS = getNavItems(user, translateNavbar);
 
   return (
     <motion.aside
@@ -100,7 +102,7 @@ function Navbar({ isExpanded, toggleSidebar, onLogout }) {
         <button
           onClick={toggleSidebar} // Use prop function
           className={`${isExpanded ? '' : 'mt-4'} p-1.5 rounded-full text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200 `}
-          title={isExpanded ? "Collapse Sidebar" : "Expand Sidebar"} // Use prop
+          title={isExpanded ? translateNavbar('controls.collapse') : translateNavbar('controls.expand')} // Use prop
         >
           {isExpanded ? <ChevronLeft size={18} /> : <ChevronRight size={18} />} {/* Use prop */}
         </button>
@@ -110,7 +112,7 @@ function Navbar({ isExpanded, toggleSidebar, onLogout }) {
       <nav className="flex-grow px-3 py-6 space-y-1.5 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
         <div className={`mb-2 px-4 ${isExpanded ? 'block' : 'hidden'}`}>
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Main Menu
+            {translateNavbar('sections.mainMenu')}
           </h3>
         </div>
         
@@ -178,7 +180,7 @@ function Navbar({ isExpanded, toggleSidebar, onLogout }) {
                 exit="exit"
                 className="ml-3 font-medium whitespace-nowrap overflow-hidden"
               >
-                Sign out
+                {translateNavbar('actions.signOut')}
               </motion.span>
             )}
           </AnimatePresence>

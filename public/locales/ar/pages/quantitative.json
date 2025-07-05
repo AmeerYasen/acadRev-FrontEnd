@@ -1,0 +1,54 @@
+{
+  "title": "المؤشرات الكمية",
+  "subtitle": "مقاييس التقييم وتحليل البيانات للبرنامج",
+  "selectArea": "اختر منطقة تقييم",
+  "selectAreaDescription": "اختر منطقة من الشريط الجانبي لعرض وتعديل مؤشراتها الكمية",
+  "areaProgress": "التقدم",
+  "complete": "مكتمل",
+  "dataEntryTable": "جدول إدخال البيانات",
+  "expandTable": "توسيع الجدول",
+  "openFullTableView": "فتح عرض الجدول الكامل",
+  "dataEntryTableDescription": "أدخل البيانات الكمية لكل عنصر ومقياس",
+  "assessmentAreas": "مناطق التقييم",
+  "areasAvailable": "منطقة متاحة",
+  "quickStats": "إحصائيات سريعة",
+  "totalAreas": "إجمالي المناطق",
+  "completed": "مكتمل",
+  "inProgress": "قيد التقدم",
+  "overallProgress": "التقدم الإجمالي",
+  "items": "العناصر",
+  "metrics": "المقاييس",
+  "item": "العنصر",
+  "itemPlaceholder": "أدخل اسم العنصر",
+  "enterValue": "أدخل القيمة",
+  "value": "القيمة",
+  "loading": {
+    "initial": "جاري تحميل المؤشرات الكمية...",
+    "data": "جاري تحميل البيانات...",
+    "saving": "جاري الحفظ..."
+  },
+  "status": {
+    "completed": "مكتمل",
+    "inProgress": "قيد التقدم",
+    "notStarted": "لم يبدأ"
+  },
+  "modal": {
+    "title": "جدول إدخال البيانات",
+    "cancel": "إلغاء",
+    "saveAreaData": "حفظ بيانات المنطقة",
+    "progress": "التقدم",
+    "progressComplete": "مكتمل",
+    "itemsMetrics": "{{items}} عنصر • {{metrics}} مقياس",
+    "noDataAvailable": "لا توجد بنية بيانات متاحة",
+    "contactAdmin": "يرجى التواصل مع المدير"
+  },
+  "errors": {
+    "loadFailed": "فشل في تحميل البيانات الأولية",
+    "loadAreaFailed": "فشل في تحميل بيانات المنطقة",
+    "saveFailed": "فشل في حفظ بيانات المنطقة",
+    "networkError": "حدث خطأ في الشبكة. يرجى التحقق من الاتصال."
+  },
+  "success": {
+    "areaSaved": "تم حفظ بيانات المنطقة بنجاح!"
+  }
+}

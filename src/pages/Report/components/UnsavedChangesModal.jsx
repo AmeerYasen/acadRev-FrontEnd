@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { AlertTriangle, Save, X } from "lucide-react";
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const UnsavedChangesModal = ({ 
   isOpen, 
@@ -10,6 +11,8 @@ const UnsavedChangesModal = ({
   onDiscard,
   saving = false 
 }) => {
+  const { translateReport } = useNamespacedTranslation();
+  
   if (!isOpen) return null;
 
   return (
@@ -18,13 +21,13 @@ const UnsavedChangesModal = ({
         <CardHeader className="pb-3">
           <CardTitle className="text-lg text-gray-800 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-orange-500" />
-            تغييرات غير محفوظة
+            {translateReport('messages.unsavedChangesTitle')}
           </CardTitle>
         </CardHeader>
         
         <CardContent>
           <p className="text-gray-600 mb-6">
-            لديك تغييرات غير محفوظة في التقرير. ماذا تريد أن تفعل؟
+            {translateReport('messages.unsavedChangesMessage')}
           </p>
           
           <div className="flex gap-3 justify-end">
@@ -33,7 +36,7 @@ const UnsavedChangesModal = ({
               onClick={onClose}
               disabled={saving}
             >
-              إلغاء
+              {translateReport('buttons.cancel')}
             </Button>
             
             <Button
@@ -43,7 +46,7 @@ const UnsavedChangesModal = ({
               className="text-red-600 border-red-300 hover:bg-red-50"
             >
               <X className="h-4 w-4 ml-1" />
-              تجاهل التغييرات
+              {translateReport('buttons.discardChanges')}
             </Button>
             
             <Button
@@ -54,12 +57,12 @@ const UnsavedChangesModal = ({
               {saving ? (
                 <>
                   <div className="animate-spin h-4 w-4 border border-white border-t-transparent rounded-full ml-2"></div>
-                  جاري الحفظ...
+                  {translateReport('loading.saving')}
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 ml-1" />
-                  حفظ والمغادرة
+                  {translateReport('buttons.saveAndLeave')}
                 </>
               )}
             </Button>

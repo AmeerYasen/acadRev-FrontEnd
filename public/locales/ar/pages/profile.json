@@ -1,0 +1,16 @@
+{
+  "title": "الملف الشخصي",
+  "subtitle": "إدارة معلومات ملفك الشخصي",
+  "personalInfo": "المعلومات الشخصية",
+  "firstName": "الاسم الأول",
+  "lastName": "اسم العائلة",
+  "email": "البريد الإلكتروني",
+  "phone": "الهاتف",
+  "department": "القسم",
+  "position": "المنصب",
+  "editProfile": "تعديل الملف الشخصي",
+  "changePassword": "تغيير كلمة المرور",
+  "currentPassword": "كلمة المرور الحالية",
+  "newPassword": "كلمة المرور الجديدة",
+  "confirmPassword": "تأكيد كلمة المرور"
+}

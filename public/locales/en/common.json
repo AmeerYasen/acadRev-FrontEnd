@@ -1,0 +1,83 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "add": "Add",
+      "submit": "Submit",
+      "confirm": "Confirm",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "close": "Close",
+      "open": "Open",
+      "view": "View",
+      "search": "Search",
+      "filter": "Filter",
+      "export": "Export",
+      "import": "Import",
+      "download": "Download",
+      "upload": "Upload",
+      "refresh": "Refresh",
+      "reset": "Reset",
+      "clear": "Clear"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Information"
+    },
+    "navigation": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "settings": "Settings",
+      "profile": "Profile",
+      "logout": "Logout",
+      "login": "Login"
+    },
+    "forms": {
+      "required": "This field is required",
+      "invalid": "Invalid input",
+      "tooShort": "Too short",
+      "tooLong": "Too long",
+      "invalidEmail": "Invalid email address",
+      "passwordMismatch": "Passwords do not match",
+      "selectOption": "Select an option",
+      "enterText": "Enter text",
+      "chooseFile": "Choose file"
+    },
+    "messages": {
+      "noDataAvailable": "No data available",
+      "operationSuccessful": "Operation completed successfully",
+      "operationFailed": "Operation failed",
+      "confirmDelete": "Are you sure you want to delete this item?",
+      "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+      "accessDenied": "Access denied",
+      "sessionExpired": "Session expired. Please login again."
+    },
+    "time": {
+      "now": "Now",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "thisWeek": "This week",
+      "lastWeek": "Last week",
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "thisYear": "This year",
+      "lastYear": "Last year"
+    }
+  }
+}

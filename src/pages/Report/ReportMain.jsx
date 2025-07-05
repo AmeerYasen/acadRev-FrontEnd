@@ -12,11 +12,17 @@ import ReportSaveButton from './components/ReportSaveButton';
 import { useReportData } from './hooks/useReportData';
 import { useReportState } from './hooks/useReportState';
 import { useReportSave } from './hooks/useReportSave';
-import { editorSections } from './utils/reportHelpers';
+import { getEditorSections } from './utils/reportHelpers';
+import { getLocalizedText } from '../../utils/translationUtils';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 
 const ReportMain = () => {
   const { programId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { translateReport, currentLanguage, isRTL } = useNamespacedTranslation();
+
+  // Get localized editor sections
+  const editorSections = getEditorSections();
 
   // Custom hooks for managing state and data
   const {
@@ -56,7 +62,7 @@ const ReportMain = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-6">
           <ReportSidebar
@@ -67,7 +73,8 @@ const ReportMain = () => {
             handleDomainChange={handleDomainChangeWithReset}
           />
 
-          <div className="flex-1">            <ReportHeader
+          <div className="flex-1">
+            <ReportHeader
               setSidebarOpen={setSidebarOpen}
               programId={programId}
               currentReportId={reportState.currentReportId}

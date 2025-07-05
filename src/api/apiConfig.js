@@ -52,7 +52,7 @@ export const apiFetch = async (endpoint, options = {}) => {
         // If response is not JSON, use generic message
         errorMessage = `HTTP error! Status: ${response.status}`;
       }      // Handle 401 errors by redirecting to login
-      if (response.status === 401) {
+      if (response.status === 401 ) {
         // Clear any stored auth tokens
         localStorage.removeItem('authToken');
         localStorage.removeItem('authUser');

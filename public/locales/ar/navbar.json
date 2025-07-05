@@ -1,0 +1,63 @@
+{
+  "menu": {
+    "dashboard": "لوحة التحكم",
+    "universities": "الجامعات",
+    "colleges": "الكليات",
+    "departments": "الأقسام",
+    "programs": "البرامج",
+    "users": "المستخدمون",
+    "profile": "الملف الشخصي",
+    "results": "النتائج"
+  },
+  "sections": {
+    "mainMenu": "القائمة الرئيسية"
+  },
+  "controls": {
+    "expand": "توسيع الشريط الجانبي",
+    "collapse": "طي الشريط الجانبي"
+  },
+  "actions": {
+    "signOut": "تسجيل الخروج"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "academic": {
+      "title": "الأكاديمي",
+      "university": "الجامعة",
+      "colleges": "الكليات",
+      "departments": "الأقسام", 
+      "programs": "البرامج"
+    },
+    "assessment": {
+      "title": "التقييم",
+      "qualitative": "النوعي",
+      "quantitative": "الكمي",
+      "results": "النتائج"
+    },
+    "reports": {
+      "title": "التقارير",
+      "generate": "إنشاء التقارير",
+      "view": "عرض التقارير"
+    },
+    "management": {
+      "title": "الإدارة",
+      "users": "المستخدمون",
+      "settings": "الإعدادات"
+    }
+  },
+  "user": {
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "help": "المساعدة",
+    "logout": "تسجيل الخروج"
+  },
+  "mobile": {
+    "menu": "القائمة",
+    "close": "إغلاق"
+  },
+  "breadcrumb": {
+    "home": "الرئيسية",
+    "separator": "/"
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const ReportStatusIndicators = ({ 
   currentReportId, 
@@ -7,37 +8,39 @@ const ReportStatusIndicators = ({
   lastSaved, 
   saving 
 }) => {
+  const { translateReport, currentLanguage } = useNamespacedTranslation();
+  
   return (
     <>
       <p className="text-sm text-gray-500">
-        {currentReportId ? `تحرير تقرير موجود` : 'إنشاء تقرير جديد'}
-        {prompts.length > 0 && ` - المؤشر: ${prompts[0]?.id || 'غير محدد'}`}
+        {currentReportId ? translateReport('status.editingExisting') : translateReport('status.creatingNew')}
+        {prompts.length > 0 && ` - ${translateReport('status.indicator')}: ${prompts[0]?.id || translateReport('status.notSpecified')}`}
       </p>
       
       {lastSaved && (
         <p className="text-xs text-green-600">
-          آخر حفظ: {lastSaved.toLocaleTimeString('ar-SA')}
+          {translateReport('status.lastSaved')}: {lastSaved.toLocaleTimeString(currentLanguage === 'ar' ? 'ar-SA' : 'en-US')}
         </p>
       )}
       
       {saving && (
         <span className="text-sm text-blue-600 flex items-center gap-1">
           <div className="animate-spin h-3 w-3 border border-blue-600 border-t-transparent rounded-full"></div>
-          جاري الحفظ...
+          {translateReport('status.saving')}
         </span>
       )}
       
       {!saving && hasUnsavedChanges && (
         <span className="text-sm text-orange-600 flex items-center gap-1">
           <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
-          تغييرات غير محفوظة
+          {translateReport('status.unsavedChanges')}
         </span>
       )}
       
       {!saving && !hasUnsavedChanges && lastSaved && (
         <span className="text-sm text-green-600 flex items-center gap-1">
           <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-          محفوظ
+          {translateReport('status.saved')}
         </span>
       )}
     </>

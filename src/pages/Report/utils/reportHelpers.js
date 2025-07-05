@@ -1,3 +1,28 @@
+import { t } from 'i18next';
+
+export const getEditorSections = () => [
+  {
+    title: t('report:sections.requirementAchievement'),
+    key: 'result',
+  },
+  {
+    title: t('report:sections.strengths'),
+    key: 'power',
+  },
+  {
+    title: t('report:sections.weaknesses'),
+    key: 'weak',
+  },
+  {
+    title: t('report:sections.strengthImprovement'),
+    key: 'improve_power',
+  },
+  {
+    title: t('report:sections.weaknessImprovement'),
+    key: 'improve_weak',
+  }
+];
+
 export const editorSections = [
   {
     title: 'مدى تحقق المتطلب',

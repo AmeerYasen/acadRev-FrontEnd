@@ -1,0 +1,47 @@
+{
+  "title": "Academic Review System",
+  "subtitle": "Welcome to the Academic Review Platform",
+  "description": "Manage your academic programs, departments, and quality assessments efficiently",
+  "getStarted": "Get Started",
+  "learnMore": "Learn More",
+  "greetings": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "welcome": {
+    "subtitle": "Welcome to your academic review dashboard"
+  },
+  "stats": {
+    "universities": {
+      "label": "Universities"
+    },
+    "programs": {
+      "label": "Total Programs"
+    },
+    "users": {
+      "label": "Active Users"
+    },
+    "reports": {
+      "label": "New Reports"
+    }
+  },
+  "modules": {
+    "title": "Module Access"
+  },
+  "features": {
+    "title": "Key Features",
+    "programManagement": {
+      "title": "Program Management",
+      "description": "Comprehensive academic program oversight"
+    },
+    "qualityAssurance": {
+      "title": "Quality Assurance",
+      "description": "Advanced quality assessment tools"
+    },
+    "reporting": {
+      "title": "Detailed Reporting",
+      "description": "In-depth analytics and reports"
+    }
+  }
+}

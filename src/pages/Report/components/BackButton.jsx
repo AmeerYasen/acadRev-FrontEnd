@@ -4,6 +4,7 @@ import { Button } from "../../../components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useToast } from '../../../context/ToastContext';
 import UnsavedChangesModal from './UnsavedChangesModal';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const BackButton = ({ 
   hasUnsavedChanges, 
@@ -13,6 +14,7 @@ const BackButton = ({
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [showModal, setShowModal] = useState(false);
+  const { translateReport } = useNamespacedTranslation();
 
   const handleBack = () => {
     if (hasUnsavedChanges) {
@@ -32,7 +34,7 @@ const BackButton = ({
         navigate(-1);
       }, 1000);
     } catch (error) {
-      showToast('فشل في حفظ التغييرات، يرجى المحاولة مرة أخرى', 'error');
+      showToast(translateReport('messages.saveFailed'), 'error');
     }
   };
 
@@ -55,7 +57,7 @@ const BackButton = ({
         className="flex items-center gap-2"
       >
         <ArrowRight className="h-4 w-4" />
-        رجوع
+        {translateReport('buttons.back')}
         {hasUnsavedChanges && (
           <span className="text-orange-500">*</span>
         )}

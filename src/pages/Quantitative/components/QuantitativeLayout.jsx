@@ -2,6 +2,7 @@ import React from "react";
 import QuantitativeHeader from "./QuantitativeHeader";
 import { NotificationBar } from "../../../components";
 import { LoadingSpinner } from "../../../components";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 const QuantitativeLayout = React.memo(({ 
   programId, 
@@ -10,8 +11,10 @@ const QuantitativeLayout = React.memo(({
   setError, 
   children 
 }) => {
+  const { translateQuantitative } = useNamespacedTranslation();
+
   if (loading.initial) {
-    return <LoadingSpinner message="Loading quantitative indicators..." />;
+    return <LoadingSpinner message={translateQuantitative('loading.initial')} />;
   }
   
   return (

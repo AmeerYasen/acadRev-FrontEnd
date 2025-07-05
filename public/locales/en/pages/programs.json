@@ -1,0 +1,187 @@
+{
+  "title": "Program Management",
+  "subtitle": "Manage academic programs and curricula",
+  "addProgram": "Add Program",
+  "editProgram": "Edit Program",
+  "programName": "Program Name",
+  "description": "Description",
+  "degree": "Degree Type",
+  "duration": "Duration",
+  "credits": "Total Credits",
+  "coordinator": "Program Coordinator",
+  "accreditation": "Accreditation Status",
+  "loading": "Loading programs...",
+  "errors": {
+    "loadingError": "Failed to load programs. Please try again later.",
+    "networkError": "Network error occurred. Please check your connection.",
+    "notFound": "Program not found.",
+    "createError": "Failed to create program. Please try again.",
+    "updateError": "Failed to update program. Please try again.",
+    "deleteError": "Failed to delete program. Please try again.",
+    "fetchMyProgram": "Failed to load your program information.",
+    "noPermission": "You don't have permission to perform this action.",
+    "updateProgram": "Failed to update program information.",
+    "errorTitle": "Error",
+    "accessDenied": "Access denied. You don't have permission to view this page."
+  },
+  "actions": {
+    "retry": "Retry",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "add": "Add",
+    "close": "Close",
+    "reset": "Reset",
+    "clearSearch": "Clear Search"
+  },
+  "messages": {
+    "addSuccess": "Program added successfully!",
+    "updateSuccess": "Program updated successfully!",
+    "deleteSuccess": "Program deleted successfully!"
+  },
+  "empty": {
+    "title": "No programs found",
+    "message": "There are no programs available at the moment.",
+    "noResults": "No programs match your search criteria."
+  },
+  "success": {
+    "created": "Program created successfully!",
+    "updated": "Program updated successfully!",
+    "deleted": "Program deleted successfully!"
+  },
+  "adminView": {
+    "title": "All Programs",
+    "addButton": "Add New Program",
+    "searchPlaceholder": "Search programs by name...",
+    "errorTitle": "Error loading programs",
+    "emptyTitle": "No programs found",
+    "emptyMessage": "Try adjusting your search criteria."
+  },
+  "staffView": {
+    "loading": "Loading program information...",
+    "errorTitle": "An error occurred",
+    "notFoundTitle": "Program Not Found",
+    "notFoundMessage": "No program information found. Please contact an administrator.",
+    "unavailable": "Information currently unavailable.",
+    "editButton": "Edit Information",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "editingTitle": "Editing Mode",
+    "editingMessage": "You are now editing your program information. Fields marked with an asterisk (*) are required.",
+    "sections": {
+      "programInfo": "Program Information",
+      "academicDetails": "Academic Details"
+    },
+    "fields": {
+      "name": "Program Name",
+      "description": "Description",
+      "degree": "Degree Type",
+      "duration": "Duration (Years)",
+      "credits": "Total Credits",
+      "coordinator": "Program Coordinator",
+      "accreditation": "Accreditation Status",
+      "departmentName": "Department",
+      "collegeName": "College",
+      "universityName": "University",
+      "established": "Established",
+      "language": "Language of Instruction"
+    },
+    "errors": {
+      "loadFailed": "Failed to load program information. Please try again later.",
+      "noData": "No data to save.",
+      "updateFailed": "Failed to update program. Please try again."
+    },
+    "success": {
+      "updated": "Program information updated successfully!"
+    }
+  },
+  "modal": {
+    "title": "Program Details",
+    "editTitle": "Edit Program Details",
+    "addTitle": "Add New Program",
+    "closePopup": "Close popup",
+    "fields": {
+      "programName": "Program Name",
+      "description": "Description",
+      "degree": "Degree Type",
+      "duration": "Duration",
+      "credits": "Total Credits",
+      "coordinator": "Coordinator",
+      "accreditation": "Accreditation",
+      "department": "Department",
+      "college": "College",
+      "university": "University",
+      "notSpecified": "Not specified",
+      "language": "Language",
+      "website": "Website",
+      "established": "Established",
+      "information": "Information",
+      "languages": {
+        "english": "English",
+        "arabic": "Arabic",
+        "french": "French",
+        "german": "German"
+      }
+    },
+    "placeholders": {
+      "enterProgramName": "Enter program name...",
+      "enterDescription": "Enter program description...",
+      "selectDegree": "Select degree type...",
+      "enterDuration": "Enter duration in years...",
+      "enterCredits": "Enter total credits...",
+      "enterCoordinator": "Enter coordinator name...",
+      "selectAccreditation": "Select accreditation status...",
+      "selectDepartment": "Select department...",
+      "selectCollege": "Select college...",
+      "selectUniversity": "Select university...",
+      "enterWebsite": "Enter website URL...",
+      "selectLanguage": "Select language..."
+    },
+    "actions": {
+      "editProgram": "Edit Program",
+      "cancelEdit": "Cancel Edit",
+      "saveChanges": "Save Changes",
+      "addProgram": "Add Program",
+      "creating": "Creating..."
+    },
+    "assessmentTools": {
+      "title": "Assessment Tools",
+      "quantitativeIndicators": "Quantitative Indicators",
+      "qualitativeIndicators": "Qualitative Indicators",
+      "selfAssessmentReport": "Self-Assessment Report"
+    }
+  },
+  "sidebar": {
+    "title": "Filter Programs",
+    "searchLabel": "Search by Name",
+    "searchPlaceholder": "Enter program name...",
+    "universityLabel": "University",
+    "selectUniversity": "Select University",
+    "collegeLabel": "College",
+    "selectCollege": "Select College",
+    "departmentLabel": "Department",
+    "selectDepartment": "Select Department",
+    "itemsPerPageLabel": "Items per Page",
+    "resetButton": "Reset"
+  },
+  "pagination": {
+    "firstPage": "First Page",
+    "previousPage": "Previous Page",
+    "nextPage": "Next Page",
+    "lastPage": "Last Page",
+    "summary": "{{totalRecords}} programs • Page {{currentPage}} of {{totalPages}}"
+  },
+  "searchableDropdown": {
+    "searchPlaceholder": "Search...",
+    "noOptions": "No options found"
+  },
+  "viewCard": {
+    "unnamedProgram": "Unnamed Program",
+    "department": "Department",
+    "college": "College",
+    "university": "University",
+    "type": "PROGRAM"
+  }
+}

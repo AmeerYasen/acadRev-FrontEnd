@@ -1,0 +1,102 @@
+{
+  "title": "إدارة المستخدمين",
+  "subtitle": "يمكن للمستخدمين الإداريين إضافة مستخدمي السلطة فقط",
+  "addUser": "إضافة مستخدم",
+  "addAuthorityUser": "إضافة مستخدم سلطة",
+  "editUser": "تعديل المستخدم",
+  "viewUser": "عرض المستخدم",
+  "userDetails": "تفاصيل المستخدم",
+  "userName": "اسم المستخدم",
+  "fullName": "الاسم الكامل",
+  "email": "البريد الإلكتروني",
+  "role": "الدور",
+  "department": "القسم",
+  "status": "الحالة",
+  "lastLogin": "آخر تسجيل دخول",
+  "permissions": "الصلاحيات",
+  "password": "كلمة المرور",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "loading": "جاري تحميل المستخدمين...",
+  "loadingAuth": "جاري تحميل المصادقة...",
+  "errors": {
+    "loadingError": "خطأ في تحميل المستخدمين",
+    "accessDenied": "تم رفض الوصول",
+    "adminOnly": "هذه الصفحة للمديرين فقط.",
+    "addUserFailed": "فشل في إضافة المستخدم",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "networkError": "حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "validation": "يرجى التحقق من المدخلات والمحاولة مرة أخرى."
+  },
+  "actions": {
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "add": "إضافة",
+    "submit": "إرسال",
+    "retry": "إعادة المحاولة"
+  },
+  "fields": {
+    "id": "المعرف",
+    "username": "اسم المستخدم",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "authorityId": "معرف السلطة",
+    "authorityName": "اسم السلطة",
+    "universityId": "معرف الجامعة",
+    "collegeId": "معرف الكلية",
+    "departmentId": "معرف القسم",
+    "active": "نشط",
+    "createdAt": "تاريخ الإنشاء",
+    "notAvailable": "غير متوفر",
+    "imageUrl": "رابط صورة الملف الشخصي",
+    "userImage": "صورة المستخدم"
+  },
+  "roles": {
+    "admin": "مدير",
+    "authority": "سلطة",
+    "university": "جامعة",
+    "college": "كلية",
+    "department": "قسم"
+  },
+  "placeholders": {
+    "enterUsername": "أدخل اسم المستخدم...",
+    "enterEmail": "أدخل عنوان البريد الإلكتروني...",
+    "enterPassword": "أدخل كلمة المرور...",
+    "confirmPassword": "تأكيد كلمة المرور...",
+    "selectRole": "اختر الدور...",
+    "enterImageUrl": "أدخل رابط الصورة (اختياري)...",
+    "enterAuthorityName": "أدخل اسم السلطة..."
+  },
+  "messages": {
+    "noUsers": "لم يتم العثور على مستخدمين.",
+    "startAdding": "ابدأ بإضافة مستخدمي السلطة إلى النظام.",
+    "userAdded": "تم إضافة المستخدم بنجاح!",
+    "userUpdated": "تم تحديث المستخدم بنجاح!",
+    "userDeleted": "تم حذف المستخدم بنجاح!",
+    "passwordsMatch": "كلمات المرور متطابقة",
+    "passwordsDontMatch": "كلمات المرور غير متطابقة",
+    "yes": "نعم",
+    "no": "لا",
+    "customImage": "صورة ملف شخصي مخصصة",
+    "placeholderImage": "صورة بديلة مُولدة"
+  },
+  "modal": {
+    "addTitle": "إضافة مستخدم سلطة جديد",
+    "editTitle": "تعديل المستخدم",
+    "viewTitle": "تفاصيل المستخدم",
+    "closeModal": "إغلاق النافذة",
+    "requiredField": "حقل مطلوب",
+    "formError": "يرجى تصحيح الأخطاء أدناه",
+    "saving": "جاري الحفظ...",
+    "loading": "جاري التحميل..."
+  },
+  "security": {
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "passwordStrength": "قوة كلمة المرور",
+    "securePassword": "استخدم كلمة مرور آمنة"
+  }
+}

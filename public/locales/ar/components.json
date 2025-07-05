@@ -1,0 +1,183 @@
+{
+
+  "navbar": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "university": "الجامعة",
+    "colleges": "الكليات",
+    "departments": "الأقسام",
+    "programs": "البرامج",
+    "qualitative": "النوعي",
+    "quantitative": "الكمي",
+    "results": "النتائج",
+    "reports": "التقارير",
+    "users": "المستخدمون",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "help": "المساعدة",
+    "support": "الدعم"
+  },
+  "footer": {
+    "copyright": "© 2024 نظام المراجعة الأكاديمية. جميع الحقوق محفوظة.",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "contact": "اتصل بنا",
+    "about": "حول",
+    "version": "الإصدار"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "اختر اللغة",
+    "currentLanguage": "اللغة الحالية",
+    "changeLanguage": "تغيير اللغة",
+    "english": "English",
+    "arabic": "العربية",
+    "languageChanged": "تم تغيير اللغة بنجاح"
+  },
+  "loadingSpinner": {
+    "loading": "جارٍ التحميل...",
+    "pleaseWait": "يرجى الانتظار",
+    "processing": "جارٍ المعالجة"
+  },
+  "toast": {
+    "closeNotification": "إغلاق الإشعار",
+    "dismiss": "تجاهل",
+    "success": "نجح",
+    "error": "خطأ",
+    "warning": "تحذير",
+    "info": "معلومات"
+  },
+  "notificationBar": {
+    "dismissNotification": "تجاهل الإشعار",
+    "close": "إغلاق"
+  },
+  "ui": {
+    "badge": {
+      "new": "جديد",
+      "updated": "محدث",
+      "pending": "معلق",
+      "completed": "مكتمل",
+      "draft": "مسودة",
+      "published": "منشور",
+      "archived": "مؤرشف"
+    },
+    "button": {
+      "primary": "أساسي",
+      "secondary": "ثانوي",
+      "success": "نجح",
+      "danger": "خطر",
+      "warning": "تحذير",
+      "info": "معلومات",
+      "light": "فاتح",
+      "dark": "غامق",
+      "link": "رابط"
+    },
+    "card": {
+      "header": "العنوان",
+      "body": "المحتوى",
+      "footer": "التذييل",
+      "title": "العنوان",
+      "subtitle": "العنوان الفرعي",
+      "expand": "توسيع",
+      "collapse": "طي"
+    },
+    "progress": {
+      "loading": "جاري التحميل",
+      "complete": "مكتمل",
+      "inProgress": "قيد التقدم",
+      "pending": "معلق",
+      "failed": "فشل"
+    },
+    "separator": {
+      "or": "أو",
+      "and": "و",
+      "divider": "فاصل"
+    }
+  },
+  "forms": {
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "email": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "minLength": "الحد الأدنى {{count}} أحرف مطلوبة",
+      "maxLength": "الحد الأقصى {{count}} أحرف مسموحة",
+      "pattern": "تنسيق غير صحيح",
+      "numeric": "يرجى إدخال رقم صحيح",
+      "alphanumeric": "الأحرف والأرقام فقط مسموحة",
+      "phone": "يرجى إدخال رقم هاتف صحيح",
+      "url": "يرجى إدخال رابط صحيح",
+      "date": "يرجى إدخال تاريخ صحيح",
+      "time": "يرجى إدخال وقت صحيح",
+      "passwordStrength": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل مع أحرف كبيرة وصغيرة ورقم ورمز خاص"
+    },
+    "placeholders": {
+      "enterEmail": "أدخل بريدك الإلكتروني",
+      "enterPassword": "أدخل كلمة المرور",
+      "enterName": "أدخل اسمك",
+      "enterPhone": "أدخل رقم هاتفك",
+      "selectOption": "اختر خياراً",
+      "chooseFile": "اختر ملف",
+      "enterDescription": "أدخل الوصف",
+      "searchHere": "ابحث هنا...",
+      "typeMessage": "اكتب رسالتك..."
+    }
+  },
+  "tables": {
+    "headers": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "status": "الحالة",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "activate": "تنشيط",
+      "deactivate": "إلغاء التنشيط",
+      "approve": "موافقة",
+      "reject": "رفض"
+    },
+    "pagination": {
+      "showing": "عرض",
+      "of": "من",
+      "results": "نتائج",
+      "page": "صفحة",
+      "rowsPerPage": "صفوف لكل صفحة",
+      "first": "الأول",
+      "last": "الأخير",
+      "next": "التالي",
+      "previous": "السابق"
+    },
+    "empty": {
+      "noData": "لا توجد بيانات متاحة",
+      "noResults": "لم يتم العثور على نتائج",
+      "emptyTable": "هذا الجدول فارغ"
+    }
+  },
+  "modals": {
+    "confirm": {
+      "title": "تأكيد الإجراء",
+      "message": "هل أنت متأكد من أنك تريد المتابعة؟",
+      "yes": "نعم",
+      "no": "لا",
+      "confirm": "تأكيد",
+      "cancel": "إلغاء"
+    },
+    "delete": {
+      "title": "حذف العنصر",
+      "message": "هل أنت متأكد من أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "delete": "حذف",
+      "cancel": "إلغاء"
+    },
+    "save": {
+      "title": "حفظ التغييرات",
+      "message": "هل تريد حفظ التغييرات؟",
+      "save": "حفظ",
+      "discard": "تجاهل",
+      "cancel": "إلغاء"
+    }
+  }
+}

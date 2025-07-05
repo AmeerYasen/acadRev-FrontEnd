@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 import { addCollege } from '../../../api/collegeApi'; // Adjust path if your functions.js is elsewhere
-
+// import { useToast } from '../../../context/ToastContext';
 const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
+  const { translateCollege } = useNamespacedTranslation();
   const [collegeName, setCollegeName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -9,6 +11,7 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  // const [showError, showSuccess ] = useToast();
 
   if (!isOpen) return null;
 
@@ -17,16 +20,16 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(translateCollege('modal.errors.passwordsDoNotMatch'));
       return;
     }
     if (!collegeName.trim() || !username.trim() || !email.trim() || !password.trim()) {
-      setError("All fields are required.");
+      setError(translateCollege('modal.errors.allFieldsRequired'));
       return;
     }
     // Basic email validation
     if (!/\S+@\S+\.\S+/.test(email)) {
-        setError("Please enter a valid email address.");
+        setError(translateCollege('modal.errors.invalidEmail'));
         return;
     }
 
@@ -40,10 +43,13 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
         
       };
       const newCollege = await addCollege(collegeData); // Use your actual API function
+      
       onCollegeAdded(newCollege); // Callback to refresh list or notify parent
+
       handleClose();
     } catch (err) {
-      setError(err.message || "Failed to add college. Please try again.");
+      setError(err.message || translateCollege('modal.errors.addFailed'));
+      
     } finally {
       setIsLoading(false);
     }
@@ -73,14 +79,14 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
         <button
           className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 transition-colors duration-200 rounded-full w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-700"
           onClick={handleClose}
-          aria-label="Close popup"
+          aria-label={translateCollege('modal.accessibility.closePopup')}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
           </svg>
         </button>
         
-        <h2 className="text-primary text-2xl font-bold mb-6 text-center">Add New College</h2>
+        <h2 className="text-primary text-2xl font-bold mb-6 text-center">{translateCollege('modal.title')}</h2>
         
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-md text-sm">
@@ -88,12 +94,12 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
           </div>
         )}
 
-        <p className="text-sm text-gray-500 mb-4 text-center">All fields are required</p>
+        <p className="text-sm text-gray-500 mb-4 text-center">{translateCollege('modal.allFieldsRequired')}</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="collegeName" className="block text-sm font-medium text-gray-700 mb-1">
-              College Name <span className="text-red-500">*</span>
+              {translateCollege('modal.collegeName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -101,16 +107,16 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
               value={collegeName}
               onChange={(e) => setCollegeName(e.target.value)}
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base"
-              placeholder="Enter the full name of the college"
+              placeholder={translateCollege('modal.collegeNamePlaceholder')}
               required
             />
           </div>
           
-          <p className="text-sm font-semibold text-gray-600 pt-2 border-t border-gray-200">College Admin User Details</p>
+          <p className="text-sm font-semibold text-gray-600 pt-2 border-t border-gray-200">{translateCollege('modal.adminUserDetails')}</p>
           
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-              Admin Username <span className="text-red-500">*</span>
+              {translateCollege('modal.adminUsername')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -118,13 +124,13 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base"
-              placeholder="Username for college admin account"
+              placeholder={translateCollege('modal.adminUsernamePlaceholder')}
               required
             />
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Admin Email <span className="text-red-500">*</span>
+              {translateCollege('modal.adminEmail')} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -132,13 +138,13 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base"
-              placeholder="example@college.edu"
+              placeholder={translateCollege('modal.adminEmailPlaceholder')}
               required
             />
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Admin Password <span className="text-red-500">*</span>
+              {translateCollege('modal.adminPassword')} <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -146,7 +152,7 @@ const AddCollegeModal = ({ isOpen, onClose, onCollegeAdded, }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base"
-              placeholder="Create a secure password"
+              placeholder={translateCollege('modal.adminPasswordPlaceholder')}
               required
               minLength="6"
             />

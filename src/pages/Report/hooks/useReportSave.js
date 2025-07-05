@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { fetchAllReports, saveAndUpdateReport } from '../../../api/reportsAPI';
 import  {useToast}  from '../../../context/ToastContext';
+import { t } from 'i18next';
 
 export const useReportSave = (
   programId, 
@@ -52,18 +53,18 @@ export const useReportSave = (
 
   const handleSaveReport = async () => {
     if (!currentDomain?.id) {
-      showToast('يرجى اختيار مجال أولاً', 'error');
+      showToast(t('report:error.selectDomainFirst', 'Please select a domain first'), 'error');
       return;
     }
 
     if (!programId) {
-      showToast('معرف البرنامج مطلوب', 'error');
+      showToast(t('report:error.programIdRequired', 'Program ID is required'), 'error');
       return;
     }
 
     const currentIndicatorId = prompts.length > 0 ? prompts[0]?.id : null;
     if (!currentIndicatorId) {
-      showToast('يرجى التأكد من وجود مؤشر صالح', 'error');
+      showToast(t('report:error.validIndicatorRequired', 'Please ensure a valid indicator exists'), 'error');
       return;
     }
 
@@ -80,7 +81,7 @@ export const useReportSave = (
     );
     
     if (!hasContent) {
-      showToast('يرجى إدخال محتوى في قسم واحد على الأقل', 'error');
+      showToast(t('report:error.contentRequired', 'Please enter content in at least one section'), 'error');
       return;
     }
 
@@ -106,12 +107,14 @@ export const useReportSave = (
       const newReportId = response?.inserted && response?.id ? response.id : reportState.currentReportId;
       reportState.markAsSaved(newReportId);
       
-      const message = response?.updated ? 'تم تحديث التقرير بنجاح' : 'تم حفظ التقرير بنجاح';
+      const message = response?.updated 
+        ? t('report:success.reportUpdated', 'Report updated successfully') 
+        : t('report:success.reportSaved', 'Report saved successfully');
       showToast(message, 'success');
       
     } catch (error) {
       console.error('Error saving report:', error);
-      showToast('حدث خطأ أثناء حفظ التقرير', 'error');
+      showToast(t('report:error.saveFailed', 'An error occurred while saving the report'), 'error');
     } finally {
       setSaving(false);
     }
@@ -137,7 +140,7 @@ export const useReportSave = (
     const handleBeforeUnload = (event) => {
       if (reportState.hasUnsavedChanges) {
         event.preventDefault();
-        event.returnValue = 'لديك تغييرات غير محفوظة. هل تريد المغادرة؟';
+        event.returnValue = t('report:messages.beforeUnloadWarning', 'You have unsaved changes. Do you want to leave?');
         return event.returnValue;
       }
     };

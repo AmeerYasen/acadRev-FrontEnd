@@ -1,6 +1,8 @@
 import React from "react";
 import { Target } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText } from "../../../utils/translationUtils";
 
 const DomainsSidebar = React.memo(({ 
   domains, 
@@ -9,6 +11,7 @@ const DomainsSidebar = React.memo(({
   handleDomainSelect, 
   getDomainStatus 
 }) => {
+  const { translateQualitative, currentLanguage } = useNamespacedTranslation();
   // Icon mapping for domains
   const getDomainIcon = (domainId) => {
     // You can customize this based on your domain types
@@ -20,9 +23,9 @@ const DomainsSidebar = React.memo(({
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Target className="h-5 w-5 text-blue-600" />
-          <span>Quality Domains</span>
+          <span>{translateQualitative('qualityDomains')}</span>
         </CardTitle>
-        <CardDescription>{domains.length} domains available</CardDescription>
+        <CardDescription>{domains.length} {translateQualitative('domainsAvailable')}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
@@ -50,13 +53,13 @@ const DomainsSidebar = React.memo(({
                     className={`font-medium text-sm leading-relaxed ${
                       isSelected ? "text-blue-900" : "text-gray-900"
                     } whitespace-normal`}
-                    title={domain.name}
+                    title={getLocalizedText(domain, currentLanguage)}
                   >
-                    {domain.name}
+                    {getLocalizedText(domain, currentLanguage)}
                   </h3>
                   <div className="flex items-center justify-between mt-1">
                     <span className="text-xs text-gray-600">
-                      {progress[domain.id] || 0}% complete
+                      {progress[domain.id] || 0}% {translateQualitative('complete')}
                     </span>
                     <StatusIcon className={`h-3 w-3 ${domainStatus.color}`} />
                   </div>

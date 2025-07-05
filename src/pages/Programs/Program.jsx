@@ -12,6 +12,7 @@ import { fetchUniversityNames } from '../../api/universityApi';
 import { fetchCollegeNamesByUniversity } from '../../api/collegeApi';
 import { fetchDepNamesByCollege } from '../../api/departmentAPI';
 import {useDebounce} from '../../hooks/useDebounce';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import ProgramAdminView from './ProgramAdminView';
 import ProgramEditModal from './components/ProgramEditModal';
 import AddProgramModal from './components/AddProgramModal';
@@ -20,6 +21,7 @@ import { useToast } from '../../context/ToastContext';
 // Main Program component
 const Program = () => {
   const { user } = useAuth(); // Get user from AuthContext
+  const { translatePrograms } = useNamespacedTranslation();
   const userRole = user?.role || ROLES.GUEST;
   const roleWeight = getRoleWeight(userRole);
   const [programs, setPrograms] = useState([]);
@@ -391,8 +393,8 @@ const Program = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
-          <p className="text-gray-600">You don't have permission to view this page.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{translatePrograms('errors.accessDenied')}</h2>
+          <p className="text-gray-600">{translatePrograms('errors.noPermission')}</p>
         </div>
       </div>
     );

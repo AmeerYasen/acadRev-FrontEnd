@@ -1,0 +1,54 @@
+{
+  "title": "Quantitative Indicators",
+  "subtitle": "Assessment metrics and data analysis for Program",
+  "selectArea": "Select an Assessment Area",
+  "selectAreaDescription": "Choose an area from the sidebar to view and edit its quantitative indicators",
+  "areaProgress": "Progress",
+  "complete": "Complete",
+  "dataEntryTable": "Data Entry Table",
+  "expandTable": "Expand Table",
+  "openFullTableView": "Open Full Table View",
+  "dataEntryTableDescription": "Enter the quantitative data for each item and metric",
+  "assessmentAreas": "Assessment Areas",
+  "areasAvailable": "areas available",
+  "quickStats": "Quick Stats",
+  "totalAreas": "Total Areas",
+  "completed": "Completed",
+  "inProgress": "In Progress",
+  "overallProgress": "Overall Progress",
+  "items": "Items",
+  "metrics": "Metrics",
+  "item": "Item",
+  "itemPlaceholder": "Enter item name",
+  "enterValue": "Enter value",
+  "value": "Value",
+  "loading": {
+    "initial": "Loading quantitative indicators...",
+    "data": "Loading data...",
+    "saving": "Saving..."
+  },
+  "status": {
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started"
+  },
+  "modal": {
+    "title": "Data Entry Table",
+    "cancel": "Cancel",
+    "saveAreaData": "Save Area Data",
+    "progress": "Progress",
+    "progressComplete": "complete",
+    "itemsMetrics": "{{items}} items • {{metrics}} metrics",
+    "noDataAvailable": "No data structure available",
+    "contactAdmin": "Please contact your administrator"
+  },
+  "errors": {
+    "loadFailed": "Failed to load initial data",
+    "loadAreaFailed": "Failed to load data for area",
+    "saveFailed": "Failed to save area data",
+    "networkError": "Network error occurred. Please check your connection."
+  },
+  "success": {
+    "areaSaved": "Area data saved successfully!"
+  }
+}

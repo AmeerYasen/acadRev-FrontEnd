@@ -6,6 +6,8 @@ import {
   Beaker 
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText } from "../../../utils/translationUtils";
 
 const AreasSidebar = React.memo(({   areas, 
   selectedArea, 
@@ -13,14 +15,16 @@ const AreasSidebar = React.memo(({   areas,
   handleAreaSelect, 
   getAreaStatus 
 }) => {
+  const { translateQuantitative, currentLanguage } = useNamespacedTranslation();
+
   return (
     <Card className="top-32">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Beaker className="h-5 w-5 text-blue-600" />
-          <span>Assessment Areas</span>
+          <span>{translateQuantitative('assessmentAreas')}</span>
         </CardTitle>
-        <CardDescription>{areas.length} areas available</CardDescription>
+        <CardDescription>{areas.length} {translateQuantitative('areasAvailable')}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
@@ -44,12 +48,12 @@ const AreasSidebar = React.memo(({   areas,
                 <div className="flex-1 overflow-hidden">
                   <h3
                     className={`font-medium text-sm leading-relaxed ${isSelected ? "text-blue-900" : "text-gray-900"} whitespace-normal`}
-                    title={area.text_ar}
+                    title={getLocalizedText(area, currentLanguage)}
                   >
-                    {area.text_ar}
+                    {getLocalizedText(area, currentLanguage)}
                   </h3>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-xs text-gray-600">{progress[area.id] || 0}% complete</span>
+                    <span className="text-xs text-gray-600">{progress[area.id] || 0}% {translateQuantitative('complete')}</span>
                     <StatusIcon className={`h-3 w-3 ${areaStatus.color}`} />
                   </div>
                 </div>

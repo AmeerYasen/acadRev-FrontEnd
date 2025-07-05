@@ -1,13 +1,15 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const ProgramDisplayCard = ({ 
   item, // Expects a program object
   parentCode, // e.g., department code
   onClick, 
 }) => {
+  const { translatePrograms } = useNamespacedTranslation();
 
   // Program-specific details
-  const programName = item.program_name || 'Unnamed Program';
+  const programName = item.program_name || translatePrograms('viewCard.unnamedProgram');
   //TODO: Uncomment and adjust the date formatting 
   // if (item.created_at) {
   //   try {
@@ -44,25 +46,25 @@ const ProgramDisplayCard = ({
           
           {item.department_name && (
              <div className="text-sm text-gray-600">
-               <span className="font-medium text-gray-500">Department:</span> {item.department_name}
+               <span className="font-medium text-gray-500">{translatePrograms('viewCard.department')}:</span> {item.department_name}
              </div>
           )}
           
           {item.college_name && (
              <div className="text-sm text-gray-600">
-               <span className="font-medium text-gray-500">College:</span> {item.college_name}
+               <span className="font-medium text-gray-500">{translatePrograms('viewCard.college')}:</span> {item.college_name}
              </div>
           )}
           
           {item.university_name && (
              <div className="text-sm text-gray-600">
-               <span className="font-medium text-gray-500">University:</span> {item.university_name}
+               <span className="font-medium text-gray-500">{translatePrograms('viewCard.university')}:</span> {item.university_name}
              </div>
           )}
         </div>
         
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-          <div className="text-xs text-primary-dark font-medium">PROGRAM</div>
+          <div className="text-xs text-primary-dark font-medium">{translatePrograms('viewCard.type')}</div>
         
         </div>
       </div>

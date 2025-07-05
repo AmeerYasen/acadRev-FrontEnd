@@ -1,0 +1,63 @@
+{
+  "menu": {
+    "dashboard": "Dashboard",
+    "universities": "Universities",
+    "colleges": "Colleges",
+    "departments": "Departments", 
+    "programs": "Programs",
+    "users": "Users",
+    "profile": "Profile",
+    "results": "Results"
+  },
+  "sections": {
+    "mainMenu": "Main Menu"
+  },
+  "controls": {
+    "expand": "Expand Sidebar",
+    "collapse": "Collapse Sidebar"
+  },
+  "actions": {
+    "signOut": "Sign out"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "academic": {
+      "title": "Academic",
+      "university": "University",
+      "colleges": "Colleges", 
+      "departments": "Departments",
+      "programs": "Programs"
+    },
+    "assessment": {
+      "title": "Assessment",
+      "qualitative": "Qualitative",
+      "quantitative": "Quantitative",
+      "results": "Results"
+    },
+    "reports": {
+      "title": "Reports",
+      "generate": "Generate Reports",
+      "view": "View Reports"
+    },
+    "management": {
+      "title": "Management",
+      "users": "Users",
+      "settings": "Settings"
+    }
+  },
+  "user": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout"
+  },
+  "mobile": {
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "separator": "/"
+  }
+}

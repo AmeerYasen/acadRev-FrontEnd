@@ -1,223 +1,389 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  Building2, Mail, Globe, MapPin, User, FileText, Calendar,
+  Pencil, X, Save, Loader2, AlertCircle, Shield, Briefcase
+} from "lucide-react";
 import CollegeCard from './components/CollegeCard';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
+
+// --- Define field components outside CollegeStaffView ---
+
+const TextField = ({ label, name, value, icon, editable = true, isEditing, onChangeInput, translateCollege }) => (
+  <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">
+      {icon}
+    </div>
+    <div className="flex-1">
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      {isEditing && editable ? (
+        <input
+          type="text"
+          id={name}
+          name={name}
+          value={value || ""}
+          onChange={onChangeInput}
+          className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
+        />
+      ) : (
+        <p className="text-gray-800 mt-1 font-medium">{value || translateCollege('form.notProvided')}</p>
+      )}
+    </div>
+  </div>
+);
+
+const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput, translateCollege }) => (
+  <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">
+      {icon}
+    </div>
+    <div className="flex-1">
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      {isEditing ? (
+        <textarea
+          id={name}
+          name={name}
+          value={value || ""}
+          onChange={onChangeInput}
+          rows={3}
+          className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
+        />
+      ) : (
+        <p className="text-gray-800 mt-1 whitespace-pre-line font-medium">{value || translateCollege('form.notProvided')}</p>
+      )}
+    </div>
+  </div>
+);
+
+const UrlField = ({ label, name, value, icon, isEditing, onChangeInput, translateCollege }) => (
+  <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">
+      {icon}
+    </div>
+    <div className="flex-1 min-w-0"> {/* min-w-0 allows flex item to shrink below content size */}
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      {isEditing ? (
+        <input
+          type="url"
+          id={name}
+          name={name}
+          value={value || ""}
+          onChange={onChangeInput}
+          className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
+          placeholder="https://"
+        />
+      ) : (
+        <a 
+          href={value || '#'}
+          target="_blank" 
+          rel="noopener noreferrer"
+          className={`mt-1 block font-medium break-all ${value ? 'text-blue-600 hover:underline' : 'text-gray-800 cursor-default'}`}
+        >
+          {value || translateCollege('form.notProvided')}
+        </a>
+      )}
+    </div>
+  </div>
+);
+
+const EmailField = ({ label, name, value, icon, isEditing, onChangeInput, translateCollege }) => (
+  <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">
+      {icon}
+    </div>
+    <div className="flex-1">
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      {isEditing ? (
+        <input
+          type="email"
+          id={name}
+          name={name}
+          value={value || ""}
+          onChange={onChangeInput}
+          className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
+        />
+      ) : (
+        <a 
+          href={value ? `mailto:${value}` : '#'}
+          className={`mt-1 block font-medium ${value ? 'text-blue-600 hover:underline' : 'text-gray-800 cursor-default'}`}
+        >
+          {value || translateCollege('form.notProvided')}
+        </a>
+      )}
+    </div>
+  </div>
+);
+
+// --- End of field components ---
 
 const CollegeStaffView = ({ user, colleges, onUpdateCollege, openCollegePopup }) => {
+  const { translateCollege } = useNamespacedTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
+  const [saving, setSaving] = useState(false);
   
-  // Assuming for 'college' role, 'colleges' array will contain their specific college.
-  const collegeForCollegeRole = user?.role === 'college' && colleges && colleges.length > 0 ? colleges[0] : null;
+  // Determine if user should see staff view (college or department users)
+  const shouldShowStaffView = user?.role === 'college' || user?.role === 'department';
+  const collegeForStaffView = shouldShowStaffView && colleges && colleges.length > 0 ? colleges[0] : null;
+  const isCollegeRole = user?.role === 'college'; // Only college users can edit
 
   useEffect(() => {
-    if (user?.role === 'college' && collegeForCollegeRole) {
+    if (shouldShowStaffView && collegeForStaffView) {
       setFormData({
-        name: collegeForCollegeRole.name || '',
-        email: collegeForCollegeRole.email || '',
-        website: collegeForCollegeRole.website || '',
-        address: collegeForCollegeRole.address || '',
-        logo: collegeForCollegeRole.logo || '',
-        head_name: collegeForCollegeRole.head_name || '',
+        name: collegeForStaffView.name || '',
+        email: collegeForStaffView.email || '',
+        website: collegeForStaffView.website || '',
+        address: collegeForStaffView.address || '',
+        logo: collegeForStaffView.logo || '',
+        head_name: collegeForStaffView.head_name || '',
       });
     }
-  }, [collegeForCollegeRole, user?.role]);
+    console.log(collegeForStaffView);
+  }, [collegeForStaffView, shouldShowStaffView]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    // Reset form data to original college data
-    if (collegeForCollegeRole) {
-      setFormData({
-        name: collegeForCollegeRole.name || '',
-        email: collegeForCollegeRole.email || '',
-        website: collegeForCollegeRole.website || '',
-        address: collegeForCollegeRole.address || '',
-        logo: collegeForCollegeRole.logo || '',
-        head_name: collegeForCollegeRole.head_name || '',
-      });
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Cancel editing - revert changes
+      if (collegeForStaffView) {
+        setFormData({
+          name: collegeForStaffView.name || '',
+          email: collegeForStaffView.email || '',
+          website: collegeForStaffView.website || '',
+          address: collegeForStaffView.address || '',
+          logo: collegeForStaffView.logo || '',
+          head_name: collegeForStaffView.head_name || '',
+        });
+      }
     }
+    setIsEditing(!isEditing);
   };
 
   const handleSave = async () => {
-    if (!collegeForCollegeRole) {return};
-
-    const { name, ...restOFData } = formData; // Extract non-editable fields name and rest of data
-    // Assuming 'restOFData' contains the rest of the fields that can be edited
-    const updatedCollegeData = {
-      id: collegeForCollegeRole.id,
-      university_id: collegeForCollegeRole.university_id, // Keep non-editable fields like id, university_id
-      ...restOFData // Apply changes from the form
-    };
-
-
+    if (!collegeForStaffView) return;
 
     try {
+      setSaving(true);
+      const { name, ...restOfData } = formData; // Extract non-editable fields name and rest of data
+      const updatedCollegeData = {
+        id: collegeForStaffView.id,
+        university_id: collegeForStaffView.university_id, // Keep non-editable fields like id, university_id
+        ...restOfData // Apply changes from the form
+      };
+
       await onUpdateCollege(updatedCollegeData);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating college from staff view:", error);
       // Optionally, display an error message to the user within this component
+    } finally {
+      setSaving(false);
     }
   };
 
-  const renderDetailField = (label, value, name, type = "text", isEditable = true, multiline = false) => {
-    if (isEditing && isEditable) {
-      if (multiline) {
-        return (
-          <div className="mb-5">
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <textarea
-              id={name}
-              name={name}
-              value={formData[name] || ''}
-              onChange={handleInputChange}
-              rows="3"
-              className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition duration-150"
-            />
+  if (shouldShowStaffView) {
+    if (!collegeForStaffView) {
+      return (
+        <div className="max-w-3xl mx-auto p-6 bg-yellow-50 border border-yellow-100 rounded-lg mt-8">
+          <div className="flex items-start">
+            <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">{translateCollege('errors.collegeInfoNotAvailable')}</h3>
+              <div className="mt-2 text-sm text-yellow-700">{translateCollege('empty.noCollegeData')}</div>
+            </div>
           </div>
-        );
-      }
-      return (
-        <div className="mb-5">
-          <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-          <input
-            type={type}
-            id={name}
-            name={name}
-            value={formData[name] || ''}
-            onChange={handleInputChange}
-            className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition duration-150"
-          />
         </div>
       );
     }
-    // Improved display for non-editable fields
-    return (
-      <div className="mb-5 py-2 border-b border-gray-100 last:border-b-0">
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-500 uppercase tracking-wider mb-1">{label}</span>
-          <span className="text-gray-800 font-medium">
-            {value ? (
-              type === 'url' && value.startsWith('http') ? (
-                <a href={value} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                  {value}
-                </a>
-              ) : type === 'email' ? (
-                <a href={`mailto:${value}`} className="text-primary hover:underline">
-                  {value}
-                </a>
-              ) : (
-                value
-              )
-            ) : (
-              <span className="text-gray-400 italic">Not provided</span>
-            )}
-          </span>
-        </div>
-      </div>
-    );
-  };
 
-
-  if (user?.role === 'college') {
-    if (!collegeForCollegeRole) {
-      return (
-        <div className="flex flex-col items-center justify-center h-64 bg-white shadow-lg rounded-lg p-8">
-          <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <p className="text-center text-gray-500 text-lg">College information is not available.</p>
-        </div>
-      );
-    }
+    // Use formData when editing, otherwise collegeForStaffView
+    const displayData = isEditing ? formData : collegeForStaffView;
     
     return (
-      <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-        {/* Header with College Name and Edit Button */}
-        <div className="bg-gradient-to-r from-primary to-primary-dark p-6 text-white flex justify-between items-center">
-          <h2 className="text-2xl font-bold">
-            {isEditing ? `Editing: ${collegeForCollegeRole.name}` : collegeForCollegeRole.name}
-          </h2>
-          {!isEditing && (
-            <button
-              onClick={handleEdit}
-              className="px-4 py-2 bg-white text-primary rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition duration-150 font-medium flex items-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-              </svg>
-              Edit Details
-            </button>
-          )}
-        </div>
-        
-        <div className="p-6 md:p-8">
-          {/* Logo and Information Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Logo Section */}
-            <div className="md:col-span-1">
-              {collegeForCollegeRole.logo ? (
-                <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-center">
-                  <img 
-                    src={collegeForCollegeRole.logo} 
-                    alt={`${collegeForCollegeRole.name} logo`} 
-                    className="max-h-48 max-w-full object-contain" 
+      <div className="w-full max-w-5xl mx-auto p-6">
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100">
+          <div className="relative">
+            <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-700 h-48 md:h-60"></div>
+            <div className="absolute bottom-0 w-full transform translate-y-1/2">
+              <div className="px-6 flex flex-col md:flex-row items-center">
+                <div className="h-32 w-32 rounded-xl overflow-hidden bg-white border-4 border-white shadow-xl">
+                  {collegeForStaffView.logo ? (
+                    <img 
+                      src={collegeForStaffView.logo}
+                      alt={translateCollege('staffView.collegeLogo', { name: collegeForStaffView.name })}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://picsum.photos/seed/${collegeForStaffView.id}/800/600`;
+                       }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <Building2 className="h-16 w-16 text-gray-400" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-20 pb-4 px-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                    {collegeForStaffView.name}
+                  </h1>
+                  <div className="text-blue-600 text-lg mt-1 font-medium">
+                    {translateCollege('staffView.collegeInformation')}
+                  </div>
+                </div>
+                
+                {isCollegeRole && (
+                  <div className="flex gap-2 mt-4 md:mt-0">
+                    {isEditing ? (
+                      <>
+                        <button
+                          onClick={handleSave}
+                          disabled={saving}
+                          className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow transition-colors"
+                        >
+                          {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
+                          {saving ? translateCollege('staffView.saving') : translateCollege('actions.saveChanges')}
+                        </button>
+                        <button
+                          onClick={handleEditToggle}
+                          disabled={saving}
+                          className="flex items-center gap-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md shadow transition-colors"
+                        >
+                          <X size={18} />
+                          {translateCollege('actions.cancel')}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={handleEditToggle}
+                        className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
+                      >
+                        <Pencil size={18} />
+                        {translateCollege('actions.editDetails')}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            {isEditing && isCollegeRole && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="text-blue-600 shrink-0 mt-1" size={20} />
+                  <div>
+                    <h3 className="font-medium text-blue-800">{translateCollege('staffView.editingMode')}</h3>
+                    <p className="text-blue-700 text-sm mt-1">
+                      {translateCollege('staffView.editingInstructions')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
+                  <Briefcase size={20} className="text-blue-600" />
+                  {translateCollege('staffView.collegeDetails')}
+                </h2>
+                <div className="space-y-4">
+                  <EmailField 
+                    label={translateCollege('form.email')} 
+                    name="email" 
+                    value={displayData.email} 
+                    icon={<Mail className="text-blue-600" size={20} />} 
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
+                  />
+                  <UrlField 
+                    label={translateCollege('form.website')} 
+                    name="website" 
+                    value={displayData.website} 
+                    icon={<Globe className="text-blue-600" size={20} />} 
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
+                  />
+                  <TextAreaField 
+                    label={translateCollege('form.address')} 
+                    name="address" 
+                    value={displayData.address} 
+                    icon={<MapPin className="text-blue-600" size={20} />} 
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
                   />
                 </div>
-              ) : (
-                <div className="mb-6 bg-gray-50 p-8 rounded-lg border border-gray-200 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
+                  <Shield size={20} className="text-blue-600" />
+                  {translateCollege('staffView.administrativeInfo')}
+                </h2>
+                <div className="space-y-4">
+                  <TextField 
+                    label={translateCollege('form.headOfCollege')} 
+                    name="head_name" 
+                    value={displayData.head_name} 
+                    icon={<User className="text-blue-600" size={20} />} 
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
+                  />
+                  <TextField 
+                    label={translateCollege('form.universityId')} 
+                    name="university_id" 
+                    value={collegeForStaffView.university_id} 
+                    icon={<Building2 className="text-blue-600" size={20} />} 
+                    editable={false}
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
+                  />
+                  <TextField 
+                    label={translateCollege('form.dateEstablished')} 
+                    name="created_at" 
+                    value={new Date(collegeForStaffView.created_at).toLocaleDateString()} 
+                    icon={<Calendar className="text-blue-600" size={20} />} 
+                    editable={false}
+                    isEditing={isEditing}
+                    onChangeInput={handleInputChange}
+                    translateCollege={translateCollege}
+                  />
                 </div>
-              )}
-              
-              {isEditing && renderDetailField("Logo URL", formData.logo, "logo")}
-              
-              {/* Read-only information */}
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
-                <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wider mb-3">Administrative Information</h3>
-                {renderDetailField("University ID", collegeForCollegeRole.university_id, "university_id", "text", false)}
-                {renderDetailField("Date Established", new Date(collegeForCollegeRole.created_at).toLocaleDateString(), "created_at", "text", false)}
               </div>
             </div>
             
-            {/* Details Section */}
-            <div className="md:col-span-2">
-              <h3 className="font-semibold text-lg text-gray-800 mb-4 pb-2 border-b">College Details</h3>
-              
-              {renderDetailField("College Name", collegeForCollegeRole.name, "name", "text", false)}
-              {renderDetailField("Email", collegeForCollegeRole.email, "email", "email", true)}
-              {renderDetailField("Website", collegeForCollegeRole.website, "website", "url", true)}
-              {renderDetailField("Head of College", collegeForCollegeRole.head_name, "head_name", "text", true)}
-              {renderDetailField("Address", collegeForCollegeRole.address, "address", "text", true, true)}
-            </div>
+            {/* Logo URL field - only visible in edit mode and spans full width */}
+            {isEditing && (
+              <div className="mt-6">
+                <UrlField 
+                  label={translateCollege('form.logoUrl')} 
+                  name="logo" 
+                  value={displayData.logo} 
+                  icon={<FileText className="text-blue-600" size={20} />} 
+                  isEditing={isEditing}
+                  onChangeInput={handleInputChange}
+                  translateCollege={translateCollege}
+                />
+              </div>
+            )}
           </div>
-
-          {/* Action Buttons for Edit Mode */}
-          {isEditing && (
-            <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-4">
-              <button
-                onClick={handleCancel}
-                className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-6 py-2.5 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-opacity-50 transition duration-150 font-medium"
-              >
-                Save Changes
-              </button>
-            </div>
-          )}
         </div>
       </div>
     );
@@ -244,8 +410,8 @@ const CollegeStaffView = ({ user, colleges, onUpdateCollege, openCollegePopup })
       <svg className="w-24 h-24 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
       </svg>
-      <p className="text-center text-gray-500 text-lg font-medium">No colleges to display.</p>
-      <p className="text-center text-gray-400 mt-2">No college data is currently available for your account.</p>
+      <p className="text-center text-gray-500 text-lg font-medium">{translateCollege('empty.noColleges')}</p>
+      <p className="text-center text-gray-400 mt-2">{translateCollege('empty.noCollegeData')}</p>
     </div>
   );
 };

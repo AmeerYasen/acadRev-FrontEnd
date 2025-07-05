@@ -1,0 +1,102 @@
+{
+  "title": "User Management",
+  "subtitle": "Admin users can add authority users only",
+  "addUser": "Add User",
+  "addAuthorityUser": "Add Authority User",
+  "editUser": "Edit User",
+  "viewUser": "View User",
+  "userDetails": "User Details",
+  "userName": "Username",
+  "fullName": "Full Name",
+  "email": "Email",
+  "role": "Role",
+  "department": "Department",
+  "status": "Status",
+  "lastLogin": "Last Login",
+  "permissions": "Permissions",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "loading": "Loading users...",
+  "loadingAuth": "Loading authentication...",
+  "errors": {
+    "loadingError": "Error loading users",
+    "accessDenied": "Access Denied",
+    "adminOnly": "This page is for administrators only.",
+    "addUserFailed": "Add user failed",
+    "passwordMismatch": "Passwords do not match",
+    "networkError": "Network error occurred. Please try again.",
+    "validation": "Please check your input and try again."
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "add": "Add",
+    "submit": "Submit",
+    "retry": "Retry"
+  },
+  "fields": {
+    "id": "ID",
+    "username": "Username",
+    "email": "Email",
+    "role": "Role",
+    "authorityId": "Authority ID",
+    "authorityName": "Authority Name",
+    "universityId": "University ID",
+    "collegeId": "College ID",
+    "departmentId": "Department ID",
+    "active": "Active",
+    "createdAt": "Created At",
+    "notAvailable": "N/A",
+    "imageUrl": "Profile Image URL",
+    "userImage": "User Image"
+  },
+  "roles": {
+    "admin": "Admin",
+    "authority": "Authority",
+    "university": "University",
+    "college": "College",
+    "department": "Department"
+  },
+  "placeholders": {
+    "enterUsername": "Enter username...",
+    "enterEmail": "Enter email address...",
+    "enterPassword": "Enter password...",
+    "confirmPassword": "Confirm password...",
+    "selectRole": "Select role...",
+    "enterImageUrl": "Enter image URL (optional)...",
+    "enterAuthorityName": "Enter authority name..."
+  },
+  "messages": {
+    "noUsers": "No users found.",
+    "startAdding": "Start by adding authority users to the system.",
+    "userAdded": "User added successfully!",
+    "userUpdated": "User updated successfully!",
+    "userDeleted": "User deleted successfully!",
+    "passwordsMatch": "Passwords match",
+    "passwordsDontMatch": "Passwords do not match",
+    "yes": "Yes",
+    "no": "No",
+    "customImage": "Custom profile image",
+    "placeholderImage": "Generated placeholder image"
+  },
+  "modal": {
+    "addTitle": "Add New Authority User",
+    "editTitle": "Edit User",
+    "viewTitle": "User Details",
+    "closeModal": "Close modal",
+    "requiredField": "Required field",
+    "formError": "Please correct the errors below",
+    "saving": "Saving...",
+    "loading": "Loading..."
+  },
+  "security": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "passwordStrength": "Password strength",
+    "securePassword": "Use a secure password"
+  }
+}

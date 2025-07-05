@@ -5,18 +5,22 @@ import { Badge } from "../../../components/ui/badge";
 import { Progress } from "../../../components/ui/progress";
 import { TrendingUp, TrendingDown, Target } from "lucide-react";
 import { formatScoreDisplay } from '../../../api/resultsAPI';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+import { getLocalizedText } from '../../../utils/translationUtils';
 
 const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
+  const { translateResults, currentLanguage } = useNamespacedTranslation();
+  
   if (isLoading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>تحليل المجالات</CardTitle>
+          <CardTitle>{translateResults('detailedAnalysis.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin h-8 w-8 border border-blue-600 border-t-transparent rounded-full"></div>
-            <span className="mr-2">جاري تحميل البيانات...</span>
+            <span className="mr-2">{translateResults('detailedAnalysis.loadingData')}</span>
           </div>
         </CardContent>
       </Card>
@@ -27,11 +31,11 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>تحليل المجالات</CardTitle>
+          <CardTitle>{translateResults('detailedAnalysis.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-gray-500">
-            لا توجد بيانات متاحة للعرض
+            {translateResults('detailedAnalysis.noDataAvailable')}
           </div>
         </CardContent>
       </Card>
@@ -60,7 +64,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5 text-blue-600" />
-          تحليل المجالات التفصيلي
+          {translateResults('detailedAnalysis.title')}
         </CardTitle>
       </CardHeader>
       
@@ -71,21 +75,21 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
             <div className="text-lg font-bold text-blue-600">
               {domains.length}
             </div>
-            <div className="text-sm text-blue-700">إجمالي المجالات</div>
+            <div className="text-sm text-blue-700">{translateResults('detailedAnalysis.summaryStats.totalDomains')}</div>
           </div>
           
           <div className="bg-green-50 p-3 rounded-lg text-center">
             <div className="text-lg font-bold text-green-600">
               {domains.filter(d => d.domain_score >= 75).length}
             </div>
-            <div className="text-sm text-green-700">مجالات متميزة</div>
+            <div className="text-sm text-green-700">{translateResults('detailedAnalysis.summaryStats.excellentDomains')}</div>
           </div>
           
           <div className="bg-orange-50 p-3 rounded-lg text-center">
             <div className="text-lg font-bold text-orange-600">
               {domains.filter(d => d.domain_score < 60).length}
             </div>
-            <div className="text-sm text-orange-700">مجالات تحتاج تحسين</div>
+            <div className="text-sm text-orange-700">{translateResults('detailedAnalysis.summaryStats.improvementNeeded')}</div>
           </div>
         </div>
 
@@ -94,12 +98,12 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-gray-200 px-4 py-3 text-right font-semibold">المجال</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">عدد المؤشرات</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">الوزن (Wi)</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">الدرجة (Si)</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">الدرجة المرجحة</th>
-                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">التقييم</th>
+                <th className="border border-gray-200 px-4 py-3 text-right font-semibold">{translateResults('detailedAnalysis.table.domain')}</th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">{translateResults('detailedAnalysis.table.indicatorsCount')}</th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">{translateResults('detailedAnalysis.table.weight')}</th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">{translateResults('detailedAnalysis.table.score')}</th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">{translateResults('detailedAnalysis.table.weightedScore')}</th>
+                <th className="border border-gray-200 px-4 py-3 text-center font-semibold">{translateResults('detailedAnalysis.table.evaluation')}</th>
               </tr>
             </thead>
             <tbody>
@@ -110,7 +114,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
                     <td className="border border-gray-200 px-4 py-3">
                       <div className="flex items-center gap-2">
                         {getPerformanceIcon(domain.domain_score)}
-                        <span className="font-medium">{domain.domain_name}</span>
+                        <span className="font-medium">{getLocalizedText(domain, currentLanguage)}</span>
                       </div>
                     </td>
                     <td className="border border-gray-200 px-4 py-3 text-center">
@@ -142,7 +146,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
             </tbody>
             <tfoot>
               <tr className="bg-blue-100 font-bold">
-                <td className="border border-gray-200 px-4 py-3">المجموع النهائي</td>
+                <td className="border border-gray-200 px-4 py-3">{translateResults('detailedAnalysis.table.finalTotal')}</td>
                 <td className="border border-gray-200 px-4 py-3 text-center">
                   {domains.reduce((sum, d) => sum + d.indicator_count, 0)}
                 </td>
@@ -167,24 +171,24 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
               <Card key={domain.domain_id} className="p-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-sm">{domain.domain_name}</h3>
+                    <h3 className="font-semibold text-sm">{getLocalizedText(domain, currentLanguage)}</h3>
                     {getPerformanceIcon(domain.domain_score)}
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-600">المؤشرات:</span>
+                      <span className="text-gray-600">{translateResults('detailedAnalysis.mobile.indicators')}</span>
                       <Badge variant="outline" className="mr-1">{domain.indicator_count}</Badge>
                     </div>
                     <div>
-                      <span className="text-gray-600">الوزن:</span>
+                      <span className="text-gray-600">{translateResults('detailedAnalysis.mobile.weight')}</span>
                       <span className="font-mono mr-1">{domain.domain_weight.toFixed(2)}%</span>
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">الدرجة:</span>
+                      <span className="text-gray-600">{translateResults('detailedAnalysis.mobile.score')}</span>
                       <span className={`font-bold ${formattedScore.colorClass}`}>
                         {formattedScore.percentage}
                       </span>
@@ -193,7 +197,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">الدرجة المرجحة:</span>
+                    <span className="text-gray-600">{translateResults('detailedAnalysis.mobile.weightedScore')}</span>
                     <span className="font-mono text-sm">{domain.domain_weighted_score.toFixed(4)}</span>
                   </div>
                   
@@ -208,7 +212,7 @@ const DomainAnalysisTable = ({ weightedResults, isLoading = false }) => {
           {/* Mobile Final Score */}
           <Card className="p-4 bg-blue-50 border-blue-200">
             <div className="text-center">
-              <h3 className="font-semibold text-blue-900 mb-2">الدرجة النهائية</h3>
+              <h3 className="font-semibold text-blue-900 mb-2">{translateResults('detailedAnalysis.mobile.finalScore')}</h3>
               <div className="text-2xl font-bold text-blue-600">
                 {weightedResults.final_program_score.toFixed(2)}%
               </div>

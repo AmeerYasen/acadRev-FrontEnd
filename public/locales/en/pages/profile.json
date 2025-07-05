@@ -1,0 +1,16 @@
+{
+  "title": "Profile",
+  "subtitle": "Manage your profile information",
+  "personalInfo": "Personal Information",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "email": "Email",
+  "phone": "Phone",
+  "department": "Department",
+  "position": "Position",
+  "editProfile": "Edit Profile",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm Password"
+}

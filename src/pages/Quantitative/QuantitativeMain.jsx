@@ -11,10 +11,12 @@ import TableModal from "./components/TableModal";
 
 // Hooks
 import { useQuantitative } from "./hooks/useQuantitative";
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
 
 const QuantitativeMain = () => {
   const { programId } = useParams();
   const { user } = useAuth();
+  const { translateQuantitative } = useNamespacedTranslation();
   const userRole = user?.role;
   
   const {

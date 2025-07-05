@@ -1,0 +1,53 @@
+{
+  "title": "Login",
+  "subtitle": "Sign in to your account",
+  "email": "Email",
+  "password": "Password",
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "signIn": "Sign In",
+  "noAccount": "Don't have an account?",
+  "signUp": "Sign up",
+  "invalidCredentials": "Invalid email or password",
+  "loginSuccess": "Login successful",
+  "sidebar": {
+    "title": "Access Your Institution's Portal",
+    "description": "Log in to access your institution's academic review portal. All data is encrypted and securely stored following industry best practices.",
+    "features": {
+      "authentication": "Secure institutional authentication",
+      "updates": "Real-time updates and notifications",
+      "analytics": "Comprehensive data analytics"
+    },
+    "support": {
+      "text": "Need assistance? Contact your institution's IT department or email",
+      "email": "support@acadrev.edu"
+    }
+  },
+  "form": {
+    "title": "Log in to your account",
+    "subtitle": "Access the academic review portal with your institutional credentials",
+    "fields": {
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+      }
+    },
+    "buttons": {
+      "signIn": "Sign in"
+    }
+  },
+  "errors": {
+    "fieldsRequired": "Please enter both username and password",
+    "loginFailed": "Login failed",
+    "general": "An error occurred during login"
+  },
+  "security": {
+    "message": "Secure institutional login"
+  }
+}

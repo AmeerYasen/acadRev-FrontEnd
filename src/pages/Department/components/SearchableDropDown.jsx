@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const SearchableDropdown = ({
   options,
@@ -7,6 +8,7 @@ const SearchableDropdown = ({
   placeholder,
   label
 }) => {
+  const t = useNamespacedTranslation('pages.department');
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -44,7 +46,7 @@ const SearchableDropdown = ({
             <div className="p-2">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t('searchableDropdown.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -63,7 +65,7 @@ const SearchableDropdown = ({
                   </button>
                 ))
               ) : (
-                <div className="px-3 py-2 text-sm text-gray-500">No options found</div>
+                <div className="px-3 py-2 text-sm text-gray-500">{t('searchableDropdown.noOptions')}</div>
               )}
             </div>
           </div>

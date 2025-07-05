@@ -1,0 +1,60 @@
+{
+  "title": "Self-Assessment Report",
+  "programNumber": "Program #: {{programId}}",
+  "defaultProgramName": "Arabic Language and Literature Program",
+  "reportSections": "Report Sections",
+  "domains": "Domains",
+  "noDomainsAvailable": "No domains currently available",
+  "domainNotSpecified": "Domain not specified",
+  "currentIndicator": "Current Indicator:",
+  "reportInstructions": "You must answer the following sections for each requirement, attaching the necessary evidence and proof, explaining their availability and the program's achievement of them, clarifying strengths and weaknesses and methods for improvement, in the designated space. The existence of appropriate and activated mechanisms for continuous improvement and development of the teaching process.",
+  "quickSaveTip": "💡 Tip: Use Ctrl+S for quick save",
+  "sections": {
+    "requirementAchievement": "Extent of Requirement Achievement",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses", 
+    "strengthImprovement": "Methods to Improve Strengths",
+    "weaknessImprovement": "Methods to Address Weaknesses"
+  },
+  "status": {
+    "editingExisting": "Editing existing report",
+    "creatingNew": "Creating new report",
+    "indicator": "Indicator",
+    "notSpecified": "Not specified",
+    "lastSaved": "Last saved",
+    "saving": "Saving...",
+    "unsavedChanges": "Unsaved changes",
+    "saved": "Saved"
+  },
+  "buttons": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveReport": "Save Report",
+    "updateReport": "Update Report",
+    "saveAndLeave": "Save and Leave",
+    "discardChanges": "Discard Changes"
+  },
+  "messages": {
+    "noIndicatorsToSave": "No indicators available to save",
+    "unsavedChangesTitle": "Unsaved Changes",
+    "unsavedChangesMessage": "You have unsaved changes in the report. What would you like to do?",
+    "saveFailed": "Failed to save changes, please try again",
+    "beforeUnloadWarning": "You have unsaved changes. Do you want to leave?"
+  },
+  "loading": {
+    "saving": "Saving..."
+  },
+  "success": {
+    "reportSaved": "Report saved successfully",
+    "reportUpdated": "Report updated successfully"
+  },
+  "error": {
+    "saveFailed": "Failed to save report",
+    "loadFailed": "Failed to load report data",
+    "selectDomainFirst": "Please select a domain first",
+    "programIdRequired": "Program ID is required",
+    "validIndicatorRequired": "Please ensure a valid indicator exists",
+    "contentRequired": "Please enter content in at least one section"
+  }
+}

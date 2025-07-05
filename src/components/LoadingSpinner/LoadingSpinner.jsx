@@ -1,13 +1,16 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation";
 
 const LoadingSpinner = ({ 
   size = "default", 
-  message = "Loading...", 
+  message, 
   fullScreen = true,
   className = "",
   variant = "default" 
 }) => {
+  const { translateLoading } = useNamespacedTranslation();
+  const defaultMessage = message || translateLoading('loading');
   // Size configurations
   const sizeConfig = {
     small: { spinner: "h-4 w-4", text: "text-sm" },
@@ -33,9 +36,9 @@ const LoadingSpinner = ({
   const spinnerContent = (
     <div className={`text-center ${className}`}>
       <Loader2 className={`${config.spinner} ${colorClass} animate-spin mx-auto`} />
-      {message && (
+      {defaultMessage && (
         <p className={`mt-3 text-gray-600 ${config.text}`}>
-          {message}
+          {defaultMessage}
         </p>
       )}
     </div>

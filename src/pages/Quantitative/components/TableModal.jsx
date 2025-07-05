@@ -4,6 +4,8 @@ import { Button } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
 import { ROLES } from "../../../constants";
 import DataTable from "./DataTable";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText } from "../../../utils/translationUtils";
 
 const TableModal = React.memo(({ 
   isTableModalOpen, 
@@ -19,15 +21,18 @@ const TableModal = React.memo(({
   setIsTableModalOpen, 
   handleSaveArea 
 }) => {
+  const { translateQuantitative, currentLanguage } = useNamespacedTranslation();
+
   if (!isTableModalOpen || !selectedArea) return null;
 
   const selectedAreaData = areas.find(area => area.id === selectedArea);
   const areaHeaders = headers[selectedArea] || [];
   const areaItems = items[selectedArea] || [];
   const isLoadingData = loading.headers || loading.items;
+  
   console.log('User Role from TableModal:', userRole);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-center justify-center">
       {/* Backdrop with blur effect */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -41,8 +46,8 @@ const TableModal = React.memo(({
           <div className="flex items-center space-x-3">
             <BarChart3 className="h-6 w-6 text-blue-600" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Data Entry Table</h2>
-              <p className="text-sm text-gray-600">{selectedAreaData?.text_ar}</p>
+              <h2 className="text-xl font-bold text-gray-900">{translateQuantitative('modal.title')}</h2>
+              <p className="text-sm text-gray-600">{getLocalizedText(selectedAreaData, currentLanguage)}</p>
             </div>
           </div>
           <button
@@ -59,15 +64,15 @@ const TableModal = React.memo(({
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Loading data...</p>
+                <p className="mt-4 text-gray-600">{translateQuantitative('loading.data')}</p>
               </div>
             </div>
           ) : areaHeaders.length === 0 ? (
             <div className="flex items-center justify-center h-full text-gray-500">
               <div className="text-center">
                 <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-lg font-medium">No data structure available</p>
-                <p className="text-sm">Please contact your administrator</p>
+                <p className="text-lg font-medium">{translateQuantitative('modal.noDataAvailable')}</p>
+                <p className="text-sm">{translateQuantitative('modal.contactAdmin')}</p>
               </div>
             </div>
           ) : (
@@ -75,8 +80,8 @@ const TableModal = React.memo(({
               {/* Progress Section */}
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Progress</span>
-                  <span className="text-sm text-gray-600">{progress[selectedArea] || 0}% complete</span>
+                  <span className="text-sm font-medium text-gray-700">{translateQuantitative('modal.progress')}</span>
+                  <span className="text-sm text-gray-600">{progress[selectedArea] || 0}% {translateQuantitative('modal.progressComplete')}</span>
                 </div>
                 <Progress value={progress[selectedArea] || 0} className="h-2" />
               </div>              {/* Scrollable Table Container */}
@@ -99,14 +104,14 @@ const TableModal = React.memo(({
         <div className="border-t border-gray-200 p-6">
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-600">
-              {areaItems.length} items • {areaHeaders.length} metrics
+              {translateQuantitative('modal.itemsMetrics', { items: areaItems.length, metrics: areaHeaders.length })}
             </div>            
             <div className="flex space-x-3 rounded-lg hover:bg-gray-100 transition-colors duration-300"> 
               <Button
                 variant="outline"
                 onClick={() => setIsTableModalOpen(false)}
               >
-                Cancel
+                {translateQuantitative('modal.cancel')}
               </Button>
               {userRole === ROLES.DEPARTMENT && (
                 <Button
@@ -117,12 +122,12 @@ const TableModal = React.memo(({
                   {loading.saving ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Saving...
+                      {translateQuantitative('loading.saving')}
                     </>
                   ) : (
                     <>
                       <Download className="h-4 w-4 mr-2" />
-                      Save Area Data
+                      {translateQuantitative('modal.saveAreaData')}
                     </>
                   )}
                 </Button>

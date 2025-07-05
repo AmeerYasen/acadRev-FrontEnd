@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from "../../../components/ui/button";
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const ReportSaveButton = ({ 
   onSave, 
@@ -9,6 +10,8 @@ const ReportSaveButton = ({
   currentReportId,
   showNoIndicatorsMessage = false
 }) => {
+  const { translateReport } = useNamespacedTranslation();
+  
   return (
     <div className="mt-8 flex justify-center">
       <Button
@@ -24,11 +27,11 @@ const ReportSaveButton = ({
         {saving ? (
           <>
             <div className="animate-spin h-4 w-4 border border-white border-t-transparent rounded-full ml-2"></div>
-            جاري الحفظ...
+            {translateReport('status.saving')}
           </>
         ) : (
           <>
-            {currentReportId ? 'تحديث التقرير' : 'حفظ التقرير'}
+            {currentReportId ? translateReport('buttons.updateReport') : translateReport('buttons.saveReport')}
             {hasUnsavedChanges && ' *'}
           </>
         )}
@@ -36,7 +39,7 @@ const ReportSaveButton = ({
       
       {showNoIndicatorsMessage && (
         <p className="text-sm text-gray-500 mt-2">
-          لا توجد مؤشرات متاحة للحفظ
+          {translateReport('messages.noIndicatorsToSave')}
         </p>
       )}
     </div>

@@ -4,6 +4,7 @@ import { PlusCircle, Search, ArrowUpDown, Loader2, AlertCircle } from 'lucide-re
 import { fetchUniversities, addUniversity, editUniversity, deleteUniversity } from '../../api/universityApi';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import { ROUTES, ROLES } from '../../constants';
 import { lazy, Suspense } from 'react';
 // import UniversityTable from './components/UniversityTable';
@@ -30,6 +31,7 @@ function useDebounce(value, delay) {
 function University() {
   const { user, isLoggedIn } = useAuth();
   const { showSuccess, showError, showWarning, showInfo } = useToast();
+  const { translateUniversity } = useNamespacedTranslation();
   const navigate = useNavigate();
 
   const [universities, setUniversities] = useState([]);
@@ -71,8 +73,9 @@ function University() {
       setUniversities(data);
       setError(null);
     } catch (err) {
-      setError(err.message || 'Failed to load universities. Please try again later.');
-      showError(err.message || 'Failed to load universities. Please try again later.');
+      const errorMessage = err.message || translateUniversity('errorLoadingUniversities');
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -109,29 +112,33 @@ function University() {
         setUniversities((prev) =>
           prev.map((uni) => (uni.id === savedUniversity.id ? savedUniversity : uni))
         );
-        showSuccess('University updated successfully!');
+        showSuccess(translateUniversity('universityUpdated'));
       } else {
         savedUniversity = await addUniversity(formData);
         setUniversities((prev) => [...prev, savedUniversity]);
-        showSuccess('University added successfully!');
+        showSuccess(translateUniversity('universityAdded'));
       }
       handleCloseModal();
     } catch (err) {
-      showError(err.message || 'Failed to save university. Please try again.');
+      const errorMessage = err.message || (isEditing ? 
+        translateUniversity('errorUpdatingUniversity') : 
+        translateUniversity('errorAddingUniversity'));
+      showError(errorMessage);
     }
   };
 
   const handleDeleteUniversity = async (universityId) => {
-    if (!window.confirm('Are you sure you want to delete this university?')) {
+    if (!window.confirm(translateUniversity('confirmDelete'))) {
       return;
     }
 
     try {
       await deleteUniversity(universityId);
       setUniversities((prev) => prev.filter((uni) => uni.id !== universityId));
-      showSuccess('University deleted successfully!');
+      showSuccess(translateUniversity('universityDeleted'));
     } catch (err) {
-      showError(err.message || 'Failed to delete university. Please try again.');
+      const errorMessage = err.message || translateUniversity('errorDeletingUniversity');
+      showError(errorMessage);
     }
   };
 
@@ -172,7 +179,7 @@ function University() {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-lg text-gray-700">Loading...</span>
+        <span className="ml-2 text-lg text-gray-700">{translateUniversity('loadingUniversities')}</span>
       </div>
     );
   }
@@ -197,7 +204,7 @@ function University() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Universities</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">{translateUniversity('title')}</h1>
 
       {/* Search and Add University Section */}
       <div className="flex justify-between items-center mb-6">
@@ -207,7 +214,7 @@ function University() {
           </div>
           <input
             type="text"
-            placeholder="Search universities..."
+            placeholder={translateUniversity('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -219,7 +226,7 @@ function University() {
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <PlusCircle className="h-5 w-5 mr-1" />
-            <span>Add University</span>
+            <span>{translateUniversity('addUniversity')}</span>
           </button>
         )}
       </div>

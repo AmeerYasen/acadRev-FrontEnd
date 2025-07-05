@@ -3,6 +3,7 @@ import { Button } from "../../../components/ui/button";
 import { Menu } from "lucide-react";
 import ReportStatusIndicators from './ReportStatusIndicators';
 import BackButton from './BackButton';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const ReportHeader = ({ 
   setSidebarOpen,
@@ -13,7 +14,8 @@ const ReportHeader = ({
   lastSaved,
   saving,
   onSave
-}) => {  return (
+}) => {
+  const { translateReport } = useNamespacedTranslation();  return (
     <div className="mb-6">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-4">
@@ -28,11 +30,11 @@ const ReportHeader = ({
             </Button>
             
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">تقرير التقويم الذاتي</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{translateReport('title')}</h1>
               
               <div className="flex items-center gap-4 mt-1">
                 <p className="text-gray-600">
-                  {programId ? `برنامج رقم: ${programId}` : 'برنامج اللغة العربية وآدابها'}
+                  {programId ? translateReport('programNumber', { programId }) : translateReport('defaultProgramName')}
                 </p>
                 
                 <ReportStatusIndicators

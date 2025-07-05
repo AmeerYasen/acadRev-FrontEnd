@@ -1,0 +1,116 @@
+{
+  "header": {
+    "title": "Academic Management",
+    "subtitle": "Select a module to access its features and data"
+  },
+  "welcome": "Welcome to Dashboard",
+  "overview": "Overview",
+  "quickStats": "Quick Statistics",
+  "recentActivity": "Recent Activity",
+  "pendingTasks": "Pending Tasks",
+  "notifications": "Notifications",
+  "shortcuts": "Quick Actions",
+  "stats": {
+    "totalUniversities": "Total Universities",
+    "totalColleges": "Total Colleges",
+    "totalDepartments": "Total Departments",
+    "totalPrograms": "Total Programs",
+    "totalUsers": "Total Users",
+    "completedAssessments": "Completed Assessments",
+    "pendingReviews": "Pending Reviews"
+  },
+  "cards": {
+    "university": {
+      "title": "University",
+      "subtitle": "Universities",
+      "description": "Manage university profiles and accreditation status",
+      "stats": {
+        "label": "universities"
+      }
+    },
+    "college": {
+      "title": "College",
+      "subtitle": "Colleges",
+      "description": "Oversee college structures and academic units",
+      "stats": {
+        "label": "colleges"
+      }
+    },
+    "department": {
+      "title": "Department",
+      "subtitle": "Departments",
+      "description": "Monitor departmental performance and metrics",
+      "stats": {
+        "label": "departments"
+      }
+    },
+    "program": {
+      "title": "Program",
+      "subtitle": "Programs",
+      "description": "Review academic programs and curriculum structures",
+      "stats": {
+        "label": "programs"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Users",
+      "description": "Manage user accounts and access permissions",
+      "stats": {
+        "label": "active users"
+      }
+    },
+    "profile": {
+      "title": "User Profile",
+      "subtitle": "Profile",
+      "description": "View and manage your personal profile",
+      "stats": {
+        "label": "profile"
+      }
+    },
+    "results": {
+      "title": "Results",
+      "subtitle": "Results",
+      "description": "Generate analytics and assessment results",
+      "stats": {
+        "label": "results"
+      }
+    },
+    "programManagement": {
+      "title": "Program Management",
+      "description": "Manage academic programs and curricula",
+      "action": "View Programs"
+    },
+    "qualityAssurance": {
+      "title": "Quality Assurance", 
+      "description": "Monitor and assess quality standards",
+      "action": "Start Assessment"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Generate comprehensive reports",
+      "action": "View Reports"
+    },
+    "userManagement": {
+      "title": "User Management",
+      "description": "Manage system users and roles",
+      "action": "Manage Users"
+    }
+  },
+  "actions": {
+    "viewAll": "View All",
+    "refresh": "Refresh",
+    "export": "Export",
+    "filter": "Filter",
+    "search": "Search"
+  },
+  "navigation": {
+    "viewAll": "View All",
+    "manage": "Manage",
+    "create": "Create New",
+    "settings": "Settings"
+  },
+  "lastUpdated": "Last Updated",
+  "noData": "No data available",
+  "loading": "Loading dashboard data..."
+}

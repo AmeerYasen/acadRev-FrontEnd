@@ -10,6 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Progress } from "../../../components/ui/progress";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { getLocalizedText } from "../../../utils/translationUtils";
 
 const AreaTable = React.memo(({ 
   selectedArea, 
@@ -21,13 +23,15 @@ const AreaTable = React.memo(({
   setIsTableModalOpen 
 }) => {
   const [activeTab, setActiveTab] = useState('items'); // items selected by default
+  const { translateQuantitative, currentLanguage } = useNamespacedTranslation();
+
   if (!selectedArea) {
     return (
       <div className="flex flex-col items-center justify-center h-96 text-gray-500">
         <BarChart3 className="h-16 w-16 mb-4 text-gray-300" />
-        <h3 className="text-lg font-medium mb-2">Select an Assessment Area</h3>
+        <h3 className="text-lg font-medium mb-2">{translateQuantitative('selectArea')}</h3>
         <p className="text-sm text-center max-w-md">
-          Choose an area from the sidebar to view and edit its quantitative indicators
+          {translateQuantitative('selectAreaDescription')}
         </p>
       </div>
     );
@@ -70,19 +74,19 @@ const AreaTable = React.memo(({
       {/* Area Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-l font-bold text-gray-900">{selectedAreaData?.text_ar}</h2>
+          <h2 className="text-l font-bold text-gray-900">{getLocalizedText(selectedAreaData, currentLanguage)}</h2>
         </div>
         <div className="flex items-center space-x-3">
           <Badge className={getAreaStatus(selectedArea).badge}>
             {getAreaStatus(selectedArea).status === "completed"
-              ? "Completed"
+              ? translateQuantitative('status.completed')
               : getAreaStatus(selectedArea).status === "in-progress"
-                ? "In Progress"
-                : "Not Started"}
+                ? translateQuantitative('status.inProgress')
+                : translateQuantitative('status.notStarted')}
           </Badge>
           <div className="text-right">
             <div className="text-lg font-semibold text-blue-600">{progress[selectedArea] || 0}%</div>
-            <div className="text-xs text-gray-500">Complete</div>
+            <div className="text-xs text-gray-500">{translateQuantitative('complete')}</div>
           </div>
         </div>
       </div>
@@ -96,17 +100,17 @@ const AreaTable = React.memo(({
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <BarChart3 className="h-5 w-5" />
-              <span>Data Entry Table</span>
+              <span>{translateQuantitative('dataEntryTable')}</span>
             </div>
             <Button
               onClick={() => setIsTableModalOpen(true)}
               className="bg-blue-600 hover:bg-blue-700 flex items-center space-x-2"
             >
               <Maximize2 className="h-4 w-4" />
-              <span>Expand Table</span>
+              <span>{translateQuantitative('expandTable')}</span>
             </Button>
           </CardTitle>
-          <CardDescription>Enter the quantitative data for each item and metric</CardDescription>
+          <CardDescription>{translateQuantitative('dataEntryTableDescription')}</CardDescription>
         </CardHeader>        <CardContent>
           {/* Tabs */}
           <div className="flex space-x-1 mb-4 bg-gray-100 p-1 rounded-lg">
@@ -120,7 +124,7 @@ const AreaTable = React.memo(({
             >
               <div className="flex items-center justify-center space-x-2">
                 <FileText className="h-4 w-4" />
-                <span>Items ({areaItems.length})</span>
+                <span>{translateQuantitative('items')} ({areaItems.length})</span>
               </div>
             </button>
             <button
@@ -133,7 +137,7 @@ const AreaTable = React.memo(({
             >
               <div className="flex items-center justify-center space-x-2">
                 <BarChart3 className="h-4 w-4" />
-                <span>Metrics ({areaHeaders.length})</span>
+                <span>{translateQuantitative('metrics')} ({areaHeaders.length})</span>
               </div>
             </button>
           </div>          {/* Tab Content */}
@@ -144,9 +148,8 @@ const AreaTable = React.memo(({
                 console.log('Item keys:', Object.keys(item)); // Debug log for keys
                 
                 // Try multiple possible property names for the text
-                const displayText = 
-                  item?.name||
-                  `Item ${index + 1}`;
+                const displayText = getLocalizedText(item, currentLanguage) || 
+                  (currentLanguage === 'en' ? `Item ${index + 1}` : `البند ${index + 1}`);
                 
                 return (
                   <div key={item.id || index} className="flex items-center p-3 bg-gray-50 rounded-lg border">
@@ -167,9 +170,8 @@ const AreaTable = React.memo(({
                 console.log('Header keys:', Object.keys(header)); // Debug log for keys
                 
                 // Try multiple possible property names for the text
-                const displayText = 
-                  header?.text || 
-                  `Metric ${index + 1}`;
+                const displayText = getLocalizedText(header, currentLanguage) || 
+                  (currentLanguage === 'en' ? `Metric ${index + 1}` : `مقياس ${index + 1}`);
                 
                 return (
                   <div key={header.id || index} className="flex items-center p-3 bg-gray-50 rounded-lg border">
@@ -194,7 +196,7 @@ const AreaTable = React.memo(({
               className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
             >
               <Maximize2 className="h-4 w-4 mr-2" />
-              Open Full Table View
+              {translateQuantitative('openFullTableView')}
             </Button>
           </div>
         </CardContent>

@@ -1,0 +1,34 @@
+{
+  "title": "الإعدادات",
+  "subtitle": "إدارة تفضيلات التطبيق",
+  "tabs": {
+    "language": "اللغة",
+    "account": "الحساب",
+    "notifications": "الإشعارات",
+    "security": "الأمان",
+    "appearance": "المظهر"
+  },
+  "language": {
+    "title": "إعدادات اللغة",
+    "description": "اختر لغتك المفضلة للتطبيق",
+    "selectLanguage": "اختيار اللغة",
+    "currentLanguage": "اللغة الحالية",
+    "currentSelection": "المحدد حالياً:"
+  },
+  "account": {
+    "title": "إعدادات الحساب",
+    "comingSoon": "إعدادات الحساب قادمة قريباً"
+  },
+  "notifications": {
+    "title": "إعدادات الإشعارات",
+    "comingSoon": "إعدادات الإشعارات قادمة قريباً"
+  },
+  "security": {
+    "title": "إعدادات الأمان",
+    "comingSoon": "إعدادات الأمان قادمة قريباً"
+  },
+  "appearance": {
+    "title": "إعدادات المظهر",
+    "comingSoon": "إعدادات المظهر قادمة قريباً"
+  }
+}

@@ -12,15 +12,17 @@ import { useAuth } from "../../context/AuthContext"
 import { useState } from "react"
 import "./Header.css"
 import { Link } from "react-router-dom"
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation"
 
 function Header({ toggleSidebar, isMobile }) {
   const {  user, logout } = useAuth()
   const [showDropdown, setShowDropdown] = useState(false)
+  const { translateHeader } = useNamespacedTranslation()
   
   const toggleDropdown = () => setShowDropdown(!showDropdown)
 
   return (
-    <header className="sticky top-0 z-99 bg-background border-b border-gray-200 shadow-sm">
+    <header dir='ltr' className="sticky top-0 z-98 bg-background border-b border-gray-200 shadow-sm">
       <div className="px-8 py-3 flex items-center justify-between">
         {/* Mobile menu toggle */}
         {isMobile && (
@@ -66,9 +68,9 @@ function Header({ toggleSidebar, isMobile }) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.3 }}
           >
-            <button className="p-2 rounded-full hover:bg-gray-100">
+            <Link to="/settings" className="p-2 rounded-full hover:bg-gray-100 block">
               <Settings size={20} className="text-gray-600" />
-            </button>
+            </Link>
           </motion.div>
           
           {/* User profile */}
@@ -86,7 +88,7 @@ function Header({ toggleSidebar, isMobile }) {
                 <User size={16} />
               </div>
               <span className="hidden md:inline-block text-sm font-medium text-gray-700">
-                {user?.username || "User"}
+                {user?.username || translateHeader('user.defaultName')}
               </span>
               <ChevronDown size={16} className="hidden md:block text-gray-500" />
             </button>
@@ -102,15 +104,15 @@ function Header({ toggleSidebar, isMobile }) {
                 <Link to="profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                   <div className="flex items-center">
                     <User size={16} className="mr-2" />
-                    Profile
+                    {translateHeader('user.menu.profile')}
                   </div>
                 </Link>
-                <a href="#settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                   <div className="flex items-center">
                     <Settings size={16} className="mr-2" />
-                    Settings
+                    {translateHeader('user.menu.settings')}
                   </div>
-                </a>
+                </Link>
                 <div className="border-t border-gray-100 my-1"></div>
                 <button 
                   onClick={logout} 
@@ -120,7 +122,7 @@ function Header({ toggleSidebar, isMobile }) {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    Sign out
+                    {translateHeader('user.menu.logout')}
                   </div>
                 </button>
               </motion.div>

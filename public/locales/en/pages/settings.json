@@ -1,0 +1,34 @@
+{
+  "title": "Settings",
+  "subtitle": "Manage your application preferences",
+  "tabs": {
+    "language": "Language",
+    "account": "Account",
+    "notifications": "Notifications",
+    "security": "Security",
+    "appearance": "Appearance"
+  },
+  "language": {
+    "title": "Language Settings",
+    "description": "Choose your preferred language for the application",
+    "selectLanguage": "Select Language",
+    "currentLanguage": "Current Language",
+    "currentSelection": "Currently selected:"
+  },
+  "account": {
+    "title": "Account Settings",
+    "comingSoon": "Account settings are coming soon"
+  },
+  "notifications": {
+    "title": "Notification Settings",
+    "comingSoon": "Notification settings are coming soon"
+  },
+  "security": {
+    "title": "Security Settings",
+    "comingSoon": "Security settings are coming soon"
+  },
+  "appearance": {
+    "title": "Appearance Settings",
+    "comingSoon": "Appearance settings are coming soon"
+  }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 import { ROUTES } from '../../constants';
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation";
 import "./Login.css";
 
 // Modern academic logo
@@ -70,13 +71,14 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login, isLoading: authLoading, error: authError } = useAuth();
+  const { translateLogin } = useNamespacedTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (!username || !password) {
-      setError("Please enter both username and password");
+      setError(translateLogin('errors.fieldsRequired'));
       return;
     }
 
@@ -87,10 +89,10 @@ function Login() {
       if (loginResponse.success) {
         navigate(ROUTES.MAIN);
       } else {
-        setError(loginResponse.error || "Login failed");
+        setError(loginResponse.error || translateLogin('errors.loginFailed'));
       }
     } catch (err) {
-      setError(err.message || "An error occurred during login");
+      setError(err.message || translateLogin('errors.general'));
     } finally {
       setIsLoading(false);
     }
@@ -114,37 +116,36 @@ function Login() {
           </div>
           
           <div className="flex flex-col space-y-6 relative z-10">
-            <h1 className="text-2xl font-bold">Access Your Institution's Portal</h1>
+            <h1 className="text-2xl font-bold">{translateLogin('sidebar.title')}</h1>
             <p className="text-sm text-gray-300">
-              Log in to access your institution's academic review portal. All data is 
-              encrypted and securely stored following industry best practices.
+              {translateLogin('sidebar.description')}
             </p>
             <div className="space-y-5 mt-8">
               <div className="flex items-center space-x-3 text-sm animate-slide-in" style={{ animationDelay: "0.1s" }}>
                 <svg className="h-5 w-5 text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Secure institutional authentication</span>
+                <span>{translateLogin('sidebar.features.authentication')}</span>
               </div>
               <div className="flex items-center space-x-3 text-sm animate-slide-in" style={{ animationDelay: "0.2s" }}>
                 <svg className="h-5 w-5 text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Real-time updates and notifications</span>
+                <span>{translateLogin('sidebar.features.updates')}</span>
               </div>
               <div className="flex items-center space-x-3 text-sm animate-slide-in" style={{ animationDelay: "0.3s" }}>
                 <svg className="h-5 w-5 text-teal-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Comprehensive data analytics</span>
+                <span>{translateLogin('sidebar.features.analytics')}</span>
               </div>
             </div>
           </div>
           
           <div className="mt-auto text-xs text-gray-300 relative z-10">
-            <p>Need assistance? Contact your institution's IT department or email</p>
+            <p>{translateLogin('sidebar.support.text')}</p>
             <a href="mailto:support@acadrev.edu" className="text-teal-400 hover:underline">
-              support@acadrev.edu
+              {translateLogin('sidebar.support.email')}
             </a>
           </div>
         </div>
@@ -163,9 +164,9 @@ function Login() {
                   </div>
                 </div>
               </div>
-              <h2 className="text-2xl font-semibold text-gray-800 bg-clip-text text-transparent bg-gradient-to-r from-darknavy to-blue-600">Log in to your account</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 bg-clip-text text-transparent bg-gradient-to-r from-darknavy to-blue-600">{translateLogin('form.title')}</h2>
               <p className="text-gray-600 text-sm mt-2">
-                Access the academic review portal with your institutional credentials
+                {translateLogin('form.subtitle')}
               </p>
             </div>
 
@@ -181,7 +182,7 @@ function Login() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-1">
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                  Username
+                  {translateLogin('form.fields.username.label')}
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
@@ -195,7 +196,7 @@ function Login() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="pl-10 w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-darknavy focus:border-transparent transition-colors bg-white bg-opacity-80 backdrop-blur-sm"
-                    placeholder="Enter your username"
+                    placeholder={translateLogin('form.fields.username.placeholder')}
                     required
                     disabled={isLoading || authLoading}
                   />
@@ -205,7 +206,7 @@ function Login() {
               <div className="space-y-1">
                 <div className="flex justify-between">
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Password
+                    {translateLogin('form.fields.password.label')}
                   </label>
                 </div>
                 <div className="relative group">
@@ -220,7 +221,7 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-darknavy focus:border-transparent transition-colors bg-white bg-opacity-80 backdrop-blur-sm"
-                    placeholder="Enter your password"
+                    placeholder={translateLogin('form.fields.password.placeholder')}
                     required
                     disabled={isLoading || authLoading}
                   />
@@ -229,7 +230,7 @@ function Login() {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
                     onClick={togglePasswordVisibility}
                     disabled={isLoading || authLoading}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={showPassword ? translateLogin('form.fields.password.hidePassword') : translateLogin('form.fields.password.showPassword')}
                   >
                     {showPassword ? (
                       <EyeIcon className="h-5 w-5" />
@@ -248,11 +249,11 @@ function Login() {
                 >
                   {(isLoading || authLoading) ? (
                     <>
-                      <span className="opacity-0">Sign in</span>
+                      <span className="opacity-0">{translateLogin('form.buttons.signIn')}</span>
                       <LoadingSpinner />
                     </>
                   ) : (
-                    "Sign in"
+                    translateLogin('form.buttons.signIn')
                   )}
                 </button>
               </div>
@@ -261,7 +262,7 @@ function Login() {
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex items-center justify-center text-sm text-gray-500 space-x-2">
                 <ShieldIcon />
-                <span>Secure institutional login</span>
+                <span>{translateLogin('security.message')}</span>
               </div>
             </div>
           </div>

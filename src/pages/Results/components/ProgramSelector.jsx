@@ -26,6 +26,8 @@ import { fetchDepNamesByCollege } from '../../../api/departmentAPI';
 import { useAuth } from '../../../context/AuthContext';
 import { getRoleWeight } from '../../../constants';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+import { getLocalizedText, getLocalizedName } from '../../../utils/translationUtils';
 import ProgramPagination from './ProgramPagination';
 import ProgramFilterSidebar from './ProgramFilterSidebar';
 
@@ -39,6 +41,7 @@ const ProgramSelector = ({
 }) => {
   const { user } = useAuth();
   const userRoleWeight = getRoleWeight(user?.role);
+  const { translateResults, currentLanguage } = useNamespacedTranslation();
 
   // State for programs and pagination
   const [programs, setPrograms] = useState([]);
@@ -205,7 +208,7 @@ const ProgramSelector = ({
       
     } catch (err) {
       console.error('Error loading programs:', err);
-      setError('فشل في تحميل البرامج');
+      setError(translateResults('messages.error.loadingResults'));
       setPrograms([]);
       setTotalPages(1);
       setTotalRecords(0);
@@ -289,38 +292,43 @@ const ProgramSelector = ({
       {/* Selected Program Display */}
       {selectedProgramId && selectedProgramDetails && (
         <Card className="border-blue-200 bg-blue-50 mb-6">
-          <CardContent className="p-6">            <div className="flex items-center justify-between mb-4">
+          <CardContent className="p-6">            
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <BookOpen className="h-5 w-5 text-blue-600" />
                 <div>
                   <h3 className="font-semibold text-blue-900 text-lg">
-                    Selected Program: {selectedProgramDetails.name || `Program ${selectedProgramId}`}
+                    {translateResults('programSelector.selectedProgram')}: {getLocalizedName(selectedProgramDetails, currentLanguage) || `${translateResults('header.programLabel')} ${selectedProgramId}`}
                   </h3>
-                  <p className="text-sm text-blue-700 font-medium">ID: {selectedProgramId}</p>                  {selectedProgramDetails.department_name && (
-                    <p className="text-sm text-blue-600 mt-1">📚 Department: {selectedProgramDetails.department_name}</p>
+                  <p className="text-sm text-blue-700 font-medium">{translateResults('programSelector.programId')}: {selectedProgramId}</p>                  
+                  {selectedProgramDetails.department_name && (
+                    <p className="text-sm text-blue-600 mt-1">📚 {translateResults('programSelector.department')}: {getLocalizedName(selectedProgramDetails, currentLanguage, 'department_name')}</p>
                   )}
                   {selectedProgramDetails.college_name && (
-                    <p className="text-sm text-blue-600 mt-1">🏫 College: {selectedProgramDetails.college_name}</p>
+                    <p className="text-sm text-blue-600 mt-1">🏫 {translateResults('programSelector.college')}: {getLocalizedName(selectedProgramDetails, currentLanguage, 'college_name')}</p>
                   )}
                   {selectedProgramDetails.university_name && (
-                    <p className="text-sm text-blue-600 mt-1">🏛️ University: {selectedProgramDetails.university_name}</p>
+                    <p className="text-sm text-blue-600 mt-1">🏛️ {translateResults('programSelector.university')}: {getLocalizedName(selectedProgramDetails, currentLanguage, 'university_name')}</p>
                   )}
                 </div>
-              </div>              <Button
+              </div>              
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={() => onProgramSelect(null)}
                 className="text-blue-600 border-blue-300 hover:bg-blue-100"
               >
-                Change Selection
+                {translateResults('programSelector.changeSelection')}
               </Button>
-            </div>            {isLoading && (
+            </div>            
+            {isLoading && (
               <div className="mt-4 text-sm text-blue-600 flex items-center gap-2">
                 <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
-                Loading results...
+                {translateResults('programSelector.loadingResults')}
               </div>
-            )}            <div className="mt-4 text-xs text-blue-700 bg-blue-100 p-3 rounded">
-              💡 Click "Change Selection" to choose a different program for analysis
+            )}            
+            <div className="mt-4 text-xs text-blue-700 bg-blue-100 p-3 rounded">
+              💡 {translateResults('programSelector.hint')}
             </div>
           </CardContent>
         </Card>      )}      {/* No Selection State */}
@@ -331,10 +339,10 @@ const ProgramSelector = ({
               <BookOpen className="h-5 w-5 text-orange-600" />
               <div>
                 <h3 className="font-semibold text-orange-900">
-                  No Program Selected
+                  {translateResults('programSelector.noSelection.title')}
                 </h3>
                 <p className="text-sm text-orange-700">
-                  Please select a program below to view its analysis results
+                  {translateResults('programSelector.noSelection.description')}
                 </p>
               </div>
             </div>
@@ -359,7 +367,7 @@ const ProgramSelector = ({
                 </Button>
               )}
               <BookOpen className="h-5 w-5 text-blue-600" />
-              اختيار البرنامج للتحليل
+              {translateResults('programSelector.title')}
             </CardTitle>
             <div className="flex items-center gap-2">
               {/* Mobile filter toggle */}
@@ -373,7 +381,7 @@ const ProgramSelector = ({
               </Button>
               {!loadingPrograms && totalRecords > 0 && (
                 <span className="text-sm font-normal text-gray-500">
-                  ({totalRecords} برنامج متاح)
+                  ({totalRecords} {translateResults('programSelector.available')})
                 </span>
               )}
             </div>
@@ -383,12 +391,12 @@ const ProgramSelector = ({
           {user && (
             <div className="text-sm text-gray-600 mt-2">
               {userRoleWeight <= 2 
-                ? 'يمكنك الوصول إلى جميع البرامج في النظام'
+                ? translateResults('programSelector.accessInfo.allPrograms')
                 : userRoleWeight === 3 
-                  ? `يمكنك الوصول إلى برامج الجامعة (${user.university_name || 'جامعتك'})`
+                  ? `${translateResults('programSelector.accessInfo.universityPrograms')} (${getLocalizedName(user, currentLanguage, 'university_name') || translateResults('programSelector.university')})`
                   : userRoleWeight === 4 
-                    ? `يمكنك الوصول إلى برامج الكلية (${user.college_name || 'كليتك'})`
-                    : `يمكنك الوصول إلى برامج القسم (${user.department_name || 'قسمك'})`
+                    ? `${translateResults('programSelector.accessInfo.collegePrograms')} (${getLocalizedName(user, currentLanguage, 'college_name') || translateResults('programSelector.college')})`
+                    : `${translateResults('programSelector.accessInfo.departmentPrograms')} (${getLocalizedName(user, currentLanguage, 'department_name') || translateResults('programSelector.department')})`
               }
             </div>
           )}
@@ -425,7 +433,7 @@ const ProgramSelector = ({
                   <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="البحث عن برنامج..."
+                    placeholder={translateResults('programSelector.search')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -437,7 +445,7 @@ const ProgramSelector = ({
               {loadingPrograms && (
                 <div className="text-center py-8">
                   <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-                  <span className="text-gray-600">جاري تحميل البرامج...</span>
+                  <span className="text-gray-600">{translateResults('programSelector.loading')}</span>
                 </div>
               )}              {/* Error State */}
               {error && (
@@ -449,7 +457,7 @@ const ProgramSelector = ({
                     onClick={() => loadPrograms(currentPage)}
                     className="border-blue-600 text-blue-600 hover:bg-blue-50"
                   >
-                    إعادة المحاولة
+                    {translateResults('programSelector.retry')}
                   </Button>
                 </div>
               )}
@@ -471,21 +479,21 @@ const ProgramSelector = ({
                             onClick={() => handleProgramClick(program.id.toString())}
                           >
                             <div className="font-medium mb-2">
-                              {program.program_name || `برنامج ${program.id}`}
+                              {getLocalizedText(program, currentLanguage) || `${translateResults('header.programLabel')} ${program.id}`}
                             </div>
                             <div className="text-sm text-gray-600 mb-2">
-                              رقم البرنامج: {program.id}
+                              {translateResults('programSelector.programNumber')}: {program.id}
                             </div>
                             {/* Show hierarchy information based on user role */}
                             <div className="text-xs space-y-1">
                               {userRoleWeight <= 3 && program.university_name && (
-                                <div className="text-purple-600">🏛️ {program.university_name}</div>
+                                <div className="text-purple-600">🏛️ {getLocalizedName(program, currentLanguage, 'university_name')}</div>
                               )}
                               {userRoleWeight <= 4 && program.college_name && (
-                                <div className="text-blue-600">🏫 {program.college_name}</div>
+                                <div className="text-blue-600">🏫 {getLocalizedName(program, currentLanguage, 'college_name')}</div>
                               )}
                               {program.department_name && (
-                                <div className="text-green-600">📚 {program.department_name}</div>
+                                <div className="text-green-600">📚 {getLocalizedName(program, currentLanguage, 'department_name')}</div>
                               )}
                             </div>
                           </div>
@@ -506,25 +514,27 @@ const ProgramSelector = ({
                     <div className="text-center py-8">
                       {debouncedSearchTerm || selectedUniversities.length > 0 || selectedColleges.length > 0 || selectedDepartments.length > 0 ? (
                         <div>
-                          <p className="text-gray-600 mb-2">لا توجد برامج تطابق الفلاتر المحددة</p>
-                          <p className="text-sm text-gray-500">جرب تعديل الفلاتر أو البحث</p>                          <Button 
+                          <p className="text-gray-600 mb-2">{translateResults('programSelector.noResults')}</p>
+                          <p className="text-sm text-gray-500">{translateResults('programSelector.tryModifying')}</p>                          
+                          <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={handleReset}
                             className="mt-2 border-blue-600 text-blue-600 hover:bg-blue-50"
                           >
-                            مسح الفلاتر
+                            {translateResults('programSelector.clearFilters')}
                           </Button>
                         </div>
                       ) : (
                         <div>
-                          <p className="text-gray-600 mb-4">لا توجد برامج متاحة</p>
+                          <p className="text-gray-600 mb-4">{translateResults('programSelector.noAvailable')}</p>
                         </div>
                       )}
                     </div>
                   )}
                 </>
-              )}            </div>
+              )}            
+              </div>
           </div>
         </CardContent>
       </Card>

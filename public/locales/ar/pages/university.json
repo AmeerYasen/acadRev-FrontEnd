@@ -1,0 +1,201 @@
+{
+  "title": "إدارة الجامعات",
+  "subtitle": "إدارة معلومات الجامعة والوصول",
+  "addUniversity": "إضافة جامعة",
+  "editUniversity": "تعديل الجامعة",
+  "viewUniversity": "عرض تفاصيل الجامعة",
+  "deleteUniversity": "حذف الجامعة",
+  "searchPlaceholder": "البحث في الجامعات...",
+  "noUniversitiesFound": "لم يتم العثور على جامعات",
+  "loadingUniversities": "جارٍ تحميل الجامعات...",
+  "confirmDelete": "هل أنت متأكد من أنك تريد حذف هذه الجامعة؟",
+  "deleteWarning": "لا يمكن التراجع عن هذا الإجراء",
+  "universityDeleted": "تم حذف الجامعة بنجاح",
+  "universityAdded": "تم إضافة الجامعة بنجاح",
+  "universityUpdated": "تم تحديث الجامعة بنجاح",
+  "errorLoadingUniversities": "خطأ في تحميل الجامعات",
+  "errorAddingUniversity": "خطأ في إضافة الجامعة",
+  "errorUpdatingUniversity": "خطأ في تحديث الجامعة",
+  "errorDeletingUniversity": "خطأ في حذف الجامعة",
+  "fields": {
+    "name": "اسم الجامعة",
+    "description": "الوصف",
+    "location": "الموقع",
+    "establishedDate": "تاريخ التأسيس",
+    "type": "نوع الجامعة",
+    "status": "الحالة",
+    "website": "الموقع الإلكتروني",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "rector": "اسم رئيس الجامعة",
+    "accreditation": "حالة الاعتماد"
+  },
+  "placeholders": {
+    "name": "أدخل اسم الجامعة",
+    "description": "أدخل وصف الجامعة",
+    "location": "أدخل الموقع",
+    "website": "أدخل رابط الموقع الإلكتروني",
+    "email": "أدخل عنوان البريد الإلكتروني",
+    "phone": "أدخل رقم الهاتف",
+    "address": "أدخل العنوان الكامل",
+    "rector": "أدخل اسم رئيس الجامعة"
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "view": "عرض",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "back": "رجوع"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "معلق",
+    "suspended": "معلق"
+  },
+  "types": {
+    "public": "حكومية",
+    "private": "خاصة",
+    "international": "دولية"
+  },
+  "validation": {
+    "nameRequired": "اسم الجامعة مطلوب",
+    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صالح",
+    "invalidWebsite": "يرجى إدخال رابط موقع إلكتروني صالح",
+    "invalidPhone": "يرجى إدخال رقم هاتف صالح"
+  },
+  "accessibility": {
+    "totalUniversities": "إجمالي الجامعات",
+    "activeUniversities": "الجامعات النشطة",
+    "sortByName": "ترتيب حسب الاسم",
+    "filterByStatus": "تصفية حسب الحالة"
+  },
+  "table": {
+    "headers": {
+      "logo": "الشعار",
+      "name": "الاسم",
+      "country": "البلد",
+      "email": "البريد الإلكتروني",
+      "established": "تاريخ التأسيس",
+      "website": "الموقع الإلكتروني",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "visit": "زيارة",
+      "viewDetails": "عرض تفاصيل {{name}}",
+      "viewTooltip": "عرض التفاصيل",
+      "editUniversity": "تعديل {{name}}",
+      "editTooltip": "تعديل الجامعة",
+      "deleteUniversity": "حذف {{name}}",
+      "deleteTooltip": "حذف الجامعة"
+    },
+    "noUniversitiesFound": "لم يتم العثور على جامعات. أضف واحدة!"
+  },
+  "modal": {
+    "add": {
+      "title": "إضافة جامعة",
+      "description": "إنشاء جامعة جديدة مع حساب مستخدم إداري.",
+      "universityName": "اسم الجامعة",
+      "universityNamePlaceholder": "أدخل اسم الجامعة",
+      "adminSection": "تفاصيل الحساب الإداري",
+      "adminEmail": "البريد الإلكتروني للمدير",
+      "adminEmailPlaceholder": "admin@example.com",
+      "adminUsername": "اسم المستخدم للمدير",
+      "adminUsernamePlaceholder": "اسم المستخدم لمدير الجامعة",
+      "adminPassword": "كلمة مرور المدير",
+      "adminPasswordPlaceholder": "أدخل كلمة مرور آمنة",
+      "confirmPassword": "تأكيد كلمة مرور المدير",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+      "adding": "جارٍ الإضافة...",
+      "addButton": "إضافة جامعة"
+    },
+    "errors": {
+      "nameRequired": "اسم الجامعة مطلوب",
+      "emailRequired": "البريد الإلكتروني لمدير الجامعة مطلوب",
+      "invalidEmail": "تنسيق البريد الإلكتروني غير صالح",
+      "usernameRequired": "اسم المستخدم مطلوب",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "addFailed": "فشل في إضافة الجامعة. يرجى المحاولة مرة أخرى."
+    },
+    "accessibility": {
+      "close": "إغلاق",
+      "hidePassword": "إخفاء كلمة المرور",
+      "showPassword": "إظهار كلمة المرور"
+    }
+  },
+  "adminModal": {
+    "closeModal": "إغلاق",
+    "universityLogo": "شعار {{name}}",
+    "defaultUniversityName": "الجامعة",
+    "established": "تأسست {{year}}",
+    "notAvailable": "غ/م",
+    "international": "دولية",
+    "noDate": "-",
+    "stats": {
+      "colleges": "الكليات",
+      "departments": "الأقسام",
+      "programs": "البرامج",
+      "users": "المستخدمون"
+    },
+    "contactInformation": "معلومات الاتصال",
+    "contactLabels": {
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "address": "العنوان",
+      "website": "الموقع الإلكتروني"
+    },
+    "systemInformation": "معلومات النظام",
+    "systemLabels": {
+      "created": "تاريخ الإنشاء",
+      "lastUpdated": "آخر تحديث",
+      "recordId": "معرف السجل"
+    },
+    "about": "حول",
+    "noDescriptionAvailable": "لا يوجد وصف متاح لهذه الجامعة.",
+    "closeButton": "إغلاق",
+    "noData": "-"
+  },
+  "staffView": {
+    "loading": "جارٍ تحميل معلومات الجامعة...",
+    "noData": "-",
+    "universityLogo": "شعار {{name}}",
+    "defaultUniversityName": "الجامعة",
+    "abbreviationPlaceholder": "الاختصار",
+    "saving": "جارٍ الحفظ...",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "editInformation": "تحرير المعلومات",
+    "editingMode": "وضع التحرير",
+    "editingInstructions": "أنت الآن تقوم بتحرير معلومات جامعتك. الحقول المميزة بعلامة النجمة (*) مطلوبة. لاحظ أنه لا يمكن تغيير اسم الجامعة. قم بإجراء التحديثات وانقر على \"حفظ التغييرات\" عند الانتهاء.",
+    "universityInformation": "معلومات الجامعة",
+    "additionalDetails": "تفاصيل إضافية",
+    "fields": {
+      "email": "البريد الإلكتروني *",
+      "website": "الموقع الإلكتروني",
+      "address": "العنوان",
+      "phone": "الهاتف",
+      "presidentDean": "الرئيس/العميد",
+      "established": "تاريخ التأسيس",
+      "country": "البلد"
+    },
+    "errors": {
+      "loadFailed": "فشل في تحميل معلومات الجامعة. يرجى المحاولة مرة أخرى لاحقاً.",
+      "noDataToSave": "لا توجد بيانات للحفظ.",
+      "updateFailed": "فشل في تحديث الجامعة. يرجى المحاولة مرة أخرى.",
+      "errorOccurred": "حدث خطأ",
+      "universityNotFound": "الجامعة غير موجودة",
+      "noUniversityInfo": "لم يتم العثور على معلومات الجامعة. يرجى الاتصال بالمسؤول.",
+      "informationUnavailable": "المعلومات غير متاحة حالياً."
+    },
+    "messages": {
+      "updateSuccess": "تم تحديث معلومات الجامعة بنجاح! جارٍ تحديث البيانات..."
+    }
+  }
+}

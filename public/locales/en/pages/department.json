@@ -1,0 +1,191 @@
+{
+  "title": "Department Management",
+  "subtitle": "Manage department information and programs",
+  "addDepartment": "Add Department",
+  "editDepartment": "Edit Department",
+  "departmentName": "Department Name",
+  "description": "Description",
+  "head": "Department Head",
+  "college": "College",
+  "programs": "Programs",
+  "faculty": "Faculty Members",
+  "courses": "Courses",
+  "errors": {
+    "loadingError": "Failed to load departments. Please try again later.",
+    "networkError": "Network error occurred. Please check your connection.",
+    "notFound": "Department not found.",
+    "createError": "Failed to create department. Please try again.",
+    "updateError": "Failed to update department. Please try again.",
+    "deleteError": "Failed to delete department. Please try again.",
+    "fetchMyDepartment": "Failed to load your department information.",
+    "noPermission": "You don't have permission to perform this action.",
+    "updateDepartment": "Failed to update department information.",
+    "errorTitle": "Error",
+    "accessDenied": "Access denied. You don't have permission to view this page."
+  },
+  "loading": "Loading departments...",
+  "actions": {
+    "retry": "Retry"
+  },
+  "messages": {
+    "addSuccess": "Department added successfully!",
+    "updateSuccess": "Department updated successfully!"
+  },
+  "empty": {
+    "title": "No departments found",
+    "message": "There are no departments available at the moment."
+  },
+  "success": {
+    "created": "Department created successfully!",
+    "updated": "Department updated successfully!",
+    "deleted": "Department deleted successfully!"
+  },
+  "adminView": {
+    "title": "All Departments",
+    "addButton": "Add New Department",
+    "filterToggle": "Toggle filters",
+    "searchPlaceholder": "Search departments by name...",
+    "errorTitle": "Error loading departments",
+    "emptyTitle": "No departments found",
+    "emptyMessage": "Try adjusting your search criteria."
+  },
+  "staffView": {
+    "loading": "Loading department information...",
+    "errorTitle": "An error occurred",
+    "notFoundTitle": "Department Not Found",
+    "notFoundMessage": "No department information found. Please contact an administrator.",
+    "unavailable": "Information currently unavailable.",
+    "logoAlt": "{{name}} Logo",
+    "defaultName": "Department",
+    "editButton": "Edit Information",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "editingTitle": "Editing Mode",
+    "editingMessage": "You are now editing your department information. Fields marked with an asterisk (*) are required. Note that the department name cannot be changed. Make your updates and click \"Save Changes\" when done.",
+    "sections": {
+      "departmentInfo": "Department Information",
+      "academicDetails": "Academic Details"
+    },
+    "fields": {
+      "email": "Email *",
+      "website": "Website",
+      "address": "Address",
+      "phone": "Phone",
+      "head": "Department Head",
+      "established": "Established",
+      "programCount": "Programs Count",
+      "description": "Description",
+      "logo": "Department Logo"
+    },
+    "errors": {
+      "loadFailed": "Failed to load department information. Please try again later.",
+      "noData": "No data to save.",
+      "updateFailed": "Failed to update department. Please try again."
+    },
+    "success": {
+      "updated": "Department information updated successfully! Refreshing data..."
+    }
+  },
+  "viewCard": {
+    "unnamed": "Unnamed Department",
+    "notAvailable": "N/A",
+    "chair": "Chair",
+    "college": "College",
+    "university": "University",
+    "type": "DEPARTMENT",
+    "programCount": "{{count}} Programs"
+  },
+  "sidebar": {
+    "title": "Filter Departments",
+    "searchLabel": "Search by Name",
+    "searchPlaceholder": "Enter department name...",
+    "universityLabel": "University",
+    "selectUniversity": "Select University",
+    "collegeLabel": "College",
+    "selectCollege": "Select College",
+    "itemsPerPageLabel": "Items per Page",
+    "resetButton": "Reset"
+  },
+  "pagination": {
+    "firstPage": "First Page",
+    "previousPage": "Previous Page",
+    "nextPage": "Next Page",
+    "lastPage": "Last Page",
+    "summary": "{{totalRecords}} departments • Page {{currentPage}} of {{totalPages}}"
+  },
+  "searchableDropdown": {
+    "searchPlaceholder": "Search...",
+    "noOptions": "No options found"
+  },
+  "modal": {
+    "title": "Department Details",
+    "editTitle": "Edit Department Details",
+    "closePopup": "Close popup",
+    "fields": {
+      "departmentName": "Department Name",
+      "departmentCode": "Department Code",
+      "email": "Email",
+      "website": "Website",
+      "headOfDepartment": "Head of Department",
+      "establishedYear": "Established Year",
+      "logoUrl": "Logo URL",
+      "logo": "Logo",
+      "address": "Address",
+      "aboutDepartment": "About Department",
+      "programs": "Programs",
+      "registrationDate": "Registration Date",
+      "notSpecified": "Not specified"
+    },
+    "placeholders": {
+      "enterDepartmentName": "Enter department name...",
+      "enterDepartmentCode": "Enter department code...",
+      "enterEmail": "Enter email...",
+      "enterWebsite": "Enter website...",
+      "enterHeadName": "Enter head of department...",
+      "enterEstablishedYear": "Enter established year...",
+      "enterLogoUrl": "Enter logo URL...",
+      "enterAddress": "Enter address...",
+      "enterAboutDepartment": "Enter about department...",
+      "enterDescription": "Enter about department..."
+    },
+    "actions": {
+      "editDepartment": "Edit Department",
+      "cancelEdit": "Cancel Edit",
+      "saveChanges": "Save Changes"
+    },
+    "programs": {
+      "noProgramsListed": "No programs listed"
+    }
+  },
+  "addModal": {
+    "title": "Add New Department",
+    "allFieldsRequired": "All fields marked with * are required",
+    "departmentName": "Department Name",
+    "departmentNamePlaceholder": "Enter department name",
+    "adminUserDetails": "Admin User Details",
+    "adminUsername": "Admin Username",
+    "adminUsernamePlaceholder": "Enter admin username",
+    "adminEmail": "Admin Email",
+    "adminEmailPlaceholder": "Enter admin email",
+    "adminPassword": "Admin Password",
+    "adminPasswordPlaceholder": "Enter admin password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm admin password",
+    "collegeLabel": "College",
+    "collegePlaceholder": "Select college",
+    "createDepartment": "Create Department",
+    "creating": "Creating...",
+    "cancel": "Cancel",
+    "errors": {
+      "passwordsDoNotMatch": "Passwords do not match",
+      "allFieldsRequired": "All fields are required",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "invalidEmail": "Please enter a valid email address",
+      "addFailed": "Failed to add department"
+    },
+    "accessibility": {
+      "closePopup": "Close popup"
+    }
+  }
+}

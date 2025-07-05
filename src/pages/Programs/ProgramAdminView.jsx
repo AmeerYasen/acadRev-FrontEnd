@@ -2,6 +2,7 @@ import React from 'react';
 import ProgramSidebar from './components/ProgramSidebar';
 import ProgramDisplayCard from './components/viewCard';
 import ProgramPagination from './components/Pagination';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 
 const ProgramAdminView = ({
   loading,
@@ -43,20 +44,22 @@ const ProgramAdminView = ({
   roleWeight,
   roles,
 }) => {
+  const { translatePrograms } = useNamespacedTranslation();
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header Section */}
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">All Programs</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{translatePrograms('adminView.title')}</h1>
             <div className="flex items-center gap-4">
               {isDepartmentUser && ( // Show Add Program button for Department Users
                 <button
                   onClick={onOpenAddProgramModal}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
                 >
-                  Add New Program
+                  {translatePrograms('adminView.addButton')}
                 </button>
               )}
               {/* Mobile Filter Toggle Button - Hide if department user as sidebar is hidden */}
@@ -77,7 +80,7 @@ const ProgramAdminView = ({
             <div className="mt-4 mb-6">
               <input
                 type="text"
-                placeholder="Search programs by name..."
+                placeholder={translatePrograms('adminView.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => onSearchTermChange(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -130,7 +133,7 @@ const ProgramAdminView = ({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Error loading programs</h3>
+                    <h3 className="text-sm font-medium text-red-800">{translatePrograms('adminView.errorTitle')}</h3>
                     <p className="text-sm text-red-700 mt-1">{error}</p>
                   </div>
                 </div>
@@ -140,8 +143,8 @@ const ProgramAdminView = ({
                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No programs found</h3>
-                <p className="mt-1 text-sm text-gray-500">Try adjusting your search criteria.</p>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">{translatePrograms('adminView.emptyTitle')}</h3>
+                <p className="mt-1 text-sm text-gray-500">{translatePrograms('adminView.emptyMessage')}</p>
               </div>
             ) : (
               <>

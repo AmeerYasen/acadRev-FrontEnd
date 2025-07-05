@@ -14,10 +14,12 @@ import {
   fetchHeaders,
 } from "../../../api/quantitativeAPI";
 import { useToast } from "../../../context/ToastContext";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 
 
 export const useQuantitative = (programId) => {
+const { translateQuantitative } = useNamespacedTranslation();
 // State management
 const [areas, setAreas] = useState([]);
 const [selectedArea, setSelectedArea] = useState(null); // Stores selected areaId
@@ -55,7 +57,7 @@ const loadAreaData = useCallback(async (areaId) => {
     setItems((prev) => ({ ...prev, [areaId]: itemsData || [] }));
     setResponses((prev) => ({...prev,[areaId]: areaResponses || [] }));  } catch (err) {
     console.error("Error loading area data for areaId:", areaId, err);
-    showError(`Failed to load data for area ${areaId}`);
+    showError(translateQuantitative('errors.loadAreaFailed', { area: areaId }));
   } finally {
     setLoading((prev) => ({ ...prev, headers: false, items: false }));  }
 }, [programId, showError]); // Include dependencies
@@ -114,7 +116,7 @@ const loadInitialData = useCallback(async () => {
       setResponses({});
       setSelectedArea(null);
     }  } catch (err) {
-    showError(err.message || "Failed to load initial data");
+    showError(err.message || translateQuantitative('errors.loadFailed'));
     console.error("Error loading initial data:", err);  } finally {
     setLoading((prev) => ({ ...prev, initial: false }));
   }
@@ -178,7 +180,7 @@ const handleSaveArea = useCallback(async (areaId) => {
     if (areaResponsesToSubmit.length > 0) {
       const payload = { responses: areaResponsesToSubmit, program_id: programId };
       await submitResponses(payload);
-      showSuccess("Area data saved successfully!");
+      showSuccess(translateQuantitative('success.areaSaved'));
 
       // Refetch progress and completed areas as they might have changed
       const updatedProgressData = await fetchAreaProgress(programId);
@@ -200,7 +202,7 @@ const handleSaveArea = useCallback(async (areaId) => {
     }
   } catch (err) {
     console.error("Error saving area data:", err);
-    showError("Failed to save data. Please try again.");
+    showError(translateQuantitative('errors.saveFailed'));
   } finally {
     setLoading((prev) => ({ ...prev, saving: false }));
   }

@@ -1,0 +1,173 @@
+{
+  "title": "إدارة الكليات",
+  "subtitle": "إدارة معلومات الكليات والإعدادات",
+  "addCollege": "إضافة كلية",
+  "editCollege": "تعديل الكلية",
+  "collegeName": "اسم الكلية",
+  "description": "الوصف",
+  "dean": "العميد",
+  "establishedYear": "سنة التأسيس",
+  "location": "الموقع",
+  "departments": "الأقسام",
+  "programs": "البرامج",
+  "students": "الطلاب",
+  "faculty": "أعضاء هيئة التدريس",
+  
+  "countMessage": {
+    "college": "كلية",
+    "colleges": "كلية",
+    "inUniversity": "في {{university}}",
+    "acrossAllUniversities": "عبر جميع الجامعات",
+    "resultsFound": "{{count}} {{location}}"
+  },
+
+  "searchPlaceholder": {
+    "inUniversity": "البحث في كليات {{university}}...",
+    "allColleges": "البحث في جميع الكليات...",
+    "colleges": "البحث في الكليات..."
+  },
+
+  "emptyStates": {
+    "noCollegesMatchingSearch": "لم يتم العثور على كليات تطابق بحثك.",
+    "noCollegesAvailable": "لا توجد كليات متاحة.",
+    "noCollegesForUniversity": "لم يتم العثور على كليات لـ {{university}}.",
+    "noCollegesAvailableOrSelect": "لا توجد كليات متاحة. يرجى اختيار جامعة لعرض كلياتها.",
+    "noCollegesForYourUniversity": "لا توجد كليات متاحة لجامعتك."
+  },
+
+  "adminView": {
+    "selectUniversity": "اختيار الجامعة",
+    "allUniversities": "جميع الجامعات",
+    "loadingUniversities": "جارٍ تحميل الجامعات...",
+    "addCollege": "إضافة كلية"
+  },
+
+  "card": {
+    "established": "تأسست",
+    "notAvailable": "غير متوفر",
+    "head": "الرئيس",
+    "departments": "أقسام"
+  },
+
+  "messages": {
+    "collegeUpdatedSuccess": " تم تحديث معلومات الكلية بنجاح!"
+  },
+  
+  "form": {
+    "collegeName": "اسم الكلية",
+    "email": "البريد الإلكتروني",
+    "website": "الموقع الإلكتروني",
+    "address": "العنوان",
+    "logoUrl": "رابط الشعار",
+    "logo": "الشعار",
+    "headOfCollege": "رئيس الكلية",
+    "established": "تاريخ التأسيس",
+    "establishedYear": "سنة التأسيس",
+    "aboutCollege": "حول الكلية",
+    "departments": "الأقسام",
+    "universityId": "معرف الجامعة",
+    "dateEstablished": "تاريخ التأسيس",
+    "registrationDate": "تاريخ التسجيل",
+    "notProvided": "غير متوفر",
+    "notSpecified": "غير محدد",
+    "ariaLabel": "حقل إدخال {{field}}",
+    "placeholderText": "أدخل {{field}}..."
+  },
+  
+  "actions": {
+    "edit": "تعديل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "saveChanges": "حفظ التغييرات",
+    "editDetails": "تعديل التفاصيل",
+    "editDetailsAriaLabel": "تعديل تفاصيل الكلية",
+    "editing": "تعديل",
+    "editCollege": "تعديل الكلية",
+    "editCollegeDetails": "تعديل تفاصيل الكلية",
+    "closePopup": "إغلاق النافذة",
+    "clearSearch": "مسح البحث"
+  },
+  
+  "errors": {
+    "collegeInfoNotAvailable": "معلومات الكلية غير متوفرة.",
+    "errorLoadingUniversities": "خطأ: {{error}}",
+    "fetchUniversitiesFailed": "فشل في جلب الجامعات",
+    "noFetchLogicForRole": "لا توجد منطق جلب للدور: {{role}}",
+    "updateCollegeFailed": "فشل في تحديث الكلية: {{message}}",
+    "errorLabel": "خطأ",
+    "fetchCollegesError": "فشل في جلب الكليات"
+  },
+  
+  "loading": {
+    "universities": "جارٍ تحميل الجامعات...",
+    "loadingData": "جارٍ تحميل البيانات...",
+    "loadingColleges": "جارٍ تحميل الكليات..."
+  },
+  
+  "empty": {
+    "noColleges": "لا توجد كليات للعرض.",
+    "noCollegeData": "لا توجد بيانات كلية متاحة حاليًا لحسابك.",
+    "noDepartments": "لا توجد أقسام مدرجة"
+  },
+  
+  "staffView": {
+    "administrativeInfo": "المعلومات الإدارية",
+    "collegeDetails": "تفاصيل الكلية",
+    "loading": "جارٍ تحميل معلومات الكلية...",
+    "saving": "جارٍ الحفظ...",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "editInformation": "تعديل المعلومات",
+    "editingMode": "وضع التعديل",
+    "editingInstructions": "يمكنك الآن تعديل معلومات كليتك. انقر على 'حفظ التغييرات' لتطبيق التحديثات أو 'إلغاء' لإلغاء التغييرات.",
+    "collegeInformation": "معلومات الكلية",
+    "additionalDetails": "تفاصيل إضافية",
+    "headedBy": "يترأسها",
+    "noData": "لا توجد بيانات متاحة",
+    "defaultCollegeName": "الكلية",
+    "collegeLogo": "شعار {{name}}",
+    "errors": {
+      "loadFailed": "فشل في تحميل معلومات الكلية",
+      "updateFailed": "فشل في تحديث معلومات الكلية",
+      "errorOccurred": "حدث خطأ",
+      "collegeNotFound": "لم يتم العثور على الكلية",
+      "noCollegeInfo": "لا توجد معلومات كلية متاحة لحسابك",
+      "informationUnavailable": "معلومات الكلية غير متاحة",
+      "noDataToSave": "لا توجد بيانات للحفظ"
+    }
+  },
+  
+  "navigation": {
+    "universities": "الجامعات",
+    "allUniversities": "جميع الجامعات"
+  },
+
+  "modal": {
+    "title": "إضافة كلية جديدة",
+    "allFieldsRequired": "جميع الحقول المميزة بـ * مطلوبة",
+    "collegeName": "اسم الكلية",
+    "collegeNamePlaceholder": "أدخل اسم الكلية",
+    "adminUserDetails": "تفاصيل المستخدم الإداري",
+    "adminUsername": "اسم المستخدم الإداري",
+    "adminUsernamePlaceholder": "أدخل اسم المستخدم الإداري",
+    "adminEmail": "البريد الإلكتروني للإدارة",
+    "adminEmailPlaceholder": "أدخل البريد الإلكتروني للإدارة",
+    "adminPassword": "كلمة مرور الإدارة",
+    "adminPasswordPlaceholder": "أدخل كلمة مرور الإدارة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "تأكيد كلمة مرور الإدارة",
+    "universityLabel": "الجامعة",
+    "universityPlaceholder": "اختر الجامعة",
+    "createCollege": "إنشاء الكلية",
+    "creating": "جارٍ الإنشاء...",
+    "errors": {
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "allFieldsRequired": "جميع الحقول مطلوبة",
+      "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "addFailed": "فشل في إضافة الكلية"
+    },
+    "accessibility": {
+      "closePopup": "إغلاق النافذة"
+    }
+  }
+}

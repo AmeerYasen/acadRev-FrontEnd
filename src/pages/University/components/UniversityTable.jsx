@@ -1,4 +1,5 @@
 import { Eye, Trash2, Edit } from "lucide-react";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 function UniversityTable({
   universities = [], // Matches prop name from University.jsx
@@ -10,6 +11,7 @@ function UniversityTable({
   getRandomLogo, // This prop was not passed from University.jsx
   // debouncedSearchTerm, // This prop was not passed from University.jsx
 }) {
+  const { translateUniversity } = useNamespacedTranslation();
 
   // Ensure universities is always an array
   const universityList = Array.isArray(universities) ? universities : [];
@@ -18,15 +20,19 @@ function UniversityTable({
     <table className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-100 sticky top-0">
         <tr>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">Logo</th>
-          {renderSortableHeader && renderSortableHeader("Name", "name")}
-          {renderSortableHeader && renderSortableHeader("Country", "country")}
-          {renderSortableHeader && renderSortableHeader("Email", "email")}
+          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
+            {translateUniversity('table.headers.logo')}
+          </th>
+          {renderSortableHeader && renderSortableHeader(translateUniversity('table.headers.name'), "name")}
+          {renderSortableHeader && renderSortableHeader(translateUniversity('table.headers.country'), "country")}
+          {renderSortableHeader && renderSortableHeader(translateUniversity('table.headers.email'), "email")}
           {/* Assuming 'established' might be 'since' based on previous contexts */}
-          {renderSortableHeader && renderSortableHeader("Established", "since")}
-          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Website</th>
+          {renderSortableHeader && renderSortableHeader(translateUniversity('table.headers.established'), "since")}
+          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            {translateUniversity('table.headers.website')}
+          </th>
           <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Actions
+            {translateUniversity('table.headers.actions')}
           </th>
         </tr>
       </thead>
@@ -65,7 +71,7 @@ function UniversityTable({
                     rel="noopener noreferrer"
                     className="text-indigo-600 hover:text-indigo-800 hover:underline text-center"
                   >
-                    Visit
+                    {translateUniversity('table.actions.visit')}
                   </a>
                 ) : (
                   <span className="text-gray-400">-</span>
@@ -75,8 +81,8 @@ function UniversityTable({
                 <button
                   onClick={() => onView(uni)} // Uses onView prop
                   className="text-indigo-600 hover:text-indigo-800 p-2 rounded-full hover:bg-indigo-100 transition-colors"
-                  aria-label={`View details for ${uni.name}`}
-                  title="View details"
+                  aria-label={translateUniversity('table.actions.viewDetails', { name: uni.name })}
+                  title={translateUniversity('table.actions.viewTooltip')}
                 >
                   <Eye size={18} />
                 </button>
@@ -87,16 +93,16 @@ function UniversityTable({
                     <button
                       onClick={() => onEdit(uni)} // Uses onEdit prop
                       className="text-green-600 hover:text-green-800 p-2 rounded-full hover:bg-green-100 transition-colors"
-                      aria-label={`Edit ${uni.name}`}
-                      title="Edit university"
+                      aria-label={translateUniversity('table.actions.editUniversity', { name: uni.name })}
+                      title={translateUniversity('table.actions.editTooltip')}
                     >
                       <Edit size={18} />
                     </button>
                     <button
                       onClick={() => onDelete(uni.id)} // Uses onDelete prop, passing only id
                       className="text-red-600 hover:text-red-800 p-2 rounded-full hover:bg-red-100 transition-colors"
-                      aria-label={`Delete ${uni.name}`}
-                      title="Delete university"
+                      aria-label={translateUniversity('table.actions.deleteUniversity', { name: uni.name })}
+                      title={translateUniversity('table.actions.deleteTooltip')}
                     >
                       <Trash2 size={18} />
                     </button>
@@ -109,7 +115,7 @@ function UniversityTable({
           <tr>
             <td colSpan="7" className="px-6 py-10 text-center text-gray-500">
               {/* Removed debouncedSearchTerm as it's not passed */}
-              No universities found. Add one!
+              {translateUniversity('table.noUniversitiesFound')}
             </td>
           </tr>
         )}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const UniversityNav = ({
   universitiesList,
@@ -7,18 +8,20 @@ const UniversityNav = ({
   loading,
   error
 }) => {
+  const {translateCollege} = useNamespacedTranslation();
+
   if (loading) {
-    return <p className="text-text-muted p-6">Loading universities...</p>;
+    return <p className="text-text-muted p-6">{translateCollege('loading.universities')}</p>;
   }
 
   if (error) {
-    return <p className="text-red-500 text-sm p-6">Error: {error}</p>;
+    return <p className="text-red-500 text-sm p-6">{translateCollege('errors.errorLoadingUniversities', { error })}</p>;
   }
 
   return (
     <aside className="flex-none w-64 p-6 bg-background-aside border-r border-gray-100 overflow-y-auto shadow-sm hidden md:block">
       <h2 className="mt-0 mb-6 text-xl font-semibold text-secondary pb-2 border-b border-gray-200">
-        Universities
+        {translateCollege('navigation.universities')}
       </h2>
       <ul className="list-none p-0 m-0 space-y-2">
         <li
@@ -29,7 +32,7 @@ const UniversityNav = ({
           }`}
           onClick={() => onSelectUniversity(null)} // Pass null for "All Universities"
         >
-          All Universities
+          {translateCollege('navigation.allUniversities')}
         </li>
         {universitiesList.map(uni => (
           <li

@@ -1,0 +1,116 @@
+{
+  "header": {
+    "title": "الإدارة الأكاديمية",
+    "subtitle": "اختر وحدة للوصول إلى ميزاتها وبياناتها"
+  },
+  "welcome": "مرحباً بك في لوحة التحكم",
+  "overview": "نظرة عامة",
+  "quickStats": "إحصائيات سريعة",
+  "recentActivity": "النشاط الأخير",
+  "pendingTasks": "المهام المعلقة",
+  "notifications": "الإشعارات",
+  "shortcuts": "إجراءات سريعة",
+  "stats": {
+    "totalUniversities": "إجمالي الجامعات",
+    "totalColleges": "إجمالي الكليات",
+    "totalDepartments": "إجمالي الأقسام",
+    "totalPrograms": "إجمالي البرامج",
+    "totalUsers": "إجمالي المستخدمين",
+    "completedAssessments": "التقييمات المكتملة",
+    "pendingReviews": "المراجعات المعلقة"
+  },
+  "cards": {
+    "university": {
+      "title": "الجامعة",
+      "subtitle": "الجامعات",
+      "description": "إدارة ملفات تعريف الجامعات وحالة الاعتماد",
+      "stats": {
+        "label": "جامعات"
+      }
+    },
+    "college": {
+      "title": "الكلية",
+      "subtitle": "الكليات",
+      "description": "الإشراف على هياكل الكليات والوحدات الأكاديمية",
+      "stats": {
+        "label": "كليات"
+      }
+    },
+    "department": {
+      "title": "القسم",
+      "subtitle": "الأقسام",
+      "description": "مراقبة أداء الأقسام والمقاييس",
+      "stats": {
+        "label": "أقسام"
+      }
+    },
+    "program": {
+      "title": "البرنامج",
+      "subtitle": "البرامج",
+      "description": "مراجعة البرامج الأكاديمية وهياكل المناهج",
+      "stats": {
+        "label": "برامج"
+      }
+    },
+    "users": {
+      "title": "المستخدمون",
+      "subtitle": "المستخدمون",
+      "description": "إدارة حسابات المستخدمين وأذونات الوصول",
+      "stats": {
+        "label": "مستخدمون نشطون"
+      }
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "subtitle": "الملف الشخصي",
+      "description": "عرض وإدارة ملفك الشخصي",
+      "stats": {
+        "label": "ملف شخصي"
+      }
+    },
+    "results": {
+      "title": "النتائج",
+      "subtitle": "النتائج",
+      "description": "إنشاء التحليلات ونتائج التقييم",
+      "stats": {
+        "label": "نتائج"
+      }
+    },
+    "programManagement": {
+      "title": "إدارة البرامج",
+      "description": "إدارة البرامج الأكاديمية والمناهج",
+      "action": "عرض البرامج"
+    },
+    "qualityAssurance": {
+      "title": "ضمان الجودة",
+      "description": "مراقبة وتقييم معايير الجودة",
+      "action": "بدء التقييم"
+    },
+    "reports": {
+      "title": "التقارير",
+      "description": "إنشاء تقارير شاملة",
+      "action": "عرض التقارير"
+    },
+    "userManagement": {
+      "title": "إدارة المستخدمين",
+      "description": "إدارة مستخدمي النظام والأدوار",
+      "action": "إدارة المستخدمين"
+    }
+  },
+  "actions": {
+    "viewAll": "عرض الكل",
+    "refresh": "تحديث",
+    "export": "تصدير",
+    "filter": "تصفية",
+    "search": "بحث"
+  },
+  "navigation": {
+    "viewAll": "عرض الكل",
+    "manage": "إدارة",
+    "create": "إنشاء جديد",
+    "settings": "الإعدادات"
+  },
+  "lastUpdated": "آخر تحديث",
+  "noData": "لا توجد بيانات متاحة",
+  "loading": "جاري تحميل بيانات لوحة التحكم..."
+}

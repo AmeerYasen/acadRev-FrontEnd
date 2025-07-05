@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+
 const ProgramSidebar = ({
   universities,
   colleges,
@@ -18,6 +20,7 @@ const ProgramSidebar = ({
   isCollegeUser,
   roleWeight,
 }) => {
+  const { translatePrograms } = useNamespacedTranslation();
   const handleUniversitySelect = (university) => {
     onSelectedUniversityChange(university);
   };
@@ -35,18 +38,18 @@ const ProgramSidebar = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-6 top-4">
       <h2 className="text-lg font-semibold text-gray-900 mb-6 border-b pb-3">
-        Filter Programs
+        {translatePrograms('sidebar.title')}
       </h2>
       
       {/* Search Input */}
       <div className="mb-6">
         <label htmlFor="programSearch" className="block text-sm font-medium text-gray-700 mb-1">
-          Search by Name
+          {translatePrograms('sidebar.searchLabel')}
         </label>
         <input
           type="text"
           id="programSearch"
-          placeholder="Enter program name..."
+          placeholder={translatePrograms('sidebar.searchPlaceholder')}
           value={searchTerm}
           onChange={(e) => onSearchTermChange(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -57,7 +60,7 @@ const ProgramSidebar = ({
       {roleWeight<=2 && (
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            University
+            {translatePrograms('sidebar.universityLabel')}
           </label>
           <div className="relative">
             <select
@@ -65,7 +68,7 @@ const ProgramSidebar = ({
               onChange={(e) => handleUniversitySelect(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
-              <option value="">Select University</option>
+              <option value="">{translatePrograms('sidebar.selectUniversity')}</option>
               {universities.map((university) => (
                 <option key={university.id} value={university.id}>
                   {university.name}
@@ -80,7 +83,7 @@ const ProgramSidebar = ({
       {!isCollegeUser && (
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            College
+            {translatePrograms('sidebar.collegeLabel')}
           </label>
           <div className="relative">
             <select
@@ -88,7 +91,7 @@ const ProgramSidebar = ({
               onChange={(e) => handleCollegeSelect(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
-              <option value="">Select College</option>
+              <option value="">{translatePrograms('sidebar.selectCollege')}</option>
               {colleges.map((college) => (
                 <option key={college.id} value={college.id}>
                   {college.name}
@@ -102,7 +105,7 @@ const ProgramSidebar = ({
       {/* Departments Filter */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Department
+          {translatePrograms('sidebar.departmentLabel')}
         </label>
         <div className="relative">
           <select
@@ -110,7 +113,7 @@ const ProgramSidebar = ({
             onChange={(e) => handleDepartmentSelect(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
           >
-            <option value="">Select Department</option>
+            <option value="">{translatePrograms('sidebar.selectDepartment')}</option>
             {departments.map((department) => (
               <option key={department.id} value={department.id}>
                 {department.name}
@@ -123,7 +126,7 @@ const ProgramSidebar = ({
       {/* Items Per Page Selector */}
       <div className="mb-6">
         <label htmlFor="itemsPerPageSelect" className="block text-sm font-medium text-gray-700 mb-1">
-          Items per Page
+          {translatePrograms('sidebar.itemsPerPageLabel')}
         </label>
         <select
           id="itemsPerPageSelect"
@@ -145,7 +148,7 @@ const ProgramSidebar = ({
           onClick={onReset}
           className="w-full bg-green-500 text-white py-2.5 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 transition duration-200 font-medium"
         >
-          Reset 
+          {translatePrograms('sidebar.resetButton')}
         </button>
       </div>
     </div>

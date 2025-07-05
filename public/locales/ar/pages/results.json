@@ -1,0 +1,201 @@
+{
+  "title": "نتائج التقويم النوعي", 
+  "subtitle": "نتائج التحليل النوعي",
+  "loading": {
+    "initialData": "جاري تحميل بيانات النتائج...",
+    "analysis": "جاري تحميل التحليل...",
+    "updating": "جاري التحديث...",
+    "retry": "جاري المحاولة...",
+    "exporting": "جاري التصدير...",
+    "data": "جاري تحميل البيانات..."
+  },
+  "error": {
+    "loadingData": "خطأ في تحميل البيانات",
+    "retry": "إعادة المحاولة"
+  },
+  "header": {
+    "title": "نتائج التقويم النوعي",
+    "programLabel": "البرنامج",
+    "programNumber": "البرنامج رقم #",
+    "refresh": "تحديث",
+    "print": "طباعة",
+    "finalScore": "النتيجة النهائية",
+    "domainsCount": "عدد المجالات", 
+    "indicatorsTotal": "مجموع المؤشرات",
+    "evaluationStatus": "حالة التقويم",
+    "completed": "مكتمل",
+    "incomplete": "غير مكتمل",
+    "scoreLabels": {
+      "excellent": "ممتاز",
+      "good": "جيد", 
+      "acceptable": "مقبول",
+      "poor": "ضعيف"
+    }
+  },
+  "programSelector": {
+    "title": "اختيار البرنامج للتحليل",
+    "selectedProgram": "البرنامج المختار",
+    "changeSelection": "تغيير الاختيار",
+    "loadingResults": "جاري تحميل النتائج...",
+    "hint": "اضغط على \"تغيير الاختيار\" لاختيار برنامج مختلف للتحليل",
+    "noSelection": {
+      "title": "لم يتم اختيار برنامج",
+      "description": "يرجى اختيار برنامج من الأسفل لعرض نتائج تحليله"
+    },
+    "search": "البحث عن البرامج...",
+    "noResults": "لا توجد برامج تطابق الفلاتر المحددة",
+    "tryModifying": "جرب تعديل الفلاتر أو البحث",
+    "noAvailable": "لا توجد برامج متاحة",
+    "loading": "جاري تحميل البرامج...",
+    "selectProgram": "اختيار البرنامج",
+    "programId": "رقم البرنامج",
+    "programNumber": "رقم البرنامج",
+    "selected": "مختار",
+    "filter": "فلتر",
+    "clearFilters": "مسح الفلاتر",
+    "resetFilters": "إعادة تعيين الفلاتر", 
+    "university": "الجامعة",
+    "college": "الكلية", 
+    "department": "القسم",
+    "allUniversities": "جميع الجامعات",
+    "allColleges": "جميع الكليات",
+    "allDepartments": "جميع الأقسام",
+    "selectUniversity": "اختيار الجامعة",
+    "selectCollege": "اختيار الكلية",
+    "selectDepartment": "اختيار القسم",
+    "accessInfo": {
+      "allPrograms": "يمكنك الوصول إلى جميع البرامج في النظام",
+      "universityPrograms": "يمكنك الوصول إلى برامج الجامعة",
+      "collegePrograms": "يمكنك الوصول إلى برامج الكلية", 
+      "departmentPrograms": "يمكنك الوصول إلى برامج القسم"
+    },
+    "available": "برنامج متاح",
+    "searchByName": "البحث بالاسم أو الرقم",
+    "enterProgram": "أدخل اسم البرنامج أو رقمه...",
+    "filterPrograms": "فلترة البرامج",
+    "itemsPerPage": "العناصر في الصفحة",
+    "retry": "إعادة المحاولة",
+    "pagination": {
+      "firstPage": "الصفحة الأولى",
+      "previousPage": "الصفحة السابقة", 
+      "nextPage": "الصفحة التالية",
+      "lastPage": "الصفحة الأخيرة",
+      "page": "صفحة",
+      "of": "من",
+      "showing": "عرض",
+      "to": "إلى",
+      "totalResults": "إجمالي النتائج"
+    }
+  },
+  "domainWeights": {
+    "title": "أوزان المجالات (Wi)",
+    "domain": "مجال",
+    "domains": "مجالات",
+    "indicators": "مؤشرات",
+    "indicator": "مؤشر"
+  },
+  "finalScore": {
+    "title": "النتيجة النهائية للبرنامج",
+    "statsLabels": {
+      "domains": "المجالات",
+      "indicators": "المؤشرات", 
+      "program": "البرنامج",
+      "date": "التاريخ"
+    }
+  },
+  "views": {
+    "overview": "نظرة عامة",
+    "detailed": "التحليل التفصيلي",
+    "charts": "الرسوم البيانية"
+  },
+  "overview": {
+    "title": "نظرة عامة - ملخص النتائج",
+    "scoringBreakdown": {
+      "excellent": "ممتاز (90%+)",
+      "good": "جيد (75-89%)",
+      "acceptable": "مقبول (60-74%)",
+      "poor": "ضعيف (<60%)",
+      "domain": "مجال",
+      "domains": "مجالات"
+    }
+  },
+  "detailedAnalysis": {
+    "title": "التحليل التفصيلي للمجالات",
+    "loadingData": "جاري تحميل البيانات...",
+    "noDataAvailable": "لا توجد بيانات متاحة للعرض",
+    "summaryStats": {
+      "totalDomains": "مجموع المجالات",
+      "excellentDomains": "المجالات الممتازة", 
+      "improvementNeeded": "تحتاج لتحسين"
+    },
+    "table": {
+      "domain": "المجال",
+      "indicatorsCount": "عدد المؤشرات",
+      "weight": "الوزن (Wi)",
+      "score": "النتيجة (Si)",
+      "weightedScore": "النتيجة المرجحة",
+      "evaluation": "التقويم",
+      "finalTotal": "المجموع النهائي"
+    },
+    "mobile": {
+      "indicators": "المؤشرات:",
+      "weight": "الوزن:",
+      "score": "النتيجة:",
+      "weightedScore": "النتيجة المرجحة:",
+      "finalScore": "النتيجة النهائية"
+    }
+  },
+  "charts": {
+    "title": "رسوم النتائج البيانية",
+    "noDataAvailable": "لا توجد بيانات متاحة لعرض الرسوم البيانية",
+    "types": {
+      "weights": "أوزان المجالات",
+      "scores": "نتائج المجالات", 
+      "comparison": "المقارنة الشاملة"
+    },
+    "weightsChart": {
+      "title": "أوزان المجالات (Wi)",
+      "indicators": "مؤشرات",
+      "indicator": "مؤشر"
+    },
+    "scoresChart": {
+      "title": "نتائج المجالات (Si)"
+    },
+    "comparisonChart": {
+      "title": "المقارنة: الأوزان مقابل النتائج",
+      "weight": "الوزن",
+      "score": "النتيجة",
+      "weightedScore": "النتيجة المرجحة"
+    }
+  },
+  "export": {
+    "title": "تصدير التقرير",
+    "csv": "تصدير CSV",
+    "json": "تصدير JSON", 
+    "pdf": "تصدير PDF",
+    "print": "طباعة التقرير",
+    "refresh": "تحديث البيانات"
+  },
+  "noProgram": {
+    "title": "اختر برنامجاً لعرض التحليل",
+    "description": "يرجى اختيار برنامج من القائمة أعلاه لعرض تحليل النتائج النوعية"
+  },
+  "messages": {
+    "success": {
+      "dataLoaded": "تم تحميل البيانات بنجاح",
+      "dataRefreshed": "تم تحديث البيانات بنجاح",
+      "exportComplete": "تم التصدير بنجاح"
+    },
+    "error": {
+      "loadingWeights": "فشل في تحميل أوزان المجالات",
+      "loadingScores": "فشل في تحميل نتائج المجالات", 
+      "loadingResults": "فشل في تحميل النتائج المرجحة",
+      "loadingAnalysis": "فشل في تحميل التحليل الكامل",
+      "loadingProgram": "فشل في تحميل معلومات البرنامج",
+      "exportFailed": "فشل في التصدير",
+      "networkError": "خطأ في الشبكة",
+      "serverError": "خطأ في الخادم",
+      "unexpectedError": "خطأ غير متوقع"
+    }
+  }
+}

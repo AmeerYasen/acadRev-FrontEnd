@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Card } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+import { getLocalizedText } from '../../../utils/translationUtils';
 
 /**
  * ResultsCharts Component
@@ -11,12 +13,13 @@ import { Badge } from '../../../components/ui/badge';
  * @param {Object} summary - Analysis summary data
  */
 const ResultsCharts = ({ data, summary }) => {
+  const { translateResults, currentLanguage } = useNamespacedTranslation();
   const [activeChart, setActiveChart] = useState('weights'); // 'weights', 'scores', 'comparison'
 
   if (!data || !data.result_by_domain) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-gray-600">لا توجد بيانات متاحة لعرض الرسوم البيانية</p>
+        <p className="text-gray-600">{translateResults('charts.noDataAvailable')}</p>
       </Card>
     );
   }
@@ -31,9 +34,9 @@ const ResultsCharts = ({ data, summary }) => {
   const ChartSelector = () => (
     <div className="flex flex-wrap gap-2 mb-6">
       {[
-        { key: 'weights', label: 'أوزان المجالات', icon: '⚖️' },
-        { key: 'scores', label: 'درجات المجالات', icon: '📊' },
-        { key: 'comparison', label: 'مقارنة شاملة', icon: '📈' }
+        { key: 'weights', label: translateResults('charts.types.weights'), icon: '⚖️' },
+        { key: 'scores', label: translateResults('charts.types.scores'), icon: '📊' },
+        { key: 'comparison', label: translateResults('charts.types.comparison'), icon: '📈' }
       ].map((chart) => (
         <Button
           key={chart.key}
@@ -53,11 +56,11 @@ const ResultsCharts = ({ data, summary }) => {
    */
   const WeightsChart = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold mb-4">أوزان المجالات (Wi)</h3>
+      <h3 className="text-lg font-semibold mb-4">{translateResults('charts.weightsChart.title')}</h3>
       {domains.map((domain, index) => (
         <div key={domain.domain_id} className="chart-row">
           <div className="flex justify-between items-center mb-2">
-            <span className="font-medium text-sm">{domain.domain_name}</span>
+            <span className="font-medium text-sm">{getLocalizedText(domain, currentLanguage)}</span>
             <Badge variant="secondary">{domain.domain_weight.toFixed(2)}%</Badge>
           </div>
           <div className="relative bg-gray-200 rounded-full h-4">
@@ -70,7 +73,7 @@ const ResultsCharts = ({ data, summary }) => {
             />
           </div>
           <div className="flex justify-between text-xs text-gray-600 mt-1">
-            <span>{domain.indicator_count} مؤشر</span>
+            <span>{domain.indicator_count} {translateResults('charts.weightsChart.indicator')}</span>
             <span>{domain.domain_weight.toFixed(2)}%</span>
           </div>
         </div>
@@ -83,7 +86,7 @@ const ResultsCharts = ({ data, summary }) => {
    */
   const ScoresChart = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold mb-4">درجات المجالات (Si)</h3>
+      <h3 className="text-lg font-semibold mb-4">{translateResults('charts.scoresChart.title')}</h3>
       {domains.map((domain, index) => {
         const score = domain.domain_score;
         let colorClass = 'bg-red-500';
@@ -103,7 +106,7 @@ const ResultsCharts = ({ data, summary }) => {
         return (
           <div key={domain.domain_id} className="chart-row">
             <div className="flex justify-between items-center mb-2">
-              <span className="font-medium text-sm">{domain.domain_name}</span>
+              <span className="font-medium text-sm">{getLocalizedText(domain, currentLanguage)}</span>
               <Badge variant="secondary" className={textColorClass}>
                 {score.toFixed(2)}%
               </Badge>
@@ -118,7 +121,7 @@ const ResultsCharts = ({ data, summary }) => {
               />
             </div>
             <div className="flex justify-between text-xs text-gray-600 mt-1">
-              <span>من {maxScore}%</span>
+              <span>{currentLanguage === 'ar' ? `من ${maxScore}%` : `out of ${maxScore}%`}</span>
               <span>{score.toFixed(2)}%</span>
             </div>
           </div>
@@ -132,21 +135,21 @@ const ResultsCharts = ({ data, summary }) => {
    */
   const ComparisonChart = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold mb-4">مقارنة الأوزان والدرجات</h3>
+      <h3 className="text-lg font-semibold mb-4">{translateResults('charts.comparisonChart.title')}</h3>
       {domains.map((domain, index) => (
         <div key={domain.domain_id} className="comparison-row p-4 bg-gray-50 rounded-lg">
           <div className="flex justify-between items-center mb-3">
-            <h4 className="font-medium">{domain.domain_name}</h4>
+            <h4 className="font-medium">{getLocalizedText(domain, currentLanguage)}</h4>
             <div className="flex gap-2">
-              <Badge variant="outline">وزن: {domain.domain_weight.toFixed(2)}%</Badge>
-              <Badge variant="secondary">درجة: {domain.domain_score.toFixed(2)}%</Badge>
+              <Badge variant="outline">{translateResults('charts.comparisonChart.weight')}: {domain.domain_weight.toFixed(2)}%</Badge>
+              <Badge variant="secondary">{translateResults('charts.comparisonChart.score')}: {domain.domain_score.toFixed(2)}%</Badge>
             </div>
           </div>
           
           {/* Weight Bar */}
           <div className="mb-2">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>الوزن (Wi)</span>
+              <span>{translateResults('charts.comparisonChart.weight')} (Wi)</span>
               <span>{domain.domain_weight.toFixed(2)}%</span>
             </div>
             <div className="relative bg-gray-200 rounded-full h-3">
@@ -163,7 +166,7 @@ const ResultsCharts = ({ data, summary }) => {
           {/* Score Bar */}
           <div className="mb-2">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>الدرجة (Si)</span>
+              <span>{translateResults('charts.comparisonChart.score')} (Si)</span>
               <span>{domain.domain_score.toFixed(2)}%</span>
             </div>
             <div className="relative bg-gray-200 rounded-full h-3">
@@ -180,7 +183,7 @@ const ResultsCharts = ({ data, summary }) => {
           {/* Weighted Score */}
           <div className="mt-3 p-2 bg-white rounded border">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">الدرجة المرجحة (Wi × Si)</span>
+              <span className="text-sm font-medium">{translateResults('charts.comparisonChart.weightedScore')} (Wi × Si)</span>
               <Badge variant="default">{domain.domain_weighted_score.toFixed(2)}</Badge>
             </div>
           </div>
@@ -190,12 +193,12 @@ const ResultsCharts = ({ data, summary }) => {
       {/* Final Score Summary */}
       <div className="mt-6 p-6 bg-blue-50 rounded-lg border border-blue-200">
         <div className="text-center">
-          <h4 className="text-xl font-bold text-blue-800 mb-2">الدرجة النهائية</h4>
+          <h4 className="text-xl font-bold text-blue-800 mb-2">{translateResults('detailedAnalysis.mobile.finalScore')}</h4>
           <div className="text-3xl font-bold text-blue-600">
             {data.final_program_score.toFixed(2)}%
           </div>
           <p className="text-sm text-blue-700 mt-2">
-            مجموع الدرجات المرجحة لجميع المجالات
+            {currentLanguage === 'ar' ? 'مجموع الدرجات المرجحة لجميع المجالات' : 'Sum of weighted scores for all domains'}
           </p>
         </div>
       </div>
@@ -213,13 +216,13 @@ const ResultsCharts = ({ data, summary }) => {
 
     return (
       <Card className="p-6 mb-6">
-        <h3 className="text-lg font-semibold mb-4">إحصائيات التوزيع</h3>
+        <h3 className="text-lg font-semibold mb-4">{currentLanguage === 'ar' ? 'إحصائيات التوزيع' : 'Distribution Statistics'}</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { key: 'excellent', label: 'ممتاز', color: 'text-green-600', bgColor: 'bg-green-50' },
-            { key: 'good', label: 'جيد', color: 'text-blue-600', bgColor: 'bg-blue-50' },
-            { key: 'acceptable', label: 'مقبول', color: 'text-yellow-600', bgColor: 'bg-yellow-50' },
-            { key: 'poor', label: 'ضعيف', color: 'text-red-600', bgColor: 'bg-red-50' }
+            { key: 'excellent', label: translateResults('overview.scoringBreakdown.excellent'), color: 'text-green-600', bgColor: 'bg-green-50' },
+            { key: 'good', label: translateResults('overview.scoringBreakdown.good'), color: 'text-blue-600', bgColor: 'bg-blue-50' },
+            { key: 'acceptable', label: translateResults('overview.scoringBreakdown.acceptable'), color: 'text-yellow-600', bgColor: 'bg-yellow-50' },
+            { key: 'poor', label: translateResults('overview.scoringBreakdown.poor'), color: 'text-red-600', bgColor: 'bg-red-50' }
           ].map(({ key, label, color, bgColor }) => (
             <div key={key} className={`p-4 rounded-lg ${bgColor}`}>
               <div className={`text-2xl font-bold ${color}`}>
@@ -252,23 +255,23 @@ const ResultsCharts = ({ data, summary }) => {
 
       {/* Chart Legend */}
       <Card className="p-4 mt-4">
-        <h4 className="font-medium mb-2">دليل الألوان</h4>
+        <h4 className="font-medium mb-2">{currentLanguage === 'ar' ? 'دليل الألوان' : 'Color Legend'}</h4>
         <div className="flex flex-wrap gap-4 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
-            <span>ممتاز (90%+)</span>
+            <span>{translateResults('overview.scoringBreakdown.excellent')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded"></div>
-            <span>جيد (75-89%)</span>
+            <span>{translateResults('overview.scoringBreakdown.good')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-            <span>مقبول (60-74%)</span>
+            <span>{translateResults('overview.scoringBreakdown.acceptable')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded"></div>
-            <span>ضعيف (&lt;60%)</span>
+            <span>{translateResults('overview.scoringBreakdown.poor')}</span>
           </div>
         </div>
       </Card>

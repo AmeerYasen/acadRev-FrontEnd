@@ -1,0 +1,32 @@
+{
+  "title": "Academic Review System",
+  "searchPlaceholder": "Search...",
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "settings": "Settings",
+  "logout": "Logout",
+  "welcome": "Welcome",
+  "user": {
+    "defaultName": "User",
+    "menu": {
+      "profile": "My Profile",
+      "settings": "Settings",
+      "help": "Help & Support",
+      "logout": "Sign Out"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all as read",
+      "viewAll": "View all notifications",
+      "empty": "No new notifications",
+      "new": "New",
+      "unread": "unread notifications"
+    }
+  },
+  "search": {
+    "placeholder": "Search universities, colleges, departments...",
+    "noResults": "No results found",
+    "suggestions": "Suggestions",
+    "recent": "Recent searches"
+  }
+}

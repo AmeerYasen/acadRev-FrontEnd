@@ -1,0 +1,24 @@
+{
+  "title": "Academic Review System",
+  "subtitle": "Academic Review System",
+  "links": {
+    "help": "Help Center",
+    "about": "About Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Us"
+  },
+  "copyright": "© {{year}} Academic Review System",
+  "social": {
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
+  },
+  "sections": {
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal",
+    "social": "Follow Us"
+  }
+}

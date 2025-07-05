@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ROLES } from '../../constants';
-import { fetchDepartmentsWithPagination, editDepartment, addDepartment } from '../../api/departmentAPI';
+import { fetchDepartmentsWithPagination, editDepartment, addDepartment, fetchMyDepartment } from '../../api/departmentAPI';
 import { fetchUniversityNames } from '../../api/universityApi';
 import { fetchCollegeNamesByUniversity } from '../../api/collegeApi';
 import { useDebounce } from '../../hooks/useDebounce';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import DepartmentAdminView from './DepartmentAdminView';
 import DepartmentStaffView from './DepartmentStaffView';
 import DepartmentEditModal from './components/DepartmentEditModal';
@@ -13,8 +14,26 @@ import AddDepartmentModal from './components/AddDepartmentModal';
 // Main Department component
 const Department = () => {
   const { user } = useAuth(); // Get user from AuthContext
+  const { translateDepartment } = useNamespacedTranslation();
   const userRole = user?.role || ROLES.GUEST;
 
+  // Early return for department users - they don't need admin functionality
+  if (userRole === ROLES.DEPARTMENT) {
+    return <DepartmentStaffView />;
+  }
+
+  // For access denied cases - early return
+  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY, ROLES.COLLEGE].includes(userRole);
+  if (!canAdminView) {
+    return <div className="p-6">{translateDepartment('errors.accessDenied')}</div>;
+  }
+
+  // If we reach here, user has admin access - render the admin component
+  return <AdminDepartmentComponent user={user} userRole={userRole} translateDepartment={translateDepartment} />;
+};
+
+// Admin Department Component - handles admin functionality
+const AdminDepartmentComponent = ({ user, userRole, translateDepartment }) => {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,7 +77,7 @@ const Department = () => {
       setError(err.message);
       setUniversities([]);
     }
-  }, []); // Assuming fetchUniversityNames is a stable import
+  }, []); // Remove translateDepartment dependency to prevent infinite re-renders
 
   const fetchCollegesList = useCallback(async (universityId) => {
     if (!universityId) {
@@ -74,7 +93,7 @@ const Department = () => {
       setColleges([]);
       setSelectedCollege(''); // Clear selected college on error
     }
-  }, []); // Assuming fetchCollegeNamesByUniversity is a stable import
+  }, []); // Remove translateDepartment dependency to prevent infinite re-renders
 
   // Effect for initial university/college setup based on role and fixed status
   useEffect(() => {
@@ -164,7 +183,7 @@ const Department = () => {
         
         console.log(`Data fetched. Effective page: ${determinedPage}/${calculatedTotalPages}`);
       } else {
-        console.warn("Invalid response format or no data:", response);
+        console.warn(translateDepartment('errors.invalidResponse'), response);
         setDepartments([]);
         setTotalRecords(0);
         setTotalPages(1);
@@ -173,8 +192,8 @@ const Department = () => {
         setHasNextPage(false);
       }
     } catch (err) {
-      console.error("Failed to fetch departments:", err);
-      setError(err.message || "Failed to fetch departments");
+      console.error(translateDepartment('errors.fetchFailed'), err);
+      setError(err.message || translateDepartment('errors.fetchDepartments'));
       setDepartments([]);
       setTotalRecords(0);
       setTotalPages(1);
@@ -270,13 +289,13 @@ const Department = () => {
       setLoading(true);
       // Call the actual API to add the department
       const addedDepartment = await addDepartment(newData);
-      console.log("Department added successfully!", addedDepartment); 
+      console.log(translateDepartment('messages.addSuccess'), addedDepartment); 
       closeAddDepartmentModal();
       // Refresh data to show the new department
       await fetchDepartments(currentPage);
     } catch (err) {
-      console.error("Failed to add department:", err);
-      setError(err.message || "Failed to add department");
+      console.error(translateDepartment('errors.addFailed'), err);
+      setError(err.message || translateDepartment('errors.addDepartment'));
       // Don't close the modal on error so user can retry
     } finally {
       setLoading(false);
@@ -286,7 +305,7 @@ const Department = () => {
 
   const handleUpdateDepartment = async (updatedData) => {
     if (!currentDepartmentToEdit || !currentDepartmentToEdit.id) {
-        console.error("No department selected for update or ID missing.");
+        console.error(translateDepartment('errors.noSelection'));
         return;
     }
     try {
@@ -294,83 +313,78 @@ const Department = () => {
         
         // Simulate update success
         setDepartments(prev => prev.map(d => d.id === updatedData.id ? updatedData : d));
-        console.log("Department updated successfully!", updatedData);
+        console.log(translateDepartment('messages.updateSuccess'), updatedData);
         closeDepartmentModal();
         
         // Refresh data
         fetchDepartments(currentPage);
     } catch (err) {
-        console.error("Failed to update department:", err);
+        console.error(translateDepartment('errors.updateFailed'), err);
     } finally {
         setLoading(false);
     }
   };
   
-  // Determine view based on user role
-  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY,ROLES.COLLEGE].includes(userRole);
-
   // Show loading screen only on initial load
   if (loading && departments.length === 0) {
     return <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600"></div>
+        <span className="ml-4 text-gray-600">{translateDepartment('loading.loadingData')}</span>
     </div>;
   }
 
-  if (canAdminView) {
-    return (
-      <>
-        <DepartmentAdminView
-          loading={loading}
-          error={error}
-          departments={departments}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          universities={universities}
-          colleges={colleges}
-          selectedUniversity={selectedUniversity}
-          selectedCollege={selectedCollege}
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-          onSelectedUniversityChange={setSelectedUniversity}
-          onSelectedCollegeChange={setSelectedCollege}
-          onReset={handleReset}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          onPageChange={handlePageChange}
-          hasPrevPage={hasPrevPage}
-          hasNextPage={hasNextPage}          onOpenDepartmentModal={openDepartmentModal}
-          itemsPerPage={itemsPerPage}
-          onItemsPerPageChange={handleItemsPerPageChange}
-          isUniversityFixed={isUniversityFixed} 
-          isCollegeUser={isCollegeUser} // Pass isCollegeUser
-          onOpenAddDepartmentModal={openAddDepartmentModal}
-          userRole={userRole} // Pass userRole to control add button visibility
+  return (
+    <>
+      <DepartmentAdminView
+        loading={loading}
+        error={error}
+        departments={departments}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        universities={universities}
+        colleges={colleges}
+        selectedUniversity={selectedUniversity}
+        selectedCollege={selectedCollege}
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+        onSelectedUniversityChange={setSelectedUniversity}
+        onSelectedCollegeChange={setSelectedCollege}
+        onReset={handleReset}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalRecords={totalRecords}
+        onPageChange={handlePageChange}
+        hasPrevPage={hasPrevPage}
+        hasNextPage={hasNextPage}
+        onOpenDepartmentModal={openDepartmentModal}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        isUniversityFixed={isUniversityFixed} 
+        isCollegeUser={isCollegeUser} // Pass isCollegeUser
+        onOpenAddDepartmentModal={openAddDepartmentModal}
+        userRole={userRole} // Pass userRole to control add button visibility
+      />
+      {isEditModalOpen && currentDepartmentToEdit && (
+        <DepartmentEditModal
+          isOpen={isEditModalOpen}
+          department={currentDepartmentToEdit}
+          onClose={closeDepartmentModal}
+          onUpdate={handleUpdateDepartment}
+          userRole={userRole}
         />
-        {isEditModalOpen && currentDepartmentToEdit && (
-          <DepartmentEditModal
-            isOpen={isEditModalOpen}
-            department={currentDepartmentToEdit}
-            onClose={closeDepartmentModal}
-            onUpdate={handleUpdateDepartment}
-            userRole={userRole}
-          />
-        )}        {isAddModalOpen && (
-          <AddDepartmentModal
-            isOpen={isAddModalOpen}
-            onClose={closeAddDepartmentModal}
-            onAddDepartment={handleAddDepartment}
-            userRole={userRole}
-            collegeId={isCollegeUser ? user?.college_id : selectedCollege}
-            universityId={isCollegeUser ? user?.university_id : selectedUniversity}
-          />
-        )}
-      </>
-    );  } else if (userRole === ROLES.DEPARTMENT) {
-    return <DepartmentStaffView />;
-  } else {
-    return <div className="p-6">Access Denied or Role View Not Implemented.</div>;
-  }
+      )}
+      {isAddModalOpen && (
+        <AddDepartmentModal
+          isOpen={isAddModalOpen}
+          onClose={closeAddDepartmentModal}
+          onAddDepartment={handleAddDepartment}
+          userRole={userRole}
+          collegeId={isCollegeUser ? user?.college_id : selectedCollege}
+          universityId={isCollegeUser ? user?.university_id : selectedUniversity}
+        />
+      )}
+    </>
+  );
 };
 
 export default Department;

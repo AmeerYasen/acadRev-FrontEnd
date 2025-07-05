@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 
 // --- Define field components outside DepartmentStaffView ---
 
@@ -86,6 +87,46 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
   </div>
 );
 
+const LogoField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
+  <div className="col-span-2 flex items-start gap-3 bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">
+      {icon}
+    </div>
+    <div className="flex-1">
+      <label htmlFor={name} className="text-sm font-medium text-gray-500 mb-3 block">{label}</label>
+      <div className="flex items-start gap-4">
+      
+        
+        {/* Logo URL Input/Display */}
+        <div className="flex-1">
+          {isEditing ? (
+            <div>
+              <input
+                type="url"
+                id={name}
+                name={name}
+                value={value || ""}
+                onChange={onChangeInput}
+                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
+                placeholder="https://example.com/logo.png"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Enter the URL of your department logo. Supported formats: JPG, PNG, SVG
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p className="text-gray-800 font-medium break-all">
+                {"The logo URL"}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 // --- End of field components ---
 
 /**
@@ -95,6 +136,7 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
 export default function DepartmentStaffView() {
   const { user } = useAuth();
   const { showSuccess, showError } = useToast();
+  const { translateDepartment } = useNamespacedTranslation();
   const isDepartmentRole = user?.role === "department";
 
   const [departmentData, setDepartmentData] = useState(null);
@@ -111,10 +153,11 @@ export default function DepartmentStaffView() {
       const data = await fetchMyDepartment();
       setDepartmentData(data);
       setEditableData(JSON.parse(JSON.stringify(data))); 
+      console.log('Data loaded successfully:', data);
       setError(null);
     } catch (err) {
       console.error("Failed to load department data:", err);
-      const errorMessage = "Failed to load department information. Please try again later.";
+      const errorMessage = translateDepartment('staffView.errors.loadFailed');
       setError(errorMessage);
       showError(errorMessage);
     } finally {
@@ -146,7 +189,7 @@ export default function DepartmentStaffView() {
     try {
       setSaving(true);
       if (!editableData) {
-        showError("No data to save.");
+        showError(translateDepartment('staffView.errors.noData'));
         setSaving(false);
         return;
       }      // Exclude read-only fields (name, id, college_id) and department code from updates
@@ -158,14 +201,14 @@ export default function DepartmentStaffView() {
 
       await editDepartment(dataToSend); 
 
-      showSuccess("Department information updated successfully! Refreshing data...");
+      showSuccess(translateDepartment('staffView.success.updated'));
       await loadDepartmentData();
      
       setIsEditing(false); 
 
     } catch (err) {
       console.error("Failed to update department:", err);
-      let errorMessage = "Failed to update department. Please try again.";
+      let errorMessage = translateDepartment('staffView.errors.updateFailed');
       if (err.response && err.response.data && err.response.data.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
@@ -181,7 +224,7 @@ export default function DepartmentStaffView() {
     <div className="flex justify-center items-center h-[70vh]">
       <div className="flex flex-col items-center">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="mt-4 text-gray-600 font-medium">Loading department information...</p>
+        <p className="mt-4 text-gray-600 font-medium">{translateDepartment('staffView.loading')}</p>
       </div>
     </div>
   );
@@ -191,7 +234,7 @@ export default function DepartmentStaffView() {
       <div className="flex items-start">
         <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-red-800">An error occurred</h3>
+          <h3 className="text-sm font-medium text-red-800">{translateDepartment('staffView.errorTitle')}</h3>
           <div className="mt-2 text-sm text-red-700">{error}</div>
         </div>
       </div>
@@ -203,8 +246,8 @@ export default function DepartmentStaffView() {
       <div className="flex items-start">
         <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-yellow-800">Department Not Found</h3>
-          <div className="mt-2 text-sm text-yellow-700">No department information found. Please contact an administrator.</div>
+          <h3 className="text-sm font-medium text-yellow-800">{translateDepartment('staffView.notFoundTitle')}</h3>
+          <div className="mt-2 text-sm text-yellow-700">{translateDepartment('staffView.notFoundMessage')}</div>
         </div>
       </div>
     </div>
@@ -218,7 +261,7 @@ export default function DepartmentStaffView() {
     console.warn("Display data is null, check state logic for editableData initialization.");
     return (
       <div className="flex justify-center items-center h-[70vh]">
-        <p className="text-gray-600 font-medium">Information currently unavailable.</p>
+        <p className="text-gray-600 font-medium">{translateDepartment('staffView.unavailable')}</p>
       </div>
     );
   }
@@ -232,12 +275,12 @@ export default function DepartmentStaffView() {
             <div className="px-6 flex flex-col md:flex-row items-center">
               <div className="h-32 w-32 rounded-xl overflow-hidden bg-white border-4 border-white shadow-xl">
                 <img 
-                  src={`https://picsum.photos/seed/${displayData.id || 'department'}/300/300`} 
-                  alt={`${displayData.name || 'Department'} Logo`}
+                  src={ displayData.logo ||`https://picsum.photos/seed/${displayData.id}`} 
+                  alt={translateDepartment('staffView.logoAlt', { name: displayData.name || translateDepartment('staffView.defaultName') })}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "https://via.placeholder.com/300?text=Department";
+                    e.target.src = `https://picsum.photos/seed/${displayData.id || 'department'}/300/300`;
                   }}
                 />
               </div>
@@ -272,7 +315,7 @@ export default function DepartmentStaffView() {
                         className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
                       >
                         {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                        {saving ? "Saving..." : "Save Changes"}
+                        {saving ? translateDepartment('staffView.saving') : translateDepartment('staffView.saveChanges')}
                       </button>
                       <button
                         onClick={handleEditToggle}
@@ -280,7 +323,7 @@ export default function DepartmentStaffView() {
                         className="flex items-center gap-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md shadow transition-colors"
                       >
                         <X size={18} />
-                        Cancel
+                        {translateDepartment('staffView.cancel')}
                       </button>
                     </>
                   ) : (
@@ -289,7 +332,7 @@ export default function DepartmentStaffView() {
                       className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
                     >
                       <Pencil size={18} />
-                      Edit Information
+                      {translateDepartment('staffView.editButton')}
                     </button>
                   )}
                 </div>
@@ -304,10 +347,9 @@ export default function DepartmentStaffView() {
               <div className="flex items-start gap-3">
                 <AlertCircle className="text-blue-600 shrink-0 mt-1" size={20} />
                 <div>
-                  <h3 className="font-medium text-blue-800">Editing Mode</h3>
+                  <h3 className="font-medium text-blue-800">{translateDepartment('staffView.editingTitle')}</h3>
                   <p className="text-blue-700 text-sm mt-1">
-                    You are now editing your department information. Fields marked with an asterisk (*) are required.
-                    Note that the department name cannot be changed. Make your updates and click "Save Changes" when done.
+                    {translateDepartment('staffView.editingMessage')}
                   </p>
                 </div>
               </div>
@@ -315,14 +357,15 @@ export default function DepartmentStaffView() {
           )}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Briefcase size={20} className="text-blue-600" />
-                Department Information
+                {translateDepartment('staffView.sections.departmentInfo')}
               </h2>
               <div className="space-y-4">
                 <TextField 
-                  label="Email *" 
+                  label={translateDepartment('staffView.fields.email')} 
                   name="email" 
                   value={displayData.email} 
                   icon={<Mail className="text-blue-600" size={20} />} 
@@ -330,7 +373,7 @@ export default function DepartmentStaffView() {
                   onChangeInput={handleInputChange}
                 />
                 <UrlField 
-                  label="Website" 
+                  label={translateDepartment('staffView.fields.website')} 
                   name="website" 
                   value={displayData.website} 
                   icon={<Globe className="text-blue-600" size={20} />} 
@@ -338,7 +381,7 @@ export default function DepartmentStaffView() {
                   onChangeInput={handleInputChange}
                 />
                 <TextAreaField 
-                  label="Address" 
+                  label={translateDepartment('staffView.fields.address')} 
                   name="address" 
                   value={displayData.address} 
                   icon={<MapPin className="text-blue-600" size={20} />} 
@@ -346,24 +389,25 @@ export default function DepartmentStaffView() {
                   onChangeInput={handleInputChange}
                 />
                 <TextField 
-                  label="Phone" 
+                  label={translateDepartment('staffView.fields.phone')} 
                   name="phone" 
                   value={displayData.phone} 
                   icon={<Phone className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
+                
               </div>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Shield size={20} className="text-blue-600" />
-                Academic Details
+                {translateDepartment('staffView.sections.academicDetails')}
               </h2>
               <div className="space-y-4">
                 <TextField 
-                  label="Department Head" 
+                  label={translateDepartment('staffView.fields.head')} 
                   name="head_name" 
                   value={displayData.head_name} 
                   icon={<User className="text-blue-600" size={20} />} 
@@ -371,7 +415,7 @@ export default function DepartmentStaffView() {
                   onChangeInput={handleInputChange}
                 />
                 <TextField 
-                  label="Established" 
+                  label={translateDepartment('staffView.fields.established')} 
                   name="since" 
                   value={displayData.since} 
                   icon={<Calendar className="text-blue-600" size={20} />} 
@@ -379,24 +423,35 @@ export default function DepartmentStaffView() {
                   onChangeInput={handleInputChange}
                 />
                 <TextField 
-                  label="Programs Count" 
+                  label={translateDepartment('staffView.fields.programCount')} 
                   name="program_count" 
-                  value={displayData.program_count} 
+                  value={displayData.programs_count} 
                   icon={<GraduationCap className="text-blue-600" size={20} />} 
                   editable={false}
                   isEditing={false}
                   onChangeInput={handleInputChange}
                 />
                 <TextAreaField 
-                  label="Description" 
+                  label={translateDepartment('staffView.fields.description')} 
                   name="description" 
                   value={displayData.description} 
                   icon={<FileText className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
+                
               </div>
+              
             </div>
+              {/* Logo Field - Spans 2 columns */}
+            <LogoField 
+              label={translateDepartment('staffView.fields.logo')} 
+              name="logo" 
+              value={displayData.logo} 
+              icon={<Building2 className="text-blue-600" size={20} />} 
+              isEditing={isEditing}
+              onChangeInput={handleInputChange}
+            />
           </div>
         </div>
       </div>

@@ -1,0 +1,200 @@
+{
+  "title": "Qualitative Evaluation Results",
+  "subtitle": "Qualitative Analysis Results",
+  "loading": {
+    "initialData": "Loading results data...",
+    "analysis": "Loading analysis...",
+    "updating": "Updating...",
+    "retry": "Retrying...",
+    "exporting": "Exporting...",
+    "data": "Loading data..."
+  },
+  "error": {
+    "loadingData": "Error loading data",
+    "retry": "Retry"
+  },
+  "header": {
+    "title": "Qualitative Evaluation Results",
+    "programLabel": "Program",
+    "programNumber": "Program #",
+    "refresh": "Refresh",
+    "print": "Print",
+    "finalScore": "Final Score",
+    "domainsCount": "Number of Domains", 
+    "indicatorsTotal": "Total Indicators",
+    "evaluationStatus": "Evaluation Status",
+    "completed": "Completed",
+    "incomplete": "Incomplete",
+    "scoreLabels": {
+      "excellent": "Excellent",
+      "good": "Good", 
+      "acceptable": "Acceptable",
+      "poor": "Poor"
+    }
+  },
+  "programSelector": {
+    "title": "Program Selection for Analysis",
+    "selectedProgram": "Selected Program",
+    "changeSelection": "Change Selection",
+    "loadingResults": "Loading results...",
+    "hint": "Click \"Change Selection\" to choose a different program for analysis",
+    "noSelection": {
+      "title": "No Program Selected",
+      "description": "Please select a program below to view its analysis results"
+    },
+    "search": "Search for programs...",
+    "noResults": "No programs found matching the selected filters",
+    "tryModifying": "Try modifying the filters or search",
+    "noAvailable": "No programs available",
+    "loading": "Loading programs...",
+    "selectProgram": "Select Program",
+    "programId": "Program ID",
+    "programNumber": "Program Number",
+    "selected": "Selected",
+    "filter": "Filter",
+    "clearFilters": "Clear Filters",
+    "resetFilters": "Reset Filters", 
+    "university": "University",
+    "college": "College", 
+    "department": "Department",
+    "allUniversities": "All Universities",
+    "allColleges": "All Colleges",
+    "allDepartments": "All Departments",
+    "selectUniversity": "Select University",
+    "selectCollege": "Select College",
+    "selectDepartment": "Select Department",
+    "accessInfo": {
+      "allPrograms": "You can access all programs in the system",
+      "universityPrograms": "You can access programs in the university",
+      "collegePrograms": "You can access programs in the college", 
+      "departmentPrograms": "You can access programs in the department"
+    },
+    "available": "programs available",
+    "searchByName": "Search by Name or ID",
+    "enterProgram": "Enter program name or ID...",
+    "filterPrograms": "Filter Programs",
+    "itemsPerPage": "Items per Page",
+    "retry": "Retry",
+    "pagination": {
+      "firstPage": "First Page",
+      "previousPage": "Previous Page", 
+      "nextPage": "Next Page",
+      "lastPage": "Last Page",
+      "page": "Page",
+      "of": "of",
+      "showing": "Showing",
+      "to": "to",
+      "totalResults": "total results"
+    }
+  },
+  "domainWeights": {
+    "title": "Domain Weights (Wi)",
+    "domain": "domain",
+    "domains": "domains",
+    "indicators": "indicators",
+    "indicator": "indicator"
+  },
+  "finalScore": {
+    "title": "Program Final Score",
+    "statsLabels": {
+      "domains": "Domains",
+      "indicators": "Indicators", 
+      "program": "Program",
+      "date": "Date"
+    }
+  },
+  "views": {
+    "overview": "Overview",
+    "detailed": "Detailed Analysis",
+    "charts": "Charts"
+  },
+  "overview": {
+    "title": "Overview - Results Summary",
+    "scoringBreakdown": {
+      "excellent": "Excellent (90%+)",
+      "good": "Good (75-89%)",
+      "acceptable": "Acceptable (60-74%)",
+      "poor": "Poor (<60%)",
+      "domain": "domain",
+      "domains": "domains"
+    }
+  },
+  "detailedAnalysis": {
+    "title": "Detailed Domain Analysis",
+    "loadingData": "Loading data...",
+    "noDataAvailable": "No data available for display",
+    "summaryStats": {
+      "totalDomains": "Total Domains",
+      "excellentDomains": "Excellent Domains", 
+      "improvementNeeded": "Needs Improvement"
+    },
+    "table": {
+      "domain": "Domain",
+      "indicatorsCount": "Indicators Count",
+      "weight": "Weight (Wi)",
+      "score": "Score (Si)",
+      "weightedScore": "Weighted Score",
+      "evaluation": "Evaluation",
+      "finalTotal": "Final Total"
+    },
+    "mobile": {
+      "indicators": "Indicators:",
+      "weight": "Weight:",
+      "score": "Score:",
+      "weightedScore": "Weighted Score:",
+      "finalScore": "Final Score"
+    }
+  },
+  "charts": {
+    "title": "Results Charts",
+    "noDataAvailable": "No data available to display charts",
+    "types": {
+      "weights": "Domain Weights",
+      "scores": "Domain Scores", 
+      "comparison": "Comprehensive Comparison"
+    },
+    "weightsChart": {
+      "title": "Domain Weights (Wi)",
+      "indicators": "indicators",
+      "indicator": "indicator"
+    },
+    "scoresChart": {
+      "title": "Domain Scores (Si)"
+    },
+    "comparisonChart": {
+      "title": "Comparison: Weights vs Scores",
+      "weight": "Weight",
+      "score": "Score",
+      "weightedScore": "Weighted Score"
+    }
+  },
+  "export": {
+    "title": "Export Report",
+    "csv": "Export CSV",
+    "json": "Export JSON", 
+    "pdf": "Export PDF",
+    "print": "Print Report",
+    "refresh": "Refresh Data"
+  },
+  "noProgram": {
+    "title": "Select a Program to View Analysis",
+    "description": "Please select a program from the list above to view qualitative results analysis"
+  },
+  "messages": {
+    "success": {
+      "dataLoaded": "Data loaded successfully",
+      "dataRefreshed": "Data refreshed successfully",
+      "exportComplete": "Export completed successfully"
+    },
+    "error": {
+      "loadingWeights": "Failed to load domain weights",
+      "loadingScores": "Failed to load domain scores", 
+      "loadingResults": "Failed to load weighted results",
+      "loadingAnalysis": "Failed to load complete analysis",
+      "loadingProgram": "Failed to load program information",
+      "programRequired": "Program ID is required",
+      "exportFailed": "Export failed",
+      "refreshFailed": "Failed to refresh data"
+    }
+  }
+}

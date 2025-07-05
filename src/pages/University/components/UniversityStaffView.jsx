@@ -6,10 +6,11 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { useToast } from "../../../context/ToastContext";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 // --- Define field components outside UniversityStaffView ---
 
-const TextField = ({ label, name, value, icon, editable = true, isEditing, onChangeInput }) => (
+const TextField = ({ label, name, value, icon, editable = true, isEditing, onChangeInput, translateUniversity }) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
     <div className="mt-1 p-2 bg-blue-50 rounded-md">
       {icon}
@@ -26,13 +27,13 @@ const TextField = ({ label, name, value, icon, editable = true, isEditing, onCha
           className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
         />
       ) : (
-        <p className="text-gray-800 mt-1 font-medium">{value || "-"}</p>
+        <p className="text-gray-800 mt-1 font-medium">{value || translateUniversity('staffView.noData')}</p>
       )}
     </div>
   </div>
 );
 
-const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
+const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput, translateUniversity }) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
     <div className="mt-1 p-2 bg-blue-50 rounded-md">
       {icon}
@@ -49,13 +50,13 @@ const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput }) =
           className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
         />
       ) : (
-        <p className="text-gray-800 mt-1 whitespace-pre-line font-medium">{value || "-"}</p>
+        <p className="text-gray-800 mt-1 whitespace-pre-line font-medium">{value || translateUniversity('staffView.noData')}</p>
       )}
     </div>
   </div>
 );
 
-const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
+const UrlField = ({ label, name, value, icon, isEditing, onChangeInput, translateUniversity }) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
     <div className="mt-1 p-2 bg-blue-50 rounded-md">
       {icon}
@@ -80,7 +81,7 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
           // Conditionally style if no value to avoid looking like a broken link
           className={`mt-1 block font-medium ${value ? 'text-blue-600 hover:underline' : 'text-gray-800 cursor-default'}`}
         >
-          {value || "-"}
+          {value || translateUniversity('staffView.noData')}
         </a>
       )}
     </div>
@@ -97,6 +98,7 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
 export default function UniversityStaffView() {
   const { user } = useAuth();
   const { showSuccess, showError } = useToast();
+  const { translateUniversity } = useNamespacedTranslation();
   const isUniversityRole = user?.role === "university";
   
   const [universityData, setUniversityData] = useState(null);
@@ -116,7 +118,7 @@ export default function UniversityStaffView() {
       setError(null);
     } catch (err) {
       console.error("Failed to load university data:", err);
-      const errorMessage = "Failed to load university information. Please try again later.";
+      const errorMessage = translateUniversity('staffView.errors.loadFailed');
       setError(errorMessage);
       showError(errorMessage); // Show toast for loading errors as well
     } finally {
@@ -148,7 +150,7 @@ export default function UniversityStaffView() {
     try {
       setSaving(true);
       if (!editableData) {
-        showError("No data to save.");
+        showError(translateUniversity('staffView.errors.noDataToSave'));
         setSaving(false);
         return;
       }
@@ -159,14 +161,14 @@ export default function UniversityStaffView() {
 
       await editUniversity(dataToSend); 
 
-      showSuccess("University information updated successfully! Refreshing data...");
+      showSuccess(translateUniversity('staffView.messages.updateSuccess'));
       await loadUniversityData(); // Now correctly calls the function in scope
      
       setIsEditing(false); 
 
     } catch (err) {
       console.error("Failed to update university:", err);
-      let errorMessage = "Failed to update university. Please try again.";
+      let errorMessage = translateUniversity('staffView.errors.updateFailed');
       if (err.response && err.response.data && err.response.data.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
@@ -182,7 +184,7 @@ export default function UniversityStaffView() {
     <div className="flex justify-center items-center h-[70vh]">
       <div className="flex flex-col items-center">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="mt-4 text-gray-600 font-medium">Loading university information...</p>
+        <p className="mt-4 text-gray-600 font-medium">{translateUniversity('staffView.loading')}</p>
       </div>
     </div>
   );
@@ -192,7 +194,7 @@ export default function UniversityStaffView() {
       <div className="flex items-start">
         <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-red-800">An error occurred</h3>
+          <h3 className="text-sm font-medium text-red-800">{translateUniversity('staffView.errors.errorOccurred')}</h3>
           <div className="mt-2 text-sm text-red-700">{error}</div>
         </div>
       </div>
@@ -204,8 +206,8 @@ export default function UniversityStaffView() {
       <div className="flex items-start">
         <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-yellow-800">University Not Found</h3>
-          <div className="mt-2 text-sm text-yellow-700">No university information found. Please contact an administrator.</div>
+          <h3 className="text-sm font-medium text-yellow-800">{translateUniversity('staffView.errors.universityNotFound')}</h3>
+          <div className="mt-2 text-sm text-yellow-700">{translateUniversity('staffView.errors.noUniversityInfo')}</div>
         </div>
       </div>
     </div>
@@ -219,7 +221,7 @@ export default function UniversityStaffView() {
     console.warn("Display data is null, check state logic for editableData initialization.");
     return (
       <div className="flex justify-center items-center h-[70vh]">
-        <p className="text-gray-600 font-medium">Information currently unavailable.</p>
+        <p className="text-gray-600 font-medium">{translateUniversity('staffView.errors.informationUnavailable')}</p>
       </div>
     );
   }
@@ -235,7 +237,7 @@ export default function UniversityStaffView() {
               <div className="h-32 w-32 rounded-xl overflow-hidden bg-white border-4 border-white shadow-xl">
                 <img 
                   src={`https://picsum.photos/seed/${displayData.id || 'university'}/300/300`} 
-                  alt={`${displayData.name || 'University'} Logo`}
+                  alt={translateUniversity('staffView.universityLogo', { name: displayData.name || translateUniversity('staffView.defaultUniversityName') })}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
@@ -263,7 +265,7 @@ export default function UniversityStaffView() {
                       value={displayData.abbreviation || ""}
                       onChange={handleInputChange}
                       className="w-48 p-1 bg-gray-50 border border-gray-300 rounded-md"
-                      placeholder="Abbreviation"
+                      placeholder={translateUniversity('staffView.abbreviationPlaceholder')}
                     />
                   ) : (
                     displayData.abbreviation || "" // Display empty string if null/undefined to avoid 'false' or 'null' text
@@ -281,7 +283,7 @@ export default function UniversityStaffView() {
                         className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow transition-colors"
                       >
                         {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                        {saving ? "Saving..." : "Save Changes"}
+                        {saving ? translateUniversity('staffView.saving') : translateUniversity('staffView.saveChanges')}
                       </button>
                       <button
                         onClick={handleEditToggle}
@@ -289,7 +291,7 @@ export default function UniversityStaffView() {
                         className="flex items-center gap-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md shadow transition-colors"
                       >
                         <X size={18} />
-                        Cancel
+                        {translateUniversity('staffView.cancel')}
                       </button>
                     </>
                   ) : (
@@ -298,7 +300,7 @@ export default function UniversityStaffView() {
                       className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
                     >
                       <Pencil size={18} />
-                      Edit Information
+                      {translateUniversity('staffView.editInformation')}
                     </button>
                   )}
                 </div>
@@ -313,10 +315,9 @@ export default function UniversityStaffView() {
               <div className="flex items-start gap-3">
                 <AlertCircle className="text-blue-600 shrink-0 mt-1" size={20} />
                 <div>
-                  <h3 className="font-medium text-blue-800">Editing Mode</h3>
+                  <h3 className="font-medium text-blue-800">{translateUniversity('staffView.editingMode')}</h3>
                   <p className="text-blue-700 text-sm mt-1">
-                    You are now editing your university information. Fields marked with an asterisk (*) are required.
-                    Note that the university name cannot be changed. Make your updates and click "Save Changes" when done.
+                    {translateUniversity('staffView.editingInstructions')}
                   </p>
                 </div>
               </div>
@@ -327,40 +328,44 @@ export default function UniversityStaffView() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Briefcase size={20} className="text-blue-600" />
-                University Information
+                {translateUniversity('staffView.universityInformation')}
               </h2>
               <div className="space-y-4">
                 <TextField 
-                  label="Email *" 
+                  label={translateUniversity('staffView.fields.email')} 
                   name="email" 
                   value={displayData.email} 
                   icon={<Mail className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
                 <UrlField 
-                  label="Website" 
+                  label={translateUniversity('staffView.fields.website')} 
                   name="website" 
                   value={displayData.website} 
                   icon={<Globe className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
                 <TextAreaField 
-                  label="Address" 
+                  label={translateUniversity('staffView.fields.address')} 
                   name="address" 
                   value={displayData.address} 
                   icon={<MapPin className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
                 <TextField 
-                  label="Phone" 
+                  label={translateUniversity('staffView.fields.phone')} 
                   name="phone" 
                   value={displayData.phone} 
                   icon={<Phone className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
               </div>
             </div>
@@ -368,32 +373,35 @@ export default function UniversityStaffView() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Shield size={20} className="text-blue-600" />
-                Additional Details
+                {translateUniversity('staffView.additionalDetails')}
               </h2>
               <div className="space-y-4">
                 <TextField 
-                  label="President/Dean" 
+                  label={translateUniversity('staffView.fields.presidentDean')} 
                   name="head_name" 
                   value={displayData.head_name} 
                   icon={<User className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
                 <TextField 
-                  label="Established" 
+                  label={translateUniversity('staffView.fields.established')} 
                   name="since" 
                   value={displayData.since} 
                   icon={<Calendar className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
                 <TextField 
-                  label="Country" 
+                  label={translateUniversity('staffView.fields.country')} 
                   name="country" 
                   value={displayData.country} 
                   icon={<Building2 className="text-blue-600" size={20} />} 
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
+                  translateUniversity={translateUniversity}
                 />
               
               </div>

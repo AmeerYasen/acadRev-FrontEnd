@@ -10,9 +10,12 @@ import QualitativeContainer from "./components/QualitativeContainer";
 import EvaluationModal from "./components/EvaluationModal";
 
 // Hooks
-import { useQualitative } from "./hooks/useQualitative";const QualitativeMain = () => {
+import { useQualitative } from "./hooks/useQualitative";
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
+
+const QualitativeMain = () => {
   const { programId } = useParams();
-  const { user } = useAuth();
+  const { translateQualitative } = useNamespacedTranslation();
 
   // Use the custom hook for state management
   const qualitativeState = useQualitative(programId);
@@ -22,7 +25,7 @@ import { useQualitative } from "./hooks/useQualitative";const QualitativeMain = 
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-lg">Loading qualitative indicators...</p>
+          <p className="mt-4 text-gray-600 text-lg">{translateQualitative('loading.initial')}</p>
         </div>
       </div>
     );

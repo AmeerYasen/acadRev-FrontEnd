@@ -1,0 +1,191 @@
+{
+  "title": "إدارة الأقسام",
+  "subtitle": "إدارة معلومات الأقسام والبرامج",
+  "addDepartment": "إضافة قسم",
+  "editDepartment": "تعديل القسم",
+  "departmentName": "اسم القسم",
+  "description": "الوصف",
+  "head": "رئيس القسم",
+  "college": "الكلية",
+  "programs": "البرامج",
+  "faculty": "أعضاء هيئة التدريس",
+  "courses": "المقررات",
+  "errors": {
+    "loadingError": "فشل في تحميل الأقسام. يرجى المحاولة مرة أخرى.",
+    "networkError": "حدث خطأ في الشبكة. يرجى التحقق من الاتصال.",
+    "notFound": "لم يتم العثور على القسم.",
+    "createError": "فشل في إنشاء القسم. يرجى المحاولة مرة أخرى.",
+    "updateError": "فشل في تحديث القسم. يرجى المحاولة مرة أخرى.",
+    "deleteError": "فشل في حذف القسم. يرجى المحاولة مرة أخرى.",
+    "fetchMyDepartment": "فشل في تحميل معلومات قسمك.",
+    "noPermission": "ليس لديك إذن لتنفيذ هذا الإجراء.",
+    "updateDepartment": "فشل في تحديث معلومات القسم.",
+    "errorTitle": "خطأ",
+    "accessDenied": "تم رفض الوصول. ليس لديك إذن لعرض هذه الصفحة."
+  },
+  "loading": "جاري تحميل الأقسام...",
+  "actions": {
+    "retry": "إعادة المحاولة"
+  },
+  "messages": {
+    "addSuccess": "تم إضافة القسم بنجاح!",
+    "updateSuccess": "تم تحديث القسم بنجاح!"
+  },
+  "empty": {
+    "title": "لم يتم العثور على أقسام",
+    "message": "لا توجد أقسام متاحة في الوقت الحالي."
+  },
+  "success": {
+    "created": "تم إنشاء القسم بنجاح!",
+    "updated": "تم تحديث القسم بنجاح!",
+    "deleted": "تم حذف القسم بنجاح!"
+  },
+  "adminView": {
+    "title": "جميع الأقسام",
+    "addButton": "إضافة قسم جديد",
+    "filterToggle": "تبديل المرشحات",
+    "searchPlaceholder": "البحث في الأقسام بالاسم...",
+    "errorTitle": "خطأ في تحميل الأقسام",
+    "emptyTitle": "لم يتم العثور على أقسام",
+    "emptyMessage": "حاول تعديل معايير البحث."
+  },
+  "staffView": {
+    "loading": "جاري تحميل معلومات القسم...",
+    "errorTitle": "حدث خطأ",
+    "notFoundTitle": "لم يتم العثور على القسم",
+    "notFoundMessage": "لم يتم العثور على معلومات القسم. يرجى الاتصال بالمسؤول.",
+    "unavailable": "المعلومات غير متاحة حالياً.",
+    "logoAlt": "شعار {{name}}",
+    "defaultName": "القسم",
+    "editButton": "تعديل المعلومات",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "saving": "جاري الحفظ...",
+    "editingTitle": "وضع التعديل",
+    "editingMessage": "أنت الآن تقوم بتعديل معلومات قسمك. الحقول المُعلمة بعلامة النجمة (*) مطلوبة. لاحظ أنه لا يمكن تغيير اسم القسم. قم بإجراء التحديثات وانقر على \"حفظ التغييرات\" عند الانتهاء.",
+    "sections": {
+      "departmentInfo": "معلومات القسم",
+      "academicDetails": "التفاصيل الأكاديمية"
+    },
+    "fields": {
+      "email": "البريد الإلكتروني *",
+      "website": "الموقع الإلكتروني",
+      "address": "العنوان",
+      "phone": "الهاتف",
+      "head": "رئيس القسم",
+      "established": "تأسس",
+      "programCount": "عدد البرامج",
+      "description": "الوصف",
+      "logo": "شعار القسم"
+    },
+    "errors": {
+      "loadFailed": "فشل في تحميل معلومات القسم. يرجى المحاولة مرة أخرى.",
+      "noData": "لا توجد بيانات للحفظ.",
+      "updateFailed": "فشل في تحديث القسم. يرجى المحاولة مرة أخرى."
+    },
+    "success": {
+      "updated": "تم تحديث معلومات القسم بنجاح! جاري تحديث البيانات..."
+    }
+  },
+  "viewCard": {
+    "unnamed": "قسم غير مسمى",
+    "notAvailable": "غير متاح",
+    "chair": "الرئيس",
+    "college": "الكلية",
+    "university": "الجامعة",
+    "type": "قسم",
+    "programCount": "{{count}} برامج"
+  },
+  "sidebar": {
+    "title": "تصفية الأقسام",
+    "searchLabel": "البحث بالاسم",
+    "searchPlaceholder": "أدخل اسم القسم...",
+    "universityLabel": "الجامعة",
+    "selectUniversity": "اختر الجامعة",
+    "collegeLabel": "الكلية",
+    "selectCollege": "اختر الكلية",
+    "itemsPerPageLabel": "العناصر لكل صفحة",
+    "resetButton": "إعادة تعيين"
+  },
+  "pagination": {
+    "firstPage": "الصفحة الأولى",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "lastPage": "الصفحة الأخيرة",
+    "summary": "{{totalRecords}} قسم • الصفحة {{currentPage}} من {{totalPages}}"
+  },
+  "searchableDropdown": {
+    "searchPlaceholder": "بحث...",
+    "noOptions": "لم يتم العثور على خيارات"
+  },
+  "modal": {
+    "title": "تفاصيل القسم",
+    "editTitle": "تعديل تفاصيل القسم",
+    "closePopup": "إغلاق النافذة",
+    "fields": {
+      "departmentName": "اسم القسم",
+      "departmentCode": "رمز القسم",
+      "email": "البريد الإلكتروني",
+      "website": "الموقع الإلكتروني",
+      "headOfDepartment": "رئيس القسم",
+      "establishedYear": "سنة التأسيس",
+      "logoUrl": "رابط الشعار",
+      "logo": "الشعار",
+      "address": "العنوان",
+      "aboutDepartment": "حول القسم",
+      "programs": "البرامج",
+      "registrationDate": "تاريخ التسجيل",
+      "notSpecified": "غير محدد"
+    },
+    "placeholders": {
+      "enterDepartmentName": "أدخل اسم القسم...",
+      "enterDepartmentCode": "أدخل رمز القسم...",
+      "enterEmail": "أدخل البريد الإلكتروني...",
+      "enterWebsite": "أدخل الموقع الإلكتروني...",
+      "enterHeadName": "أدخل اسم رئيس القسم...",
+      "enterEstablishedYear": "أدخل سنة التأسيس...",
+      "enterLogoUrl": "أدخل رابط الشعار...",
+      "enterAddress": "أدخل العنوان...",
+      "enterAboutDepartment": "أدخل معلومات حول القسم...",
+      "enterDescription": "أدخل معلومات حول القسم..."
+    },
+    "actions": {
+      "editDepartment": "تعديل القسم",
+      "cancelEdit": "إلغاء التعديل",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "programs": {
+      "noProgramsListed": "لا توجد برامج مُدرجة"
+    }
+  },
+  "addModal": {
+    "title": "إضافة قسم جديد",
+    "allFieldsRequired": "جميع الحقول المميزة بـ * مطلوبة",
+    "departmentName": "اسم القسم",
+    "departmentNamePlaceholder": "أدخل اسم القسم",
+    "adminUserDetails": "تفاصيل المستخدم الإداري",
+    "adminUsername": "اسم المستخدم الإداري",
+    "adminUsernamePlaceholder": "أدخل اسم المستخدم الإداري",
+    "adminEmail": "البريد الإلكتروني للإدارة",
+    "adminEmailPlaceholder": "أدخل البريد الإلكتروني للإدارة",
+    "adminPassword": "كلمة مرور الإدارة",
+    "adminPasswordPlaceholder": "أدخل كلمة مرور الإدارة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "تأكيد كلمة مرور الإدارة",
+    "collegeLabel": "الكلية",
+    "collegePlaceholder": "اختر الكلية",
+    "createDepartment": "إنشاء القسم",
+    "creating": "جارٍ الإنشاء...",
+    "cancel": "إلغاء",
+    "errors": {
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "allFieldsRequired": "جميع الحقول مطلوبة",
+      "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "addFailed": "فشل في إضافة القسم"
+    },
+    "accessibility": {
+      "closePopup": "إغلاق النافذة"
+    }
+  }
+}

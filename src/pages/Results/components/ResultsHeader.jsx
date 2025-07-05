@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent } from "../../../components/ui/card";
 import { BarChart3, Download, FileText, Printer, RefreshCw, FileDown } from "lucide-react";
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
+import { getLocalizedText } from '../../../utils/translationUtils';
 
 const ResultsHeader = ({ 
   programId, 
@@ -14,6 +16,8 @@ const ResultsHeader = ({
   onExport,
   isLoading = false 
 }) => {
+  const { translateResults, currentLanguage } = useNamespacedTranslation();
+  
   const getScoreColor = (score) => {
     if (score >= 90) return 'text-green-600 bg-green-50';
     if (score >= 75) return 'text-blue-600 bg-blue-50';
@@ -22,10 +26,10 @@ const ResultsHeader = ({
   };
 
   const getScoreLabel = (score) => {
-    if (score >= 90) return 'ممتاز';
-    if (score >= 75) return 'جيد';
-    if (score >= 60) return 'مقبول';
-    return 'ضعيف';
+    if (score >= 90) return translateResults('header.scoreLabels.excellent');
+    if (score >= 75) return translateResults('header.scoreLabels.good');
+    if (score >= 60) return translateResults('header.scoreLabels.acceptable');
+    return translateResults('header.scoreLabels.poor');
   };
 
   return (
@@ -35,14 +39,14 @@ const ResultsHeader = ({
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-blue-600" />
-            نتائج التقويم النوعي
+            {translateResults('header.title')}
           </h1>          <p className="text-gray-600 mt-1">
             {programId ? (
               <>
-                {programName ? `برنامج: ${programName}` : `البرنامج رقم: ${programId}`}
+                {programName ? `${translateResults('header.programLabel')}: ${getLocalizedText({ name: programName }, currentLanguage)}` : `${translateResults('header.programNumber')}: ${programId}`}
                 {programName && <span className="text-gray-400 ml-2">(#{programId})</span>}
               </>
-            ) : 'نتائج التحليل النوعي'}
+            ) : translateResults('subtitle')}
           </p>
         </div>
 
@@ -56,7 +60,7 @@ const ResultsHeader = ({
             className="flex items-center gap-2"
           >
             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            تحديث
+            {translateResults('header.refresh')}
           </Button>
 
           {programId && finalScore > 0 && (
@@ -97,7 +101,7 @@ const ResultsHeader = ({
                 className="flex items-center gap-2"
               >
                 <Printer className="h-4 w-4" />
-                طباعة
+                {translateResults('header.print')}
               </Button>
             </>
           )}
@@ -114,7 +118,7 @@ const ResultsHeader = ({
                 {finalScore.toFixed(2)}%
               </div>
               <div className="text-sm font-medium">
-                الدرجة النهائية
+                {translateResults('header.finalScore')}
               </div>
               <div className="text-xs mt-1">
                 {getScoreLabel(finalScore)}
@@ -129,7 +133,7 @@ const ResultsHeader = ({
                 {totalDomains}
               </div>
               <div className="text-sm text-gray-600">
-                عدد المجالات
+                {translateResults('header.domainsCount')}
               </div>
             </CardContent>
           </Card>
@@ -141,7 +145,7 @@ const ResultsHeader = ({
                 {totalIndicators}
               </div>
               <div className="text-sm text-gray-600">
-                إجمالي المؤشرات
+                {translateResults('header.indicatorsTotal')}
               </div>
             </CardContent>
           </Card>
@@ -153,10 +157,10 @@ const ResultsHeader = ({
                 {finalScore > 0 ? '100%' : '0%'}
               </div>
               <div className="text-sm text-gray-600">
-                حالة التقييم
+                {translateResults('header.evaluationStatus')}
               </div>
               <div className="text-xs mt-1 text-green-600">
-                {finalScore > 0 ? 'مكتمل' : 'غير مكتمل'}
+                {finalScore > 0 ? translateResults('header.completed') : translateResults('header.incomplete')}
               </div>
             </CardContent>
           </Card>

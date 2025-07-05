@@ -1,0 +1,173 @@
+{
+  "title": "College Management",
+  "subtitle": "Manage college information and settings",
+  "addCollege": "Add College",
+  "editCollege": "Edit College",
+  "collegeName": "College Name",
+  "description": "Description",
+  "dean": "Dean",
+  "establishedYear": "Established Year",
+  "location": "Location",
+  "departments": "Departments",
+  "programs": "Programs",
+  "students": "Students",
+  "faculty": "Faculty",
+  
+  "countMessage": {
+    "college": "college",
+    "colleges": "colleges",
+    "inUniversity": "in {{university}}",
+    "acrossAllUniversities": "across all universities",
+    "resultsFound": "{{count}} {{location}}"
+  },
+
+  "searchPlaceholder": {
+    "inUniversity": "Search colleges in {{university}}...",
+    "allColleges": "Search all colleges...",
+    "colleges": "Search colleges..."
+  },
+
+  "emptyStates": {
+    "noCollegesMatchingSearch": "No colleges found matching your search.",
+    "noCollegesAvailable": "No colleges available.",
+    "noCollegesForUniversity": "No colleges found for {{university}}.",
+    "noCollegesAvailableOrSelect": "No colleges available. Please select a university to view its colleges.",
+    "noCollegesForYourUniversity": "No colleges available for your university."
+  },
+
+  "adminView": {
+    "selectUniversity": "Select University",
+    "allUniversities": "All Universities",
+    "loadingUniversities": "Loading universities...",
+    "addCollege": "Add College"
+  },
+
+  "card": {
+    "established": "Established",
+    "notAvailable": "Not available",
+    "head": "Head",
+    "departments": "departments"
+  },
+
+  "messages": {
+    "collegeUpdatedSuccess": "College information updated successfully!"
+  },
+  
+  "form": {
+    "collegeName": "College Name",
+    "email": "Email",
+    "website": "Website",
+    "address": "Address",
+    "logoUrl": "Logo URL",
+    "logo": "Logo",
+    "headOfCollege": "Head of College",
+    "established": "Established",
+    "establishedYear": "Established Year",
+    "aboutCollege": "About College",
+    "departments": "Departments",
+    "universityId": "University ID",
+    "dateEstablished": "Date Established",
+    "registrationDate": "Registration Date",
+    "notProvided": "Not provided",
+    "notSpecified": "Not specified",
+    "ariaLabel": "{{field}} input field",
+    "placeholderText": "Enter {{field}}..."
+  },
+  
+  "actions": {
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "editDetails": "Edit Details",
+    "editDetailsAriaLabel": "Edit college details",
+    "editing": "Editing",
+    "editCollege": "Edit College",
+    "editCollegeDetails": "Edit College Details",
+    "closePopup": "Close popup",
+    "clearSearch": "Clear search"
+  },
+  
+  "errors": {
+    "collegeInfoNotAvailable": "College information is not available.",
+    "errorLoadingUniversities": "Error: {{error}}",
+    "fetchUniversitiesFailed": "Failed to fetch universities",
+    "noFetchLogicForRole": "No fetch logic for role: {{role}}",
+    "updateCollegeFailed": "Failed to update college: {{message}}",
+    "errorLabel": "Error",
+    "fetchCollegesError": "Failed to fetch colleges"
+  },
+  
+  "loading": {
+    "universities": "Loading universities...",
+    "loadingData": "Loading data...",
+    "loadingColleges": "Loading colleges..."
+  },
+  
+  "empty": {
+    "noColleges": "No colleges to display.",
+    "noCollegeData": "No college data is currently available for your account.",
+    "noDepartments": "No departments listed"
+  },
+  
+  "staffView": {
+    "administrativeInfo": "Administrative Information",
+    "collegeDetails": "College Details",
+    "loading": "Loading college information...",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "editInformation": "Edit Information",
+    "editingMode": "Editing Mode",
+    "editingInstructions": "You can now edit your college information. Click 'Save Changes' to apply your updates or 'Cancel' to discard changes.",
+    "collegeInformation": "College Information",
+    "additionalDetails": "Additional Details",
+    "headedBy": "Headed by",
+    "noData": "No data available",
+    "defaultCollegeName": "College",
+    "collegeLogo": "{{name}} Logo",
+    "errors": {
+      "loadFailed": "Failed to load college information",
+      "updateFailed": "Failed to update college information",
+      "errorOccurred": "An error occurred",
+      "collegeNotFound": "College not found",
+      "noCollegeInfo": "No college information available for your account",
+      "informationUnavailable": "College information unavailable",
+      "noDataToSave": "No data to save"
+    }
+  },
+  
+  "navigation": {
+    "universities": "Universities",
+    "allUniversities": "All Universities"
+  },
+
+  "modal": {
+    "title": "Add New College",
+    "allFieldsRequired": "All fields marked with * are required",
+    "collegeName": "College Name",
+    "collegeNamePlaceholder": "Enter college name",
+    "adminUserDetails": "Admin User Details",
+    "adminUsername": "Admin Username",
+    "adminUsernamePlaceholder": "Enter admin username",
+    "adminEmail": "Admin Email",
+    "adminEmailPlaceholder": "Enter admin email",
+    "adminPassword": "Admin Password",
+    "adminPasswordPlaceholder": "Enter admin password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm admin password",
+    "universityLabel": "University",
+    "universityPlaceholder": "Select university",
+    "createCollege": "Create College",
+    "creating": "Creating...",
+    "errors": {
+      "passwordsDoNotMatch": "Passwords do not match",
+      "allFieldsRequired": "All fields are required",
+      "invalidEmail": "Please enter a valid email address",
+      "addFailed": "Failed to add college"
+    },
+    "accessibility": {
+      "closePopup": "Close popup"
+    }
+  }
+}

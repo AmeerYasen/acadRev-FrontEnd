@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords, hasPrevPage, hasNextPage }) => {
+  const { translateResults } = useNamespacedTranslation();
+  
   if (totalPages <= 1) return null;
 
   const getPageNumbers = () => {
@@ -53,7 +56,7 @@ const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords
         <button
           onClick={() => onPageChange(1)}
           disabled={!hasPrevPage || currentPage === 1}
-          title="First Page"
+          title={translateResults('programSelector.pagination.firstPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-blue-600 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -64,7 +67,7 @@ const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!hasPrevPage}
-          title="Previous Page"
+          title={translateResults('programSelector.pagination.previousPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-blue-600 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -97,7 +100,7 @@ const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!hasNextPage}
-          title="Next Page"
+          title={translateResults('programSelector.pagination.nextPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-blue-600 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -108,7 +111,7 @@ const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={!hasNextPage || currentPage === totalPages}
-          title="Last Page"
+          title={translateResults('programSelector.pagination.lastPage')}
           className="p-2 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-blue-600 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -117,7 +120,7 @@ const ProgramPagination = ({ currentPage, totalPages, onPageChange, totalRecords
         </button>
       </div>
       <div className="text-sm text-gray-600">
-        <span className="font-medium text-gray-800">{}</span> Page <span className="font-medium text-gray-800">{currentPage}</span> of <span className="font-medium text-gray-800">{totalPages}</span>
+        <span className="font-medium text-gray-800"></span> {translateResults('programSelector.pagination.page')} <span className="font-medium text-gray-800">{currentPage}</span> {translateResults('programSelector.pagination.of')} <span className="font-medium text-gray-800">{totalPages}</span>
       </div>
     </div>
   );

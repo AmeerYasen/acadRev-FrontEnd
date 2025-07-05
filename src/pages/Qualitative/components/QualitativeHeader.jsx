@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, MessageSquare } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 const QualitativeHeader = React.memo(({ programId }) => {
   const navigate = useNavigate();
+  const { translateQualitative } = useNamespacedTranslation();
 
   return (
     <div className="bg-white border-b border-gray-200 shadow-sm">
@@ -23,10 +25,10 @@ const QualitativeHeader = React.memo(({ programId }) => {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center">
                 <MessageSquare className="h-8 w-8 mr-3 text-blue-600" />
-                Qualitative Assessment
+                {translateQualitative('title')}
               </h1>
               <p className="text-gray-600 mt-1">
-                Quality evaluation and evidence collection for Program {programId}
+                {translateQualitative('subtitle')}
               </p>
             </div>
           </div>

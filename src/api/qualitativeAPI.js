@@ -54,7 +54,7 @@ export const fetchIndicators = async (domainId) => {
       domain: indicator.domain,
       text: indicator.text,
       title: indicator.text, // Use text as title for compatibility
-      description: indicator.text // Use text as description for compatibility
+      text_en: indicator.text_en // Use text as description for compatibility
     }));
   } catch (error) {
     console.error('fetchIndicators: API call failed:', error);

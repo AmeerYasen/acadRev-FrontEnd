@@ -1,0 +1,61 @@
+{
+  "title": "التقييم النوعي",
+  "subtitle": "إدارة معايير التقييم النوعي والتقييمات",
+  "qualityDomains": "مجالات الجودة",
+  "domainsAvailable": "مجال متاح",
+  "selectDomain": "اختر مجال جودة",
+  "selectDomainDescription": "اختر مجال جودة من الشريط الجانبي لعرض وتقييم مؤشراته.",
+  "complete": "مكتمل",
+  "criteria": "معايير التقييم",
+  "standards": "المعايير",
+  "indicators": "المؤشرات",
+  "evidence": "الأدلة",
+  "assessment": "التقييم",
+  "score": "النتيجة",
+  "comments": "التعليقات",
+  "recommendations": "التوصيات",
+  "evaluation": "التقييم",
+  "evaluate": "قيّم",
+  "expandTable": "توسيع الجدول",
+  "openFullTableView": "فتح عرض الجدول الكامل",
+  "status": {
+    "completed": "مكتمل",
+    "inProgress": "قيد التقدم",
+    "notStarted": "لم يبدأ"
+  },
+  "evaluationOptions": {
+    "yes": "نعم",
+    "maybe": "ربما",
+    "no": "لا",
+    "unknown": "غير معروف"
+  },
+  "modal": {
+    "title": "تقييم المجال",
+    "progress": "التقدم",
+    "progressComplete": "مكتمل",
+    "noDataAvailable": "لا توجد مؤشرات متاحة",
+    "contactAdmin": "اتصل بالمسؤول للحصول على المساعدة",
+    "cancel": "إلغاء",
+    "saveEvaluation": "حفظ التقييم",
+    "itemsMetrics": "{{items}} مؤشر في هذا المجال",
+    "hideNotes": "إخفاء الملاحظات",
+    "showNotes": "عرض الملاحظات",
+    "viewEvidence": "عرض الأدلة"
+  },
+  "loading": {
+    "initial": "جاري تحميل المؤشرات النوعية...",
+    "indicators": "جاري تحميل المؤشرات...",
+    "saving": "جاري الحفظ...",
+    "data": "جاري تحميل البيانات..."
+  },
+  "error": {
+    "loadIndicators": "فشل في تحميل المؤشرات",
+    "saveEvaluation": "فشل في حفظ التقييم",
+    "loadDomains": "فشل في تحميل المجالات",
+    "loadInitialData": "فشل في تحميل البيانات الأولية"
+  },
+  "success": {
+    "evaluationSaved": "تم حفظ التقييم بنجاح",
+    "responseUpdated": "تم تحديث الاستجابة بنجاح"
+  }
+}

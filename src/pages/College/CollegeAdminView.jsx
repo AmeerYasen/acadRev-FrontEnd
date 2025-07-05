@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import UniversityNav from './components/UniversityNav';
 import CollegeCard from './components/CollegeCard';
 import AddCollegeModal from './components/AddCollegeModal';
@@ -24,6 +25,7 @@ const CollegeAdminView = ({
   onCollegeAdded,
   
 }) => {
+  const { translateCollege } = useNamespacedTranslation();
   const [isAddCollegeModalOpen, setIsAddCollegeModalOpen] = useState(false);
 
   const openAddCollegeModal = () => setIsAddCollegeModalOpen(true);
@@ -45,7 +47,7 @@ const CollegeAdminView = ({
         {(user?.role === 'admin' || user?.role === 'authority') && (
           <div className="block md:hidden mb-6">
             <label htmlFor="university-selector-mobile" className="block text-sm font-medium text-text-muted mb-2">
-              Select University
+              {translateCollege('adminView.selectUniversity')}
             </label>
             <select
               id="university-selector-mobile"
@@ -54,13 +56,13 @@ const CollegeAdminView = ({
               className="w-full p-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               disabled={universitiesLoading || !!universitiesError}
             >
-              <option value="">All Universities</option>
+              <option value="">{translateCollege('adminView.allUniversities')}</option>
               {universitiesList.map(uni => (
                 <option key={uni.id} value={uni.id}>{uni.name}</option>
               ))}
             </select>
-            {universitiesLoading && <p className="text-text-muted text-sm mt-1">Loading universities...</p>}
-            {universitiesError && <p className="text-red-500 text-sm mt-1">Error: {universitiesError}</p>}
+            {universitiesLoading && <p className="text-text-muted text-sm mt-1">{translateCollege('adminView.loadingUniversities')}</p>}
+            {universitiesError && <p className="text-red-500 text-sm mt-1">{translateCollege('errors.errorLabel')}: {universitiesError}</p>}
           </div>
         )}
 
@@ -91,7 +93,7 @@ const CollegeAdminView = ({
                 <button
                   onClick={clearSearch}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                  aria-label="Clear search"
+                  aria-label={translateCollege('actions.clearSearch')}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -115,7 +117,7 @@ const CollegeAdminView = ({
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
-                Add College
+                {translateCollege('adminView.addCollege')}
               </button>
             )}
           </div>
@@ -123,11 +125,11 @@ const CollegeAdminView = ({
 
         {collegeError && (
           <div className="mb-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-md">
-            <p>Error fetching colleges: {collegeError}</p>
+            <p>{translateCollege('errors.fetchCollegesError')}: {collegeError}</p>
           </div>
         )}
 
-        {collegesLoading && !collegeError && <p className="text-text-muted">Loading colleges...</p>}
+        {collegesLoading && !collegeError && <p className="text-text-muted">{translateCollege('loading.loadingColleges')}</p>}
 
         {!collegesLoading && filteredColleges.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
@@ -147,12 +149,12 @@ const CollegeAdminView = ({
               </svg>
               <p className="text-center text-text-muted text-lg">
                 {searchTerm
-                  ? 'No colleges found matching your search criteria.'
+                  ? translateCollege('emptyStates.noCollegesMatchingSearch')
                   : (user?.role === 'admin' || user?.role === 'authority') && selectedUniversityId
-                    ? `No colleges found for ${universitiesList.find(u => u.id === selectedUniversityId)?.name}.`
+                    ? translateCollege('emptyStates.noCollegesForUniversity', { university: universitiesList.find(u => u.id === selectedUniversityId)?.name })
                     : (user?.role === 'admin' || user?.role === 'authority')
-                        ? 'No colleges available or select a university/search.'
-                        : 'No colleges found for your university.' // Message for university role
+                        ? translateCollege('emptyStates.noCollegesAvailableOrSelect')
+                        : translateCollege('emptyStates.noCollegesForYourUniversity')
                 }
               </p>
               {searchTerm && (
@@ -160,7 +162,7 @@ const CollegeAdminView = ({
                   onClick={clearSearch}
                   className="mt-4 text-primary hover:text-primary-dark font-medium"
                 >
-                  Clear search
+                  {translateCollege('actions.clearSearch')}
                 </button>
               )}
             </div>

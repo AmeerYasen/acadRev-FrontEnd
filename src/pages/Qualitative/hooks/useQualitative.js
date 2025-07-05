@@ -13,8 +13,10 @@ import {
   removeResponse,
 } from "../../../api/qualitativeAPI";
 import { useToast } from "../../../context/ToastContext";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
-export const useQualitative = (programId) => {  // State management (domains are like areas, indicators are like items)
+export const useQualitative = (programId) => {
+  const { translateQualitative } = useNamespacedTranslation();  // State management (domains are like areas, indicators are like items)
   const [domains, setDomains] = useState([]);
   const [selectedDomain, setSelectedDomain] = useState(null); // Stores selected domainId
   const [indicators, setIndicators] = useState({}); // Stores indicators per domainId: { [domainId]: [...] }
@@ -45,7 +47,7 @@ export const useQualitative = (programId) => {  // State management (domains are
       setIndicators((prev) => ({ ...prev, [domainId]: indicatorsData || [] }));
     } catch (err) {
       console.error("Error loading domain data for domainId:", domainId, err);
-      showError(`Failed to load indicators for domain ${domainId}`);
+      showError(translateQualitative('error.loadIndicators'));
     } finally {
       setLoading((prev) => ({ ...prev, indicators: false }));
     }
@@ -92,8 +94,8 @@ export const useQualitative = (programId) => {  // State management (domains are
         setSelectedDomain(null);
       }
     } catch (err) {
-      setError(err.message || "Failed to load initial data");
-      showError(err.message || "Failed to load initial data");
+      setError(err.message || translateQualitative('error.loadInitialData'));
+      showError(err.message || translateQualitative('error.loadInitialData'));
       console.error("Error loading initial data:", err);
     } finally {
       setLoading((prev) => ({ ...prev, initial: false }));
@@ -126,7 +128,7 @@ export const useQualitative = (programId) => {  // State management (domains are
     const unsavedKeys = Object.keys(unsavedChanges);
     
     if (unsavedKeys.length === 0) {
-      showSuccess("No changes to save.");
+      showSuccess(translateQualitative('success.responseUpdated'));
       return;
     }
 
@@ -184,10 +186,10 @@ export const useQualitative = (programId) => {  // State management (domains are
         console.warn("Failed to refresh domain summary:", summaryError);
       }
 
-      showSuccess(`Successfully saved ${unsavedKeys.length} response(s)!`);
+      showSuccess(translateQualitative('success.evaluationSaved'));
     } catch (err) {
       console.error("Error saving responses:", err);
-      showError("Failed to save responses. Please try again.");
+      showError(translateQualitative('error.saveEvaluation'));
     } finally {
       setLoading((prev) => ({ ...prev, saving: false }));
     }
@@ -253,10 +255,10 @@ export const useQualitative = (programId) => {  // State management (domains are
         console.warn("Failed to refresh domain summary:", summaryError);
       }
 
-      showSuccess("Response removed successfully!");
+      showSuccess(translateQualitative('success.responseUpdated'));
     } catch (err) {
       console.error("Error removing response:", err);
-      showError("Failed to remove response. Please try again.");
+      showError(translateQualitative('error.saveEvaluation'));
     }
   }, [responses, programId, showSuccess, showError]);
 

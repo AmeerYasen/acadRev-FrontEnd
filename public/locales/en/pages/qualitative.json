@@ -1,0 +1,61 @@
+{
+  "title": "Qualitative Assessment",
+  "subtitle": "Manage qualitative evaluation criteria and assessments",
+  "qualityDomains": "Quality Domains",
+  "domainsAvailable": "domains available",
+  "selectDomain": "Select a Quality Domain",
+  "selectDomainDescription": "Choose a quality domain from the sidebar to view and evaluate its indicators.",
+  "complete": "complete",
+  "criteria": "Assessment Criteria",
+  "standards": "Standards",
+  "indicators": "Indicators",
+  "evidence": "Evidence",
+  "assessment": "Assessment",
+  "score": "Score",
+  "comments": "Comments",
+  "recommendations": "Recommendations",
+  "evaluation": "Evaluation",
+  "evaluate": "Evaluate",
+  "expandTable": "Expand Table",
+  "openFullTableView": "Open Full Table View",
+  "status": {
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started"
+  },
+  "evaluationOptions": {
+    "yes": "Yes",
+    "maybe": "Maybe",
+    "no": "No",
+    "unknown": "Unknown"
+  },
+  "modal": {
+    "title": "Domain Evaluation",
+    "progress": "Progress",
+    "progressComplete": "complete",
+    "noDataAvailable": "No indicators available",
+    "contactAdmin": "Contact your administrator for assistance",
+    "cancel": "Cancel",
+    "saveEvaluation": "Save Evaluation",
+    "itemsMetrics": "{{items}} indicators in this domain",
+    "hideNotes": "Hide Notes",
+    "showNotes": "Show Notes",
+    "viewEvidence": "View Evidence"
+  },
+  "loading": {
+    "initial": "Loading qualitative indicators...",
+    "indicators": "Loading indicators...",
+    "saving": "Saving...",
+    "data": "Loading data..."
+  },
+  "error": {
+    "loadIndicators": "Failed to load indicators",
+    "saveEvaluation": "Failed to save evaluation",
+    "loadDomains": "Failed to load domains",
+    "loadInitialData": "Failed to load initial data"
+  },
+  "success": {
+    "evaluationSaved": "Evaluation saved successfully",
+    "responseUpdated": "Response updated successfully"
+  }
+}

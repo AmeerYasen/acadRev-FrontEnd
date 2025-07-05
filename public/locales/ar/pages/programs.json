@@ -1,0 +1,187 @@
+{
+  "title": "إدارة البرامج",
+  "subtitle": "إدارة البرامج الأكاديمية والمناهج",
+  "addProgram": "إضافة برنامج",
+  "editProgram": "تعديل البرنامج",
+  "programName": "اسم البرنامج",
+  "description": "الوصف",
+  "degree": "نوع الدرجة",
+  "duration": "المدة",
+  "credits": "إجمالي الساعات المعتمدة",
+  "coordinator": "منسق البرنامج",
+  "accreditation": "حالة الاعتماد",
+  "loading": "جاري تحميل البرامج...",
+  "errors": {
+    "loadingError": "فشل في تحميل البرامج. يرجى المحاولة مرة أخرى.",
+    "networkError": "حدث خطأ في الشبكة. يرجى التحقق من الاتصال.",
+    "notFound": "البرنامج غير موجود.",
+    "createError": "فشل في إنشاء البرنامج. يرجى المحاولة مرة أخرى.",
+    "updateError": "فشل في تحديث البرنامج. يرجى المحاولة مرة أخرى.",
+    "deleteError": "فشل في حذف البرنامج. يرجى المحاولة مرة أخرى.",
+    "fetchMyProgram": "فشل في تحميل معلومات البرنامج الخاص بك.",
+    "noPermission": "لا تملك الصلاحية لتنفيذ هذا الإجراء.",
+    "updateProgram": "فشل في تحديث معلومات البرنامج.",
+    "errorTitle": "خطأ",
+    "accessDenied": "تم رفض الوصول. لا تملك الصلاحية لعرض هذه الصفحة."
+  },
+  "actions": {
+    "retry": "إعادة المحاولة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "add": "إضافة",
+    "close": "إغلاق",
+    "reset": "إعادة تعيين",
+    "clearSearch": "مسح البحث"
+  },
+  "messages": {
+    "addSuccess": "تم إضافة البرنامج بنجاح!",
+    "updateSuccess": "تم تحديث البرنامج بنجاح!",
+    "deleteSuccess": "تم حذف البرنامج بنجاح!"
+  },
+  "empty": {
+    "title": "لا توجد برامج",
+    "message": "لا توجد برامج متاحة في الوقت الحالي.",
+    "noResults": "لا توجد برامج تطابق معايير البحث."
+  },
+  "success": {
+    "created": "تم إنشاء البرنامج بنجاح!",
+    "updated": "تم تحديث البرنامج بنجاح!",
+    "deleted": "تم حذف البرنامج بنجاح!"
+  },
+  "adminView": {
+    "title": "جميع البرامج",
+    "addButton": "إضافة برنامج جديد",
+    "searchPlaceholder": "البحث في البرامج بالاسم...",
+    "errorTitle": "خطأ في تحميل البرامج",
+    "emptyTitle": "لا توجد برامج",
+    "emptyMessage": "حاول تعديل معايير البحث."
+  },
+  "staffView": {
+    "loading": "جاري تحميل معلومات البرنامج...",
+    "errorTitle": "حدث خطأ",
+    "notFoundTitle": "البرنامج غير موجود",
+    "notFoundMessage": "لم يتم العثور على معلومات البرنامج. يرجى الاتصال بالمسؤول.",
+    "unavailable": "المعلومات غير متاحة حالياً.",
+    "editButton": "تعديل المعلومات",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "saving": "جاري الحفظ...",
+    "editingTitle": "وضع التعديل",
+    "editingMessage": "أنت الآن تقوم بتعديل معلومات البرنامج. الحقول المُعلمة بعلامة النجمة (*) مطلوبة.",
+    "sections": {
+      "programInfo": "معلومات البرنامج",
+      "academicDetails": "التفاصيل الأكاديمية"
+    },
+    "fields": {
+      "name": "اسم البرنامج",
+      "description": "الوصف",
+      "degree": "نوع الدرجة",
+      "duration": "المدة (بالسنوات)",
+      "credits": "إجمالي الساعات المعتمدة",
+      "coordinator": "منسق البرنامج",
+      "accreditation": "حالة الاعتماد",
+      "departmentName": "القسم",
+      "collegeName": "الكلية",
+      "universityName": "الجامعة",
+      "established": "تأسس",
+      "language": "لغة التدريس"
+    },
+    "errors": {
+      "loadFailed": "فشل في تحميل معلومات البرنامج. يرجى المحاولة مرة أخرى.",
+      "noData": "لا توجد بيانات للحفظ.",
+      "updateFailed": "فشل في تحديث البرنامج. يرجى المحاولة مرة أخرى."
+    },
+    "success": {
+      "updated": "تم تحديث معلومات البرنامج بنجاح!"
+    }
+  },
+  "modal": {
+    "title": "تفاصيل البرنامج",
+    "editTitle": "تعديل تفاصيل البرنامج",
+    "addTitle": "إضافة برنامج جديد",
+    "closePopup": "إغلاق النافذة",
+    "fields": {
+      "programName": "اسم البرنامج",
+      "description": "الوصف",
+      "degree": "نوع الدرجة",
+      "duration": "المدة",
+      "credits": "إجمالي الساعات المعتمدة",
+      "coordinator": "المنسق",
+      "accreditation": "الاعتماد",
+      "department": "القسم",
+      "college": "الكلية",
+      "university": "الجامعة",
+      "notSpecified": "غير محدد",
+      "language": "لغة التدريس",
+      "website": "الموقع الإلكتروني",
+      "established": "تاريخ التأسيس",
+      "information": "المعلومات",
+      "languages": {
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "french": "الفرنسية",
+        "german": "الألمانية"
+      }
+    },
+    "placeholders": {
+      "enterProgramName": "أدخل اسم البرنامج...",
+      "enterDescription": "أدخل وصف البرنامج...",
+      "selectDegree": "اختر نوع الدرجة...",
+      "enterDuration": "أدخل المدة بالسنوات...",
+      "enterCredits": "أدخل إجمالي الساعات المعتمدة...",
+      "enterCoordinator": "أدخل اسم المنسق...",
+      "selectAccreditation": "اختر حالة الاعتماد...",
+      "selectDepartment": "اختر القسم...",
+      "selectCollege": "اختر الكلية...",
+      "selectUniversity": "اختر الجامعة...",
+      "enterWebsite": "أدخل رابط الموقع...",
+      "selectLanguage": "اختر اللغة..."
+    },
+    "actions": {
+      "editProgram": "تعديل البرنامج",
+      "cancelEdit": "إلغاء التعديل",
+      "saveChanges": "حفظ التغييرات",
+      "addProgram": "إضافة البرنامج",
+      "creating": "جاري الإنشاء..."
+    },
+    "assessmentTools": {
+      "title": "أدوات التقييم",
+      "quantitativeIndicators": "المؤشرات الكمية",
+      "qualitativeIndicators": "المؤشرات النوعية",
+      "selfAssessmentReport": "تقرير التقييم الذاتي"
+    }
+  },
+  "sidebar": {
+    "title": "تصفية البرامج",
+    "searchLabel": "البحث بالاسم",
+    "searchPlaceholder": "أدخل اسم البرنامج...",
+    "universityLabel": "الجامعة",
+    "selectUniversity": "اختر الجامعة",
+    "collegeLabel": "الكلية",
+    "selectCollege": "اختر الكلية",
+    "departmentLabel": "القسم",
+    "selectDepartment": "اختر القسم",
+    "itemsPerPageLabel": "العناصر في الصفحة",
+    "resetButton": "إعادة تعيين"
+  },
+  "pagination": {
+    "firstPage": "الصفحة الأولى",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "lastPage": "الصفحة الأخيرة",
+    "summary": "{{totalRecords}} برنامج • الصفحة {{currentPage}} من {{totalPages}}"
+  },
+  "searchableDropdown": {
+    "searchPlaceholder": "بحث...",
+    "noOptions": "لا توجد خيارات"
+  },
+  "viewCard": {
+    "unnamedProgram": "برنامج غير مسمى",
+    "department": "القسم",
+    "college": "الكلية",
+    "university": "الجامعة",
+    "type": "برنامج"
+  }
+}

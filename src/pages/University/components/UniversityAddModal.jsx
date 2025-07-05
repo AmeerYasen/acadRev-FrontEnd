@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X, Loader2, Building, User, Lock, EyeOff, Eye, Mail, GraduationCap } from "lucide-react";
+import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 
 // --- Externalized and Memoized FormField ---
 const MemoizedFormField = React.memo(({
@@ -84,6 +85,7 @@ export default function UniversityAddModal({
   onClose,
   onSave,
 }) {
+  const { translateUniversity } = useNamespacedTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "", 
@@ -117,15 +119,15 @@ export default function UniversityAddModal({
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.name?.trim()) newErrors.name = "University name is required";
-    if (!formData.email?.trim()) newErrors.email = "University Admin email is required";
-    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = "Invalid email format";
-    if (!formData.username?.trim()) newErrors.username = "Username is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm the password";
+    if (!formData.name?.trim()) newErrors.name = translateUniversity('modal.errors.nameRequired');
+    if (!formData.email?.trim()) newErrors.email = translateUniversity('modal.errors.emailRequired');
+    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = translateUniversity('modal.errors.invalidEmail');
+    if (!formData.username?.trim()) newErrors.username = translateUniversity('modal.errors.usernameRequired');
+    if (!formData.password) newErrors.password = translateUniversity('modal.errors.passwordRequired');
+    else if (formData.password.length < 6) newErrors.password = translateUniversity('modal.errors.passwordTooShort');
+    if (!formData.confirmPassword) newErrors.confirmPassword = translateUniversity('modal.errors.confirmPasswordRequired');
     else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = translateUniversity('modal.errors.passwordsDoNotMatch');
     }
     
     setErrors(newErrors);
@@ -161,7 +163,7 @@ export default function UniversityAddModal({
       onClose();
     } catch (error) {
       console.error("Error adding university:", error);
-      setErrors({ form: error.message || "Failed to add university. Please try again." });
+      setErrors({ form: error.message || translateUniversity('modal.errors.addFailed') });
     } finally {
       setIsSubmitting(false);
     }
@@ -176,12 +178,12 @@ export default function UniversityAddModal({
         <div className="flex justify-between items-center border-b p-5 bg-gradient-to-r from-indigo-600 to-blue-500">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">
             <GraduationCap className="h-6 w-6" />
-            Add University
+            {translateUniversity('modal.add.title')}
           </h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-full hover:bg-white/20 transition-colors text-white"
-            aria-label="Close"
+            aria-label={translateUniversity('modal.accessibility.close')}
           >
             <X size={22} />
           </button>
@@ -193,7 +195,7 @@ export default function UniversityAddModal({
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5 mr-2">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Create a new university with an administrative user account.
+              {translateUniversity('modal.add.description')}
             </p>
           </div>
           
@@ -208,48 +210,48 @@ export default function UniversityAddModal({
           
           <div className="grid grid-cols-1 gap-6">
             <MemoizedFormField
-              label="University Name"
+              label={translateUniversity('modal.add.universityName')}
               name="name"
               IconComponent={Building}
               required={true}
-              placeholder="Enter university name"
+              placeholder={translateUniversity('modal.add.universityNamePlaceholder')}
               value={formData.name}
               onChange={handleInputChange}
               error={errors.name}
             />
             
             <div className="pt-2 border-t border-gray-100">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Admin Account Details</h3>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">{translateUniversity('modal.add.adminSection')}</h3>
               <div className="space-y-4">
                 <MemoizedFormField
-                  label="Admin Email"
+                  label={translateUniversity('modal.add.adminEmail')}
                   name="email"
                   type="email"
                   IconComponent={Mail}
                   required={true}
-                  placeholder="admin@example.com"
+                  placeholder={translateUniversity('modal.add.adminEmailPlaceholder')}
                   value={formData.email}
                   onChange={handleInputChange}
                   error={errors.email}
                 />
               
                 <MemoizedFormField
-                  label="Admin Username"
+                  label={translateUniversity('modal.add.adminUsername')}
                   name="username"
                   IconComponent={User}
                   required={true}
-                  placeholder="Username for the university admin"
+                  placeholder={translateUniversity('modal.add.adminUsernamePlaceholder')}
                   value={formData.username}
                   onChange={handleInputChange}
                   error={errors.username}
                 />
                 
                 <MemoizedPasswordField
-                  label="Admin Password"
+                  label={translateUniversity('modal.add.adminPassword')}
                   name="password"
                   IconComponent={Lock}
                   required={true}
-                  placeholder="Enter secure password"
+                  placeholder={translateUniversity('modal.add.adminPasswordPlaceholder')}
                   value={formData.password}
                   onChange={handleInputChange}
                   error={errors.password}
@@ -258,11 +260,11 @@ export default function UniversityAddModal({
                 />
                 
                 <MemoizedPasswordField
-                  label="Confirm Admin Password"
+                  label={translateUniversity('modal.add.confirmPassword')}
                   name="confirmPassword"
                   IconComponent={Lock}
                   required={true}
-                  placeholder="Confirm password"
+                  placeholder={translateUniversity('modal.add.confirmPasswordPlaceholder')}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   error={errors.confirmPassword}

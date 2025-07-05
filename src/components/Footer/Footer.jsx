@@ -1,9 +1,11 @@
 "use client"
 import { BookOpen, Globe, Info } from "lucide-react"
 import "./Footer.css"
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation"
 
 function Footer() {
   const currentYear = new Date().getFullYear()
+  const { translateFooter } = useNamespacedTranslation()
 
   return (
     <footer className="bg-white border-t border-gray-200 py-4 mt-auto">
@@ -18,29 +20,29 @@ function Footer() {
                 <span className="text-darknavy">Acad</span>
                 <span className="text-blue-500">Rev</span>
               </span>
-              <p className="text-xs text-gray-500">Academic Review System</p>
+              <p className="text-xs text-gray-500">{translateFooter('subtitle')}</p>
             </div>
           </div>
           
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4 md:mb-0">
             <a href="#help" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center">
               <Info size={14} className="mr-1" />
-              Help Center
+              {translateFooter('links.help')}
             </a>
             <a href="#about" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center">
               <Globe size={14} className="mr-1" />
-              About Us
+              {translateFooter('links.about')}
             </a>
             <a href="#privacy" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              Privacy Policy
+              {translateFooter('links.privacy')}
             </a>
           </div>
           
           <div className="text-xs text-gray-500 flex items-center">
-            <span>© {currentYear} Academic Review System</span>
+            <span>{translateFooter('copyright', { year: currentYear })}</span>
           </div>
         </div>
       </div>

@@ -2,19 +2,22 @@
 import { useState, useEffect } from "react";
 import IconGrid from "../../components/Dashboard";
 import {useAuth} from "../../context/AuthContext";
+import useNamespacedTranslation from "../../hooks/useNamespacedTranslation";
 import "./Main.css";
 
 function Main() {
   const [greeting, setGreeting] = useState("");
   const { user } = useAuth();
+  const { translateMain } = useNamespacedTranslation();
   const userRole = user?.role || null;
+  
   // Set greeting based on time of day
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good morning");
-    else if (hour < 18) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
-  }, []);
+    if (hour < 12) setGreeting(translateMain('greetings.morning'));
+    else if (hour < 18) setGreeting(translateMain('greetings.afternoon'));
+    else setGreeting(translateMain('greetings.evening'));
+  }, [translateMain]);
 
   return (
     <div className="main-container bg-gray-50 min-h-screen">
@@ -26,16 +29,16 @@ function Main() {
           <div className="w-full max-w-7xl mx-auto">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <h1 className="text-2xl font-bold text-gray-800 mb-1">{greeting}, {user.username}</h1>
-              <p className="text-gray-600">Welcome to your academic review dashboard</p>
+              <p className="text-gray-600">{translateMain('welcome.subtitle')}</p>
             </div>
             
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               {[
-                { label: "Universities", value: 12, change: "+2", color: "bg-blue-500" },
-                { label: "Total Programs", value: 284, change: "+14", color: "bg-green-500" },
-                { label: "Active Users", value: 1840, change: "+86", color: "bg-purple-500" },
-                { label: "New Reports", value: 18, change: "+6", color: "bg-amber-500" }
+                { label: translateMain('stats.universities.label'), value: 12, change: "+2", color: "bg-blue-500" },
+                { label: translateMain('stats.programs.label'), value: 284, change: "+14", color: "bg-green-500" },
+                { label: translateMain('stats.users.label'), value: 1840, change: "+86", color: "bg-purple-500" },
+                { label: translateMain('stats.reports.label'), value: 18, change: "+6", color: "bg-amber-500" }
               ].map((stat, index) => (
                 <div key={index} className="bg-white rounded-xl shadow-sm p-5 flex items-center">
                   <div className={`${stat.color} h-12 w-12 rounded-lg flex items-center justify-center text-white mr-4`}>
@@ -53,7 +56,7 @@ function Main() {
             </div>
             
             <div className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">Module Access</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">{translateMain('modules.title')}</h2>
               <div className="dashboard-card-container">
                 <IconGrid userLevel={userRole} />
               </div>

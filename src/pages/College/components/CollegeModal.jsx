@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 
 // --- CollegePopup Component ---
 function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) {
+  const { translateCollege } = useNamespacedTranslation();
   const [editedCollege, setEditedCollege] = useState({
     email: college.email || '',
     website: college.website || '',
@@ -59,7 +61,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
       return (
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-500 mb-2">{label}</h3>
-          <p className="text-gray-900 font-medium">{value || 'Not specified'}</p>
+          <p className="text-gray-900 font-medium">{value || translateCollege('form.notSpecified')}</p>
         </div>
       );
     }
@@ -75,7 +77,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
               onChange={handleChange}
               rows="4"
               className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base transition-all duration-200"
-              placeholder={`Enter ${label.toLowerCase()}...`}
+              placeholder={translateCollege('form.placeholderText', { field: label.toLowerCase() })}
             />
           </div>
         );
@@ -89,7 +91,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
             value={editedCollege[name]}
             onChange={handleChange}
             className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary text-base transition-all duration-200"
-            placeholder={`Enter ${label.toLowerCase()}...`}
+            placeholder={translateCollege('form.placeholderText', { field: label.toLowerCase() })}
           />
         </div>
       );
@@ -128,7 +130,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
     return (
       <div className="mb-6">
         <h3 className="text-sm font-medium text-gray-500 mb-2">{label}</h3>
-        <p className="text-gray-900">{value || 'Not specified'}</p>
+        <p className="text-gray-900">{value || translateCollege('form.notSpecified')}</p>
       </div>
     );
   };
@@ -146,7 +148,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
         <button
           className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 transition-colors duration-200 rounded-full w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-700"
           onClick={onClose}
-          aria-label="Close popup"
+          aria-label={translateCollege('actions.closePopup')}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -155,27 +157,27 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
         
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
           <h2 className="text-primary text-2xl font-bold">
-            {isEditing ? "Edit College Details" : college.name}
+            {isEditing ? translateCollege('actions.editCollegeDetails') : college.name}
           </h2>
         </div>
 
         {isEditing && hasEditPermission ? (
           <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
             <div>
-              {renderField("College Name", college.name, "name")} {/* Always non-editable */}
-              {renderField("Email", editedCollege.email, "email", "email")}
-              {renderField("Website", editedCollege.website, "website", "url")}
-              {renderField("Head of College", editedCollege.head_name, "head_name")}
-              {renderField("Established Year", editedCollege.established, "established", "number")}
+              {renderField(translateCollege('form.collegeName'), college.name, "name")} {/* Always non-editable */}
+              {renderField(translateCollege('form.email'), editedCollege.email, "email", "email")}
+              {renderField(translateCollege('form.website'), editedCollege.website, "website", "url")}
+              {renderField(translateCollege('form.headOfCollege'), editedCollege.head_name, "head_name")}
+              {renderField(translateCollege('form.establishedYear'), editedCollege.established, "established", "number")}
             </div>
             <div>
-              {renderField("Logo URL", editedCollege.logo, "logo")}
-              {renderField("Address", editedCollege.address, "address", "text", true)}
-              {renderField("About College", editedCollege.description, "description", "text", true)}
+              {renderField(translateCollege('form.logoUrl'), editedCollege.logo, "logo")}
+              {renderField(translateCollege('form.address'), editedCollege.address, "address", "text", true)}
+              {renderField(translateCollege('form.aboutCollege'), editedCollege.description, "description", "text", true)}
               
               {/* Departments section is now read-only even in edit mode */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Departments</h3>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">{translateCollege('form.departments')}</h3>
                 <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-md min-h-[80px] border border-gray-200">
                   {departments && departments.length > 0 ? departments.map((dept, index) => (
                     <div
@@ -185,7 +187,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
                       <span>{dept}</span>
                     </div>
                   )) : (
-                    <div className="text-gray-400 text-sm italic flex items-center justify-center w-full">No departments listed</div>
+                    <div className="text-gray-400 text-sm italic flex items-center justify-center w-full">{translateCollege('empty.noDepartments')}</div>
                   )}
                 </div>
               </div>
@@ -197,13 +199,13 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
                 onClick={toggleEditMode}
                 className="px-5 py-2.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
-                Cancel
+                {translateCollege('actions.cancel')}
               </button>
               <button
                 type="submit"
                 className="px-5 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
-                Save Changes
+                {translateCollege('actions.saveChanges')}
               </button>
             </div>
           </form>
@@ -211,20 +213,20 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
               <div>
-                {renderField("College Name", college.name, "name")}
-                {renderField("Email", college.email, "email")}
-                {renderField("Website", college.website, "website")}
-                {renderField("Head of College", college.head_name, "head_name")}
-                {renderField("Established", college.established, "established")}
-                {renderField("Registration Date", formattedDate, "created_at")}
+                {renderField(translateCollege('form.collegeName'), college.name, "name")}
+                {renderField(translateCollege('form.email'), college.email, "email")}
+                {renderField(translateCollege('form.website'), college.website, "website")}
+                {renderField(translateCollege('form.headOfCollege'), college.head_name, "head_name")}
+                {renderField(translateCollege('form.established'), college.established, "established")}
+                {renderField(translateCollege('form.registrationDate'), formattedDate, "created_at")}
               </div>
               <div>
-                {renderField("Logo", college.logo, "logo")}
-                {renderField("Address", college.address, "address")}
-                {renderField("About College", college.description, "description")}
+                {renderField(translateCollege('form.logo'), college.logo, "logo")}
+                {renderField(translateCollege('form.address'), college.address, "address")}
+                {renderField(translateCollege('form.aboutCollege'), college.description, "description")}
 
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Departments</h3>
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">{translateCollege('form.departments')}</h3>
                   <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-md min-h-[80px] border border-gray-200">
                     {departments && departments.length > 0 ? departments.map((dept, index) => (
                       <div
@@ -234,7 +236,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
                         <span>{dept}</span>
                       </div>
                     )) : (
-                      <div className="text-gray-400 text-sm italic flex items-center justify-center w-full">No departments listed</div>
+                      <div className="text-gray-400 text-sm italic flex items-center justify-center w-full">{translateCollege('empty.noDepartments')}</div>
                     )}
                   </div>
                 </div>
@@ -251,7 +253,7 @@ function CollegePopup({ college, onClose, onUpdate, canEdit = true, userRole }) 
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                   </svg>
-                  Edit College
+                  {translateCollege('actions.editCollege')}
                 </button>
               </div>
             )}
