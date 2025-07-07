@@ -13,17 +13,29 @@
     "subtitle": "مرحباً بك في لوحة تحكم المراجعة الأكاديمية"
   },
   "stats": {
+    "authorities": {
+      "label": "الهيئات"
+    },
     "universities": {
       "label": "الجامعات"
     },
+    "colleges": {
+      "label": "الكليات"
+    },
+    "departments": {
+      "label": "الأقسام"
+    },
     "programs": {
-      "label": "إجمالي البرامج"
+      "label": "البرامج"
     },
     "users": {
-      "label": "المستخدمون النشطون"
+      "label": "المستخدمون"
+    },
+    "responses": {
+      "label": "الردود"
     },
     "reports": {
-      "label": "التقارير الجديدة"
+      "label": "التقارير"
     }
   },
   "modules": {

@@ -13,17 +13,29 @@
     "subtitle": "Welcome to your academic review dashboard"
   },
   "stats": {
+    "authorities": {
+      "label": "Authorities"
+    },
     "universities": {
       "label": "Universities"
     },
+    "colleges": {
+      "label": "Colleges"
+    },
+    "departments": {
+      "label": "Departments"
+    },
     "programs": {
-      "label": "Total Programs"
+      "label": "Programs"
     },
     "users": {
-      "label": "Active Users"
+      "label": "Users"
+    },
+    "responses": {
+      "label": "Responses"
     },
     "reports": {
-      "label": "New Reports"
+      "label": "Reports"
     }
   },
   "modules": {
