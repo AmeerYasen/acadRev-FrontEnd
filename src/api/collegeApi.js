@@ -62,7 +62,7 @@ export const editCollege = async (collegeData) => {
  */
 export const deleteCollege = async (collegeId) => {
   try {
-    await apiFetch(ENDPOINTS.COLLEGES.DELETE(collegeId), {
+    await apiFetch(ENDPOINTS.COLLEGES.DELETE_COLLEGE(collegeId), {
       method: 'DELETE',
     });
   } catch (error) {

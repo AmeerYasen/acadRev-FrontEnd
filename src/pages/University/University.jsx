@@ -7,6 +7,7 @@ import { useToast } from '../../context/ToastContext';
 import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
 import { ROUTES, ROLES } from '../../constants';
 import { lazy, Suspense } from 'react';
+import { deleteUser } from '../../api/userAPI';
 // import UniversityTable from './components/UniversityTable';
 // import UniversityModalManager from './components/UniversityModalManager';
 // import UniversityStaffView from './components/UniversityStaffView';
@@ -128,10 +129,6 @@ function University() {
   };
 
   const handleDeleteUniversity = async (universityId) => {
-    if (!window.confirm(translateUniversity('confirmDelete'))) {
-      return;
-    }
-
     try {
       await deleteUniversity(universityId);
       setUniversities((prev) => prev.filter((uni) => uni.id !== universityId));
@@ -139,6 +136,7 @@ function University() {
     } catch (err) {
       const errorMessage = err.message || translateUniversity('errorDeletingUniversity');
       showError(errorMessage);
+      throw err; // Re-throw to let the modal handle it
     }
   };
 
@@ -239,14 +237,16 @@ function University() {
         renderSortableHeader={renderSortableHeader}
       />
 
-      <UniversityModalManager
-        isOpen={modalState.isOpen}
-        onClose={handleCloseModal}
-        onSave={handleSaveUniversity}
-        universityData={selectedUniversity}
-        mode={modalState.mode}
-        userRole={user?.role}
-      />
+        <UniversityModalManager
+          isOpen={modalState.isOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveUniversity}
+          universityData={selectedUniversity}
+          mode={modalState.mode}
+          userRole={user?.role}
+          loggedInUser={user}
+          onUniversityDeleted={handleDeleteUniversity}
+        />
     </div>
   );
 }

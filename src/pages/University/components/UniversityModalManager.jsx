@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-// import UniversityStaffView from "./UniversityStaffView";
+import UniversityStaffView from "./UniversityStaffView";
 import UniversityAdminViewModal from "./UniversityAdminViewModal";
-// import UniversityAddModal from "./UniversityAddModal"; // Import the new modal
+import UniversityAddModal from "./UniversityAddModal";
 
 export default function UniversityModalManager({ 
   isOpen, 
@@ -9,13 +9,14 @@ export default function UniversityModalManager({
   onSave, // This is handleSaveUniversity from University.jsx
   universityData,
   mode,     // "add", "edit", "view", "view-staff"
-  userRole  // "admin", "authority", "university"
+  userRole,  // "admin", "authority", "university"
+  loggedInUser,
+  onUniversityDeleted
 }) {
   // Internal state for admin/authority toggling from view to edit mode
   // for an existing university.
   const [isInternalEditMode, setIsInternalEditMode] = useState(false);
-  const UniversityAddModal = React.lazy(() => import("./UniversityAddModal")); // Lazy load the add modal
-  const UniversityStaffView = React.lazy(() => import("./UniversityStaffView")); // Lazy load the staff view modal
+  
   if (!isOpen) return null;
   
   const handleClose = () => {
@@ -93,6 +94,8 @@ export default function UniversityModalManager({
         universityData={universityData}
         onEdit={handleEditClick} // This sets isInternalEditMode = true
         userRole={userRole}
+        loggedInUser={loggedInUser}
+        onUniversityDeleted={onUniversityDeleted}
       />
     );
   } 

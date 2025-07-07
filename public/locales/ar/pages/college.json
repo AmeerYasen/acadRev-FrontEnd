@@ -46,11 +46,15 @@
     "established": "تأسست",
     "notAvailable": "غير متوفر",
     "head": "الرئيس",
-    "departments": "أقسام"
+    "departments": "أقسام",
+    "programs": "البرامج",
+    "students": "الطلاب",
+    "faculty": "أعضاء هيئة التدريس"
   },
 
   "messages": {
-    "collegeUpdatedSuccess": " تم تحديث معلومات الكلية بنجاح!"
+    "collegeUpdatedSuccess": " تم تحديث معلومات الكلية بنجاح!",
+    "collegeDeletedSuccess": "تم حذف الكلية بنجاح"
   },
   
   "form": {
@@ -67,9 +71,14 @@
     "departments": "الأقسام",
     "universityId": "معرف الجامعة",
     "dateEstablished": "تاريخ التأسيس",
+    "contactInformation": "معلومات الاتصال",
+    "additionalInfo": "معلومات إضافية",
+    "systemInformation": "معلومات النظام",
     "registrationDate": "تاريخ التسجيل",
-    "notProvided": "غير متوفر",
+    "collegeId": "معرف الكلية",
     "notSpecified": "غير محدد",
+    "noDescriptionAvailable": "لا يوجد وصف متاح",
+    "notProvided": "غير متوفر",
     "ariaLabel": "حقل إدخال {{field}}",
     "placeholderText": "أدخل {{field}}..."
   },
@@ -78,6 +87,8 @@
     "edit": "تعديل",
     "save": "حفظ",
     "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleteCollege": "حذف الكلية",
     "saveChanges": "حفظ التغييرات",
     "editDetails": "تعديل التفاصيل",
     "editDetailsAriaLabel": "تعديل تفاصيل الكلية",
@@ -169,5 +180,10 @@
     "accessibility": {
       "closePopup": "إغلاق النافذة"
     }
+  },
+  
+  "delete": {
+    "title": "حذف الكلية",
+    "warning": "هذا الإجراء لا يمكن التراجع عنه. سيؤدي هذا إلى حذف الكلية \"{{name}}\" نهائياً وجميع البيانات المرتبطة بها بما في ذلك الأقسام والبرامج."
   }
 }

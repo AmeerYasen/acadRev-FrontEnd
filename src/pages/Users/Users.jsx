@@ -163,6 +163,18 @@ function UsersPage() {
     }
   };
 
+  const handleUserDeleted = async (deletedUserId) => {
+    try {
+      // Remove the deleted user from the local state
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== deletedUserId));
+      // Optionally refresh the users list to ensure consistency
+      await loadUsers();
+    } catch (err) {
+      console.error("Failed to refresh users after deletion:", err);
+      // Optionally set a page-level error if needed
+    }
+  };
+
   if (authLoading) {
     return <div className="flex justify-center items-center h-screen"><p className="text-lg">{translateUsers('loadingAuth')}</p></div>;
   }
@@ -225,6 +237,8 @@ function UsersPage() {
         onClose={() => setIsViewModalOpen(false)}
         getRoleStyle={getRoleStyle} // Pass getRoleStyle as a prop
         translateUsers={translateUsers}
+        loggedInUser={loggedInUser}
+        onUserDeleted={handleUserDeleted}
       />
 
       <AddEditUserModal

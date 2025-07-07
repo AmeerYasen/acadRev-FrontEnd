@@ -173,7 +173,7 @@ export default function UniversityAddModal({
   const toggleShowConfirmPassword = useCallback(() => setShowConfirmPassword(prev => !prev), []);
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-100 p-4 backdrop-blur-sm">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center border-b p-5 bg-gradient-to-r from-indigo-600 to-blue-500">
           <h2 className="text-xl font-semibold text-white flex items-center gap-2">

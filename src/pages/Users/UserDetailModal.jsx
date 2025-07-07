@@ -1,14 +1,59 @@
-import React from 'react';
-import { X, Mail, University, School, Building, UserCheck, Shield, CheckSquare, Users as UsersIcon, User, Briefcase, Key, Image } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Mail, University, School, Building, UserCheck, Shield, CheckSquare, Users as UsersIcon, User, Briefcase, Key, Image, Trash2 } from 'lucide-react';
+import ConfirmDeleteDialog from '../../components/ui/ConfirmDeleteDialog';
+import { deleteAuthority } from '../../api/authorityAPI';
+import { deleteUser } from '../../api/userAPI';
+import { ROLES } from '../../constants';
 
 // Helper function for Role Styling (passed as prop or imported from a shared util)
 // const getRoleStyle = (role) => { ... }; 
 
-function UserDetailModal({ user, isOpen, onClose, getRoleStyle, translateUsers }) {
+function UserDetailModal({ user, isOpen, onClose, getRoleStyle, translateUsers, loggedInUser, onUserDeleted }) {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   if (!isOpen || !user) return null;
 
   const roleStyle = getRoleStyle(user.role);
   const RoleIcon = roleStyle.icon;
+
+  // Check if current user is admin and viewing an authority user
+  const canDelete = loggedInUser?.role === ROLES.ADMIN && user.role === ROLES.AUTHORITY;
+
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      // Delete both user and authority records
+      // Delete the authority first
+      if (user.authority_id) {
+        await deleteAuthority(user.authority_id);
+      }
+      
+      // Then delete the user record
+      await deleteUser(user.id);
+      
+      // Notify parent component about the deletion
+      if (onUserDeleted) {
+        onUserDeleted(user.id);
+      }
+      onClose(); // Close the modal
+    } catch (error) {
+      console.error('Delete user and authority error:', error);
+      throw error; // Re-throw to let the confirmation dialog handle the error
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteDialog = () => {
+    if (!isDeleting) {
+      setIsDeleteDialogOpen(false);
+    }
+  };
 
   const detailItem = (IconComponent, label, value) => (
     <div className="flex items-start space-x-3 py-2.5 border-b border-gray-100 last:border-b-0">
@@ -62,12 +107,40 @@ function UserDetailModal({ user, isOpen, onClose, getRoleStyle, translateUsers }
             </div>
           )}
         </div>
-        <div className="flex justify-end items-center p-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+        <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+          {/* Delete button - only show for admin users viewing authority users */}
+          {canDelete && (
+            <button
+              type="button"
+              onClick={handleDeleteClick}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors flex items-center gap-2"
+            >
+              <Trash2 size={16} />
+              {translateUsers('actions.delete')}
+            </button>
+          )}
+          
+          {/* Spacer for when delete button is not shown */}
+          {!canDelete && <div></div>}
+          
           <button type="button" onClick={onClose} className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 text-sm font-medium rounded-md shadow-sm">
             {translateUsers('actions.close')}
           </button>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleDeleteConfirm}
+        title={translateUsers('modal.deleteTitle')}
+        message={translateUsers('modal.deleteWarning')}
+        resourceName={user?.authority_name || user?.username}
+        confirmationText={user?.authority_name || user?.username || ''}
+        confirmButtonText={translateUsers('actions.delete')}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
