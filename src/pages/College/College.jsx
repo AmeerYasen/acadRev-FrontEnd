@@ -240,6 +240,14 @@ const College = () => {
     loadCollegesData();
   };
 
+  const handleCollegeDeleted = (deletedCollegeId) => {
+    // Remove the deleted college from the current colleges list
+    setCurrentColleges(prevColleges =>
+      prevColleges.filter(college => college.id !== deletedCollegeId)
+    );
+    showSuccess(translateCollege('messages.collegeDeletedSuccess'));
+  };
+
   const isOverallLoading = (userRole === ROLES.ADMIN || userRole === ROLES.AUTHORITY)
     ? universitiesLoading || loading
     : loading;
@@ -353,7 +361,10 @@ const College = () => {
         <CollegePopup
           college={selectedCollege}
           onClose={closePopup}
+          onUpdate={handleUpdateCollege}
           userRole={userRole}
+          loggedInUser={user}
+          onCollegeDeleted={handleCollegeDeleted}
         />
       )}
     </div>

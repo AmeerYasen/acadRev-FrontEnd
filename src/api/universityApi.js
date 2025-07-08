@@ -56,7 +56,7 @@ export const editUniversity = async (formData) => {
  */
 export const deleteUniversity = async (universityId) => {
   try {
-    await apiFetch(ENDPOINTS.UNIVERSITIES.GET_BY_ID(universityId), {
+    await apiFetch(ENDPOINTS.UNIVERSITIES.DELETE_UNIVERSITY(universityId), {
       method: 'DELETE',
     });
   } catch (error) {

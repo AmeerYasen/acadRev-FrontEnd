@@ -91,7 +91,9 @@
     "requiredField": "Required field",
     "formError": "Please correct the errors below",
     "saving": "Saving...",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "deleteTitle": "Delete Authority User",
+    "deleteWarning": "This action cannot be undone. This will permanently delete both the user account and the authority record, along with all associated data."
   },
   "security": {
     "showPassword": "Show password",

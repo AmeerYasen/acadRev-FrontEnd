@@ -46,11 +46,15 @@
     "established": "Established",
     "notAvailable": "Not available",
     "head": "Head",
-    "departments": "departments"
+    "departments": "departments",
+    "programs": "Programs",
+    "students": "Students",
+    "faculty": "Faculty"
   },
 
   "messages": {
-    "collegeUpdatedSuccess": "College information updated successfully!"
+    "collegeUpdatedSuccess": "College information updated successfully!",
+    "collegeDeletedSuccess": "College deleted successfully"
   },
   
   "form": {
@@ -67,9 +71,14 @@
     "departments": "Departments",
     "universityId": "University ID",
     "dateEstablished": "Date Established",
+    "contactInformation": "Contact Information",
+    "additionalInfo": "Additional Information",
+    "systemInformation": "System Information",
     "registrationDate": "Registration Date",
-    "notProvided": "Not provided",
+    "collegeId": "College ID",
     "notSpecified": "Not specified",
+    "noDescriptionAvailable": "No description available",
+    "notProvided": "Not provided",
     "ariaLabel": "{{field}} input field",
     "placeholderText": "Enter {{field}}..."
   },
@@ -78,6 +87,8 @@
     "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteCollege": "Delete College",
     "saveChanges": "Save Changes",
     "editDetails": "Edit Details",
     "editDetailsAriaLabel": "Edit college details",
@@ -97,7 +108,7 @@
     "errorLabel": "Error",
     "fetchCollegesError": "Failed to fetch colleges"
   },
-  
+
   "loading": {
     "universities": "Loading universities...",
     "loadingData": "Loading data...",
@@ -169,5 +180,10 @@
     "accessibility": {
       "closePopup": "Close popup"
     }
+  },
+  
+  "delete": {
+    "title": "Delete College",
+    "warning": "This action cannot be undone. This will permanently delete the college \"{{name}}\" and all associated data including departments and programs."
   }
 }

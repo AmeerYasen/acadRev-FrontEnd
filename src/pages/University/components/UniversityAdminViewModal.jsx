@@ -1,15 +1,22 @@
-import React from "react";
-import { X, Calendar, Globe, Building2, Book, GraduationCap, Users, Mail, Phone, MapPin, ExternalLink, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { X, Calendar, Globe, Building2, Book, GraduationCap, Users, Mail, Phone, MapPin, ExternalLink, Clock, Trash2 } from "lucide-react";
 import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import ConfirmDeleteDialog from "../../../components/ui/ConfirmDeleteDialog";
+import { deleteUniversity } from "../../../api/universityApi";
+import { ROLES } from "../../../constants";
 
 export default function UniversityAdminViewModal({ 
   isOpen, 
   onClose, 
   universityData,
   onEdit,
-  userRole
+  userRole,
+  loggedInUser,
+  onUniversityDeleted
 }) {
   const { translateUniversity } = useNamespacedTranslation();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   if (!isOpen || !universityData) return null;
 
@@ -31,6 +38,38 @@ export default function UniversityAdminViewModal({
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  // Check if current user is authority and can delete university
+  const canDelete = loggedInUser?.role === ROLES.AUTHORITY;
+
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      // Delete the university using the university API
+      await deleteUniversity(universityData.id);
+      
+      // Notify parent component about the deletion
+      if (onUniversityDeleted) {
+        onUniversityDeleted(universityData.id);
+      }
+      onClose(); // Close the modal
+    } catch (error) {
+      console.error('Delete university error:', error);
+      throw error; // Re-throw to let the confirmation dialog handle the error
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCloseDeleteDialog = () => {
+    if (!isDeleting) {
+      setIsDeleteDialogOpen(false);
+    }
   };
 
   return (
@@ -215,8 +254,22 @@ export default function UniversityAdminViewModal({
         </div>
         
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 mt-8 flex justify-end gap-2 border-t">
-         
+        <div className="bg-gray-50 px-6 py-4 mt-8 flex justify-between items-center border-t">
+          {/* Delete button - only show for authority users */}
+          {canDelete && (
+            <button
+              type="button"
+              onClick={handleDeleteClick}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors flex items-center gap-2"
+            >
+              <Trash2 size={16} />
+              {translateUniversity('actions.delete')}
+            </button>
+          )}
+          
+          {/* Spacer for when delete button is not shown */}
+          {!canDelete && <div></div>}
+          
           <button
             onClick={onClose}
             className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md shadow-sm hover:bg-gray-50 transition-colors"
@@ -225,6 +278,19 @@ export default function UniversityAdminViewModal({
           </button>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onConfirm={handleDeleteConfirm}
+        title={translateUniversity('adminModal.deleteTitle')}
+        message={translateUniversity('adminModal.deleteWarning')}
+        resourceName={universityData?.name || ''}
+        confirmationText={universityData?.name || ''}
+        confirmButtonText={translateUniversity('actions.delete')}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

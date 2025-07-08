@@ -160,7 +160,9 @@
     "about": "About",
     "noDescriptionAvailable": "No description available for this university.",
     "closeButton": "Close",
-    "noData": "-"
+    "noData": "-",
+    "deleteTitle": "Delete University",
+    "deleteWarning": "This action cannot be undone. This will permanently delete the university and all associated data including colleges, departments, programs, and users."
   },
   "staffView": {
     "loading": "Loading university information...",
