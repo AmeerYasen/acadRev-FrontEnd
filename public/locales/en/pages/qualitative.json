@@ -25,7 +25,7 @@
   },
   "evaluationOptions": {
     "yes": "Yes",
-    "maybe": "Maybe",
+    "maybe": "TSE",
     "no": "No",
     "unknown": "Unknown"
   },
