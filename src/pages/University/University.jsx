@@ -1,21 +1,35 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PlusCircle, Search, ArrowUpDown, Loader2, AlertCircle } from 'lucide-react';
-import { fetchUniversities, addUniversity, editUniversity, deleteUniversity } from '../../api/universityApi';
-import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext';
-import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
-import { ROUTES, ROLES } from '../../constants';
-import { lazy, Suspense } from 'react';
-import { deleteUser } from '../../api/userAPI';
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  PlusCircle,
+  Search,
+  ArrowUpDown,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
+import {
+  fetchUniversities,
+  addUniversity,
+  editUniversity,
+  deleteUniversity,
+} from "../../api/universityApi";
+import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
+import { ROUTES, ROLES } from "../../constants";
+import { lazy, Suspense } from "react";
+import { deleteUser } from "../../api/userAPI";
 // import UniversityTable from './components/UniversityTable';
 // import UniversityModalManager from './components/UniversityModalManager';
 // import UniversityStaffView from './components/UniversityStaffView';
 
-const UniversityTable = lazy(() => import('./components/UniversityTable'));
-const UniversityModalManager = lazy(() => import('./components/UniversityModalManager'));
-const UniversityStaffView = lazy(() => import('./components/UniversityStaffView'));
-
+const UniversityTable = lazy(() => import("./components/UniversityTable"));
+const UniversityModalManager = lazy(() =>
+  import("./components/UniversityModalManager")
+);
+const UniversityStaffView = lazy(() =>
+  import("./components/UniversityStaffView")
+);
 
 // Custom Debounce Hook for Search Optimization
 function useDebounce(value, delay) {
@@ -31,25 +45,26 @@ function useDebounce(value, delay) {
 
 function University() {
   const { user, isLoggedIn } = useAuth();
-  const { showSuccess, showError, showWarning, showInfo } = useToast();
+  const { showSuccess, showError } = useToast();
   const { translateUniversity } = useNamespacedTranslation();
   const navigate = useNavigate();
 
   const [universities, setUniversities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedUniversity, setSelectedUniversity] = useState(null);
   const [modalState, setModalState] = useState({
     isOpen: false,
-    mode: 'view', // view, add, edit
+    mode: "view", // view, add, edit
   });
-  const [sortColumn, setSortColumn] = useState('name');
+  const [sortColumn, setSortColumn] = useState("name");
   const [sortAsc, setSortAsc] = useState(true);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // Check if user is admin or authority
-  const isAdminOrAuthority = user && (user.role === ROLES.ADMIN || user.role === ROLES.AUTHORITY);
+  const isAdminOrAuthority =
+    user && (user.role === ROLES.ADMIN || user.role === ROLES.AUTHORITY);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -74,7 +89,8 @@ function University() {
       setUniversities(data);
       setError(null);
     } catch (err) {
-      const errorMessage = err.message || translateUniversity('errorLoadingUniversities');
+      const errorMessage =
+        err.message || translateUniversity("errorLoadingUniversities");
       setError(errorMessage);
       showError(errorMessage);
     } finally {
@@ -111,19 +127,23 @@ function University() {
       if (isEditing) {
         savedUniversity = await editUniversity(formData);
         setUniversities((prev) =>
-          prev.map((uni) => (uni.id === savedUniversity.id ? savedUniversity : uni))
+          prev.map((uni) =>
+            uni.id === savedUniversity.id ? savedUniversity : uni
+          )
         );
-        showSuccess(translateUniversity('universityUpdated'));
+        showSuccess(translateUniversity("universityUpdated"));
       } else {
         savedUniversity = await addUniversity(formData);
         setUniversities((prev) => [...prev, savedUniversity]);
-        showSuccess(translateUniversity('universityAdded'));
+        showSuccess(translateUniversity("universityAdded"));
       }
       handleCloseModal();
     } catch (err) {
-      const errorMessage = err.message || (isEditing ? 
-        translateUniversity('errorUpdatingUniversity') : 
-        translateUniversity('errorAddingUniversity'));
+      const errorMessage =
+        err.message ||
+        (isEditing
+          ? translateUniversity("errorUpdatingUniversity")
+          : translateUniversity("errorAddingUniversity"));
       showError(errorMessage);
     }
   };
@@ -132,9 +152,10 @@ function University() {
     try {
       await deleteUniversity(universityId);
       setUniversities((prev) => prev.filter((uni) => uni.id !== universityId));
-      showSuccess(translateUniversity('universityDeleted'));
+      showSuccess(translateUniversity("universityDeleted"));
     } catch (err) {
-      const errorMessage = err.message || translateUniversity('errorDeletingUniversity');
+      const errorMessage =
+        err.message || translateUniversity("errorDeletingUniversity");
       showError(errorMessage);
       throw err; // Re-throw to let the modal handle it
     }
@@ -148,10 +169,10 @@ function University() {
   const sortedUniversities = useMemo(() => {
     const sorted = [...filteredUniversities];
     sorted.sort((a, b) => {
-      const valA = a[sortColumn] ?? '';
-      const valB = b[sortColumn] ?? '';
+      const valA = a[sortColumn] ?? "";
+      const valB = b[sortColumn] ?? "";
       const comparison =
-        typeof valA === 'number' && typeof valB === 'number'
+        typeof valA === "number" && typeof valB === "number"
           ? valA - valB
           : String(valA).localeCompare(String(valB));
       return sortAsc ? comparison : -comparison;
@@ -167,7 +188,10 @@ function University() {
       <div className="flex items-center gap-1">
         {label}
         {sortColumn === columnKey && (
-          <ArrowUpDown size={14} className={sortAsc ? '' : 'transform rotate-180'} />
+          <ArrowUpDown
+            size={14}
+            className={sortAsc ? "" : "transform rotate-180"}
+          />
         )}
       </div>
     </th>
@@ -177,7 +201,9 @@ function University() {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-lg text-gray-700">{translateUniversity('loadingUniversities')}</span>
+        <span className="ml-2 text-lg text-gray-700">
+          {translateUniversity("loadingUniversities")}
+        </span>
       </div>
     );
   }
@@ -188,7 +214,9 @@ function University() {
         <div className="flex items-start">
           <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">An error occurred</h3>
+            <h3 className="text-sm font-medium text-red-800">
+              An error occurred
+            </h3>
             <div className="mt-2 text-sm text-red-700">{error}</div>
           </div>
         </div>
@@ -202,7 +230,9 @@ function University() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">{translateUniversity('title')}</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        {translateUniversity("title")}
+      </h1>
 
       {/* Search and Add University Section */}
       <div className="flex justify-between items-center mb-6">
@@ -212,7 +242,7 @@ function University() {
           </div>
           <input
             type="text"
-            placeholder={translateUniversity('searchPlaceholder')}
+            placeholder={translateUniversity("searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -220,33 +250,33 @@ function University() {
         </div>
         {user && user.role === ROLES.AUTHORITY && (
           <button
-            onClick={() => handleOpenModal('add')}
+            onClick={() => handleOpenModal("add")}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <PlusCircle className="h-5 w-5 mr-1" />
-            <span>{translateUniversity('addUniversity')}</span>
+            <span>{translateUniversity("addUniversity")}</span>
           </button>
         )}
       </div>
 
       <UniversityTable
         universities={sortedUniversities}
-        onView={(uni) => handleOpenModal('view', uni)}
-        onEdit={(uni) => handleOpenModal('edit', uni)}
+        onView={(uni) => handleOpenModal("view", uni)}
+        onEdit={(uni) => handleOpenModal("edit", uni)}
         onDelete={handleDeleteUniversity}
         renderSortableHeader={renderSortableHeader}
       />
 
-        <UniversityModalManager
-          isOpen={modalState.isOpen}
-          onClose={handleCloseModal}
-          onSave={handleSaveUniversity}
-          universityData={selectedUniversity}
-          mode={modalState.mode}
-          userRole={user?.role}
-          loggedInUser={user}
-          onUniversityDeleted={handleDeleteUniversity}
-        />
+      <UniversityModalManager
+        isOpen={modalState.isOpen}
+        onClose={handleCloseModal}
+        onSave={handleSaveUniversity}
+        universityData={selectedUniversity}
+        mode={modalState.mode}
+        userRole={user?.role}
+        loggedInUser={user}
+        onUniversityDeleted={handleDeleteUniversity}
+      />
     </div>
   );
 }

@@ -10,12 +10,9 @@ import {
   University,
   School,
   Building,
-  CheckCircle,
-  XCircle,
   CalendarDays,
   AlertTriangle,
   Info,
-  Image,
   Edit,
   X,
   Save,
@@ -121,18 +118,21 @@ const ProfilePage = () => {
     }
   };
 
-  const DetailItem = ({ icon, label, value }) => (
-    <div className="flex items-center space-x-3 py-3 border-b border-blue-100 last:border-b-0">
-      <span className="text-blue-500">{icon}</span>
+  const DetailItem = ({ icon, label, value, value2 = null }) => (
+    <div className="flex items-start space-x-3 py-3 border-b border-blue-100 last:border-b-0">
+      <span className="text-blue-500 mt-1">{icon}</span>
       <div>
         <p className="text-sm text-blue-600">{label}</p>
-        <p className="text-md font-medium text-blue-800">
-          {value === null || value === undefined || value === "" ? (
-            <span className="italic text-blue-400">N/A</span>
-          ) : (
-            String(value)
-          )}
-        </p>
+        <div className="text-md font-medium text-blue-800">
+          <p>
+            {value === null || value === undefined || value === "" ? (
+              <span className="italic text-blue-400">N/A</span>
+            ) : (
+              String(value)
+            )}
+          </p>
+          {value2 && <p className="text-sm text-blue-700">{String(value2)}</p>}
+        </div>
       </div>
     </div>
   );
@@ -255,35 +255,7 @@ const ProfilePage = () => {
             label="Email Address"
             value={profileData.email}
           />
-          <DetailItem
-            icon={<Image className="w-5 h-5" />}
-            label="Profile Image"
-            value={
-              <div className="flex items-center space-x-3">
-                <img
-                  src={
-                    profileData.image_url ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      profileData.username || "Gest"
-                    )}&background=4f46e5&color=fff&size=48&rounded=true`
-                  }
-                  alt="Profile thumbnail"
-                  className="w-10 h-10 rounded-full object-cover border-2 border-blue-200"
-                  onError={(e) => {
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      profileData.username || "Gest"
-                    )}&background=4f46e5&color=fff&size=48&rounded=true`;
-                  }}
-                />
 
-                <span className="text-sm text-blue-600">
-                  {profileData.image_url
-                    ? "Custom profile image"
-                    : "Generated placeholder image"}
-                </span>
-              </div>
-            }
-          />
           <DetailItem
             icon={<CalendarDays className="w-5 h-5" />}
             label="Member Since"
@@ -301,29 +273,33 @@ const ProfilePage = () => {
               {profileData.authority_id && (
                 <DetailItem
                   icon={<Briefcase className="w-5 h-5" />}
-                  label="Authority ID"
-                  value={profileData.authority_id}
+                  label="Authority Identification"
+                  value={"ID: " + String(profileData.authority_id)}
+                  value2={"Name: " + String(profileData.authority_name)}
                 />
               )}
               {profileData.university_id && (
                 <DetailItem
                   icon={<University className="w-5 h-5" />}
-                  label="University ID"
-                  value={profileData.university_id}
+                  label="University Identification"
+                  value={"ID: " + String(profileData.university_id)}
+                  value2={"Name: " + String(profileData.university_name)}
                 />
               )}
               {profileData.college_id && (
                 <DetailItem
                   icon={<School className="w-5 h-5" />}
-                  label="College ID"
-                  value={profileData.college_id}
+                  label="College Identification"
+                  value={"ID: " + String(profileData.college_id)}
+                  value2={"Name: " + String(profileData.college_name)}
                 />
               )}
               {profileData.department_id && (
                 <DetailItem
                   icon={<Building className="w-5 h-5" />}
-                  label="Department ID"
-                  value={profileData.department_id}
+                  label="Department Identification"
+                  value={"ID: " + String(profileData.department_id)}
+                  value2={"Name: " + String(profileData.department_name)}
                 />
               )}
             </>

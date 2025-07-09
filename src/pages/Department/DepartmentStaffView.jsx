@@ -1,22 +1,45 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchMyDepartment, editDepartment } from "../../api/departmentAPI";
-import { 
-  Building2, Mail, Globe, MapPin, Phone, User, FileText, Calendar,
-  Pencil, X, Save, Loader2, AlertCircle, Shield, Briefcase, GraduationCap
+import {
+  Building2,
+  Mail,
+  Globe,
+  MapPin,
+  Phone,
+  User,
+  FileText,
+  Calendar,
+  Pencil,
+  X,
+  Save,
+  Loader2,
+  AlertCircle,
+  Shield,
+  Briefcase,
+  GraduationCap,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
-import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
+import { formatDisplayDate } from "../../utils/dateUtils";
 
 // --- Define field components outside DepartmentStaffView ---
 
-const TextField = ({ label, name, value, icon, editable = true, isEditing, onChangeInput }) => (
+const TextField = ({
+  label,
+  name,
+  value,
+  icon,
+  editable = true,
+  isEditing,
+  onChangeInput,
+}) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-    <div className="mt-1 p-2 bg-blue-50 rounded-md">
-      {icon}
-    </div>
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">{icon}</div>
     <div className="flex-1">
-      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">
+        {label}
+      </label>
       {isEditing && editable ? (
         <input
           type="text"
@@ -33,13 +56,20 @@ const TextField = ({ label, name, value, icon, editable = true, isEditing, onCha
   </div>
 );
 
-const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
+const TextAreaField = ({
+  label,
+  name,
+  value,
+  icon,
+  isEditing,
+  onChangeInput,
+}) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-    <div className="mt-1 p-2 bg-blue-50 rounded-md">
-      {icon}
-    </div>
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">{icon}</div>
     <div className="flex-1">
-      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">
+        {label}
+      </label>
       {isEditing ? (
         <textarea
           id={name}
@@ -50,7 +80,9 @@ const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput }) =
           className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition-all"
         />
       ) : (
-        <p className="text-gray-800 mt-1 whitespace-pre-line font-medium">{value || "-"}</p>
+        <p className="text-gray-800 mt-1 whitespace-pre-line font-medium">
+          {value || "-"}
+        </p>
       )}
     </div>
   </div>
@@ -58,11 +90,11 @@ const TextAreaField = ({ label, name, value, icon, isEditing, onChangeInput }) =
 
 const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
   <div className="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-    <div className="mt-1 p-2 bg-blue-50 rounded-md">
-      {icon}
-    </div>
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">{icon}</div>
     <div className="flex-1">
-      <label htmlFor={name} className="text-sm font-medium text-gray-500">{label}</label>
+      <label htmlFor={name} className="text-sm font-medium text-gray-500">
+        {label}
+      </label>
       {isEditing ? (
         <input
           type="url"
@@ -74,11 +106,15 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
           placeholder="https://"
         />
       ) : (
-        <a 
-          href={value || '#'}
-          target="_blank" 
+        <a
+          href={value || "#"}
+          target="_blank"
           rel="noopener noreferrer"
-          className={`mt-1 block font-medium ${value ? 'text-blue-600 hover:underline' : 'text-gray-800 cursor-default'}`}
+          className={`mt-1 block font-medium ${
+            value
+              ? "text-blue-600 hover:underline"
+              : "text-gray-800 cursor-default"
+          }`}
         >
           {value || "-"}
         </a>
@@ -89,14 +125,15 @@ const UrlField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
 
 const LogoField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
   <div className="col-span-2 flex items-start gap-3 bg-white p-6 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-    <div className="mt-1 p-2 bg-blue-50 rounded-md">
-      {icon}
-    </div>
+    <div className="mt-1 p-2 bg-blue-50 rounded-md">{icon}</div>
     <div className="flex-1">
-      <label htmlFor={name} className="text-sm font-medium text-gray-500 mb-3 block">{label}</label>
+      <label
+        htmlFor={name}
+        className="text-sm font-medium text-gray-500 mb-3 block"
+      >
+        {label}
+      </label>
       <div className="flex items-start gap-4">
-      
-        
         {/* Logo URL Input/Display */}
         <div className="flex-1">
           {isEditing ? (
@@ -111,7 +148,8 @@ const LogoField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
                 placeholder="https://example.com/logo.png"
               />
               <p className="text-xs text-gray-500 mt-2">
-                Enter the URL of your department logo. Supported formats: JPG, PNG, SVG
+                Enter the URL of your department logo. Supported formats: JPG,
+                PNG, SVG
               </p>
             </div>
           ) : (
@@ -127,12 +165,6 @@ const LogoField = ({ label, name, value, icon, isEditing, onChangeInput }) => (
   </div>
 );
 
-// --- End of field components ---
-
-/**
- * Staff view component for department information
- * Allows department users to edit their information
- */
 export default function DepartmentStaffView() {
   const { user } = useAuth();
   const { showSuccess, showError } = useToast();
@@ -152,18 +184,18 @@ export default function DepartmentStaffView() {
       setLoading(true);
       const data = await fetchMyDepartment();
       setDepartmentData(data);
-      setEditableData(JSON.parse(JSON.stringify(data))); 
-      console.log('Data loaded successfully:', data);
+      setEditableData(JSON.parse(JSON.stringify(data)));
+      console.log("Data loaded successfully:", data);
       setError(null);
     } catch (err) {
       console.error("Failed to load department data:", err);
-      const errorMessage = translateDepartment('staffView.errors.loadFailed');
+      const errorMessage = translateDepartment("staffView.errors.loadFailed");
       setError(errorMessage);
       showError(errorMessage);
     } finally {
       setLoading(false);
     }
-  }, [showError]);
+  }, []);
 
   useEffect(() => {
     loadDepartmentData();
@@ -171,9 +203,9 @@ export default function DepartmentStaffView() {
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
-    setEditableData(prev => ({
+    setEditableData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   }, []);
 
@@ -189,26 +221,25 @@ export default function DepartmentStaffView() {
     try {
       setSaving(true);
       if (!editableData) {
-        showError(translateDepartment('staffView.errors.noData'));
+        showError(translateDepartment("staffView.errors.noData"));
         setSaving(false);
         return;
-      }      // Exclude read-only fields (name, id, college_id) and department code from updates
+      } // Exclude read-only fields (name, id, college_id) and department code from updates
       // Department code should not be editable by department staff
       // eslint-disable-next-line no-unused-vars
       const { name, id, college_id, code, ...dataToSend } = editableData;
 
       console.log("Data being sent to backend for update:", dataToSend);
 
-      await editDepartment(dataToSend); 
+      await editDepartment(dataToSend);
 
-      showSuccess(translateDepartment('staffView.success.updated'));
+      showSuccess(translateDepartment("staffView.success.updated"));
       await loadDepartmentData();
-     
-      setIsEditing(false); 
 
+      setIsEditing(false);
     } catch (err) {
       console.error("Failed to update department:", err);
-      let errorMessage = translateDepartment('staffView.errors.updateFailed');
+      let errorMessage = translateDepartment("staffView.errors.updateFailed");
       if (err.response && err.response.data && err.response.data.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
@@ -220,48 +251,65 @@ export default function DepartmentStaffView() {
     }
   };
 
-  if (loading) return (
-    <div className="flex justify-center items-center h-[70vh]">
-      <div className="flex flex-col items-center">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="mt-4 text-gray-600 font-medium">{translateDepartment('staffView.loading')}</p>
-      </div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="max-w-3xl mx-auto p-6 bg-red-50 border border-red-100 rounded-lg mt-8">
-      <div className="flex items-start">
-        <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-        <div className="ml-3">
-          <h3 className="text-sm font-medium text-red-800">{translateDepartment('staffView.errorTitle')}</h3>
-          <div className="mt-2 text-sm text-red-700">{error}</div>
-        </div>
-      </div>
-    </div>
-  );
-
-  if (!departmentData) return (
-    <div className="max-w-3xl mx-auto p-6 bg-yellow-50 border border-yellow-100 rounded-lg mt-8">
-      <div className="flex items-start">
-        <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
-        <div className="ml-3">
-          <h3 className="text-sm font-medium text-yellow-800">{translateDepartment('staffView.notFoundTitle')}</h3>
-          <div className="mt-2 text-sm text-yellow-700">{translateDepartment('staffView.notFoundMessage')}</div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Use editableData when editing, otherwise departmentData. Fallback to departmentData if editableData is somehow null.
-  const displayData = isEditing ? (editableData || departmentData) : departmentData;
-  
-  // This check is an additional safeguard, though unlikely to be hit if departmentData is present.
-  if (!displayData) {
-    console.warn("Display data is null, check state logic for editableData initialization.");
+  if (loading)
     return (
       <div className="flex justify-center items-center h-[70vh]">
-        <p className="text-gray-600 font-medium">{translateDepartment('staffView.unavailable')}</p>
+        <div className="flex flex-col items-center">
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+          <p className="mt-4 text-gray-600 font-medium">
+            {translateDepartment("staffView.loading")}
+          </p>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="max-w-3xl mx-auto p-6 bg-red-50 border border-red-100 rounded-lg mt-8">
+        <div className="flex items-start">
+          <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-red-800">
+              {translateDepartment("staffView.errorTitle")}
+            </h3>
+            <div className="mt-2 text-sm text-red-700">{error}</div>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (!departmentData)
+    return (
+      <div className="max-w-3xl mx-auto p-6 bg-yellow-50 border border-yellow-100 rounded-lg mt-8">
+        <div className="flex items-start">
+          <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-yellow-800">
+              {translateDepartment("staffView.notFoundTitle")}
+            </h3>
+            <div className="mt-2 text-sm text-yellow-700">
+              {translateDepartment("staffView.notFoundMessage")}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+  // Use editableData when editing, otherwise departmentData. Fallback to departmentData if editableData is somehow null.
+  const displayData = isEditing
+    ? editableData || departmentData
+    : departmentData;
+
+  // This check is an additional safeguard, though unlikely to be hit if departmentData is present.
+  if (!displayData) {
+    console.warn(
+      "Display data is null, check state logic for editableData initialization."
+    );
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <p className="text-gray-600 font-medium">
+          {translateDepartment("staffView.unavailable")}
+        </p>
       </div>
     );
   }
@@ -274,24 +322,37 @@ export default function DepartmentStaffView() {
           <div className="absolute bottom-0 w-full transform translate-y-1/2">
             <div className="px-6 flex flex-col md:flex-row items-center">
               <div className="h-32 w-32 rounded-xl overflow-hidden bg-white border-4 border-white shadow-xl">
-                <img 
-                  src={ displayData.logo ||`https://picsum.photos/seed/${displayData.id}`} 
-                  alt={translateDepartment('staffView.logoAlt', { name: displayData.name || translateDepartment('staffView.defaultName') })}
+                <img
+                  src={
+                    displayData.logo ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      displayData.username || "Gest"
+                    )}&background=4f46e5&color=fff&size=48&rounded=true`
+                  }
+                  alt={translateDepartment("staffView.logoAlt", {
+                    name:
+                      displayData.name ||
+                      translateDepartment("staffView.defaultName"),
+                  })}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = `https://picsum.photos/seed/${displayData.id || 'department'}/300/300`;
+                    e.target.src = `https://picsum.photos/seed/${
+                      displayData.id || "department"
+                    }/300/300`;
                   }}
                 />
               </div>
             </div>
           </div>
         </div>
-        
+
         <div className="pt-20 pb-4 px-6">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div>                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <div>
+                {" "}
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {displayData.name}
                 </h1>
                 {displayData.college_name && (
@@ -305,17 +366,25 @@ export default function DepartmentStaffView() {
                   </div>
                 )}
               </div>
-              
+
               {isDepartmentRole && (
                 <div className="flex gap-2 mt-4 md:mt-0">
                   {isEditing ? (
-                    <>                      <button
+                    <>
+                      {" "}
+                      <button
                         onClick={handleSave}
                         disabled={saving}
                         className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
                       >
-                        {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                        {saving ? translateDepartment('staffView.saving') : translateDepartment('staffView.saveChanges')}
+                        {saving ? (
+                          <Loader2 className="animate-spin" size={18} />
+                        ) : (
+                          <Save size={18} />
+                        )}
+                        {saving
+                          ? translateDepartment("staffView.saving")
+                          : translateDepartment("staffView.saveChanges")}
                       </button>
                       <button
                         onClick={handleEditToggle}
@@ -323,7 +392,7 @@ export default function DepartmentStaffView() {
                         className="flex items-center gap-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md shadow transition-colors"
                       >
                         <X size={18} />
-                        {translateDepartment('staffView.cancel')}
+                        {translateDepartment("staffView.cancel")}
                       </button>
                     </>
                   ) : (
@@ -332,7 +401,7 @@ export default function DepartmentStaffView() {
                       className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow transition-colors"
                     >
                       <Pencil size={18} />
-                      {translateDepartment('staffView.editButton')}
+                      {translateDepartment("staffView.editButton")}
                     </button>
                   )}
                 </div>
@@ -345,110 +414,113 @@ export default function DepartmentStaffView() {
           {isEditing && isDepartmentRole && (
             <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
               <div className="flex items-start gap-3">
-                <AlertCircle className="text-blue-600 shrink-0 mt-1" size={20} />
+                <AlertCircle
+                  className="text-blue-600 shrink-0 mt-1"
+                  size={20}
+                />
                 <div>
-                  <h3 className="font-medium text-blue-800">{translateDepartment('staffView.editingTitle')}</h3>
+                  <h3 className="font-medium text-blue-800">
+                    {translateDepartment("staffView.editingTitle")}
+                  </h3>
                   <p className="text-blue-700 text-sm mt-1">
-                    {translateDepartment('staffView.editingMessage')}
+                    {translateDepartment("staffView.editingMessage")}
                   </p>
                 </div>
               </div>
             </div>
           )}
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Briefcase size={20} className="text-blue-600" />
-                {translateDepartment('staffView.sections.departmentInfo')}
+                {translateDepartment("staffView.sections.departmentInfo")}
               </h2>
               <div className="space-y-4">
-                <TextField 
-                  label={translateDepartment('staffView.fields.email')} 
-                  name="email" 
-                  value={displayData.email} 
-                  icon={<Mail className="text-blue-600" size={20} />} 
+                <TextField
+                  label={translateDepartment("staffView.fields.email")}
+                  name="email"
+                  value={displayData.email}
+                  icon={<Mail className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                <UrlField 
-                  label={translateDepartment('staffView.fields.website')} 
-                  name="website" 
-                  value={displayData.website} 
-                  icon={<Globe className="text-blue-600" size={20} />} 
+                <UrlField
+                  label={translateDepartment("staffView.fields.website")}
+                  name="website"
+                  value={displayData.website}
+                  icon={<Globe className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                <TextAreaField 
-                  label={translateDepartment('staffView.fields.address')} 
-                  name="address" 
-                  value={displayData.address} 
-                  icon={<MapPin className="text-blue-600" size={20} />} 
+                <TextAreaField
+                  label={translateDepartment("staffView.fields.address")}
+                  name="address"
+                  value={displayData.address}
+                  icon={<MapPin className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                <TextField 
-                  label={translateDepartment('staffView.fields.phone')} 
-                  name="phone" 
-                  value={displayData.phone} 
-                  icon={<Phone className="text-blue-600" size={20} />} 
+                <TextField
+                  label={translateDepartment("staffView.fields.phone")}
+                  name="phone"
+                  value={displayData.phone}
+                  icon={<Phone className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                
               </div>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex items-center gap-2">
                 <Shield size={20} className="text-blue-600" />
-                {translateDepartment('staffView.sections.academicDetails')}
+                {translateDepartment("staffView.sections.academicDetails")}
               </h2>
               <div className="space-y-4">
-                <TextField 
-                  label={translateDepartment('staffView.fields.head')} 
-                  name="head_name" 
-                  value={displayData.head_name} 
-                  icon={<User className="text-blue-600" size={20} />} 
+                <TextField
+                  label={translateDepartment("staffView.fields.head")}
+                  name="head_name"
+                  value={displayData.head_name}
+                  icon={<User className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                <TextField 
-                  label={translateDepartment('staffView.fields.established')} 
-                  name="since" 
-                  value={displayData.since} 
-                  icon={<Calendar className="text-blue-600" size={20} />} 
+                <TextField
+                  label={translateDepartment("staffView.fields.established")}
+                  name="since"
+                  value={formatDisplayDate(displayData.created_at, {
+                    format: "medium",
+                  })}
+                  icon={<Calendar className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                <TextField 
-                  label={translateDepartment('staffView.fields.programCount')} 
-                  name="program_count" 
-                  value={displayData.programs_count} 
-                  icon={<GraduationCap className="text-blue-600" size={20} />} 
+                <TextField
+                  label={translateDepartment("staffView.fields.programCount")}
+                  name="program_count"
+                  value={displayData.programs_count}
+                  icon={<GraduationCap className="text-blue-600" size={20} />}
                   editable={false}
                   isEditing={false}
                   onChangeInput={handleInputChange}
                 />
-                <TextAreaField 
-                  label={translateDepartment('staffView.fields.description')} 
-                  name="description" 
-                  value={displayData.description} 
-                  icon={<FileText className="text-blue-600" size={20} />} 
+                <TextAreaField
+                  label={translateDepartment("staffView.fields.description")}
+                  name="description"
+                  value={displayData.description}
+                  icon={<FileText className="text-blue-600" size={20} />}
                   isEditing={isEditing}
                   onChangeInput={handleInputChange}
                 />
-                
               </div>
-              
             </div>
-              {/* Logo Field - Spans 2 columns */}
-            <LogoField 
-              label={translateDepartment('staffView.fields.logo')} 
-              name="logo" 
-              value={displayData.logo} 
-              icon={<Building2 className="text-blue-600" size={20} />} 
+            {/* Logo Field - Spans 2 columns */}
+            <LogoField
+              label={translateDepartment("staffView.fields.logo")}
+              name="logo"
+              value={displayData.logo}
+              icon={<Building2 className="text-blue-600" size={20} />}
               isEditing={isEditing}
               onChangeInput={handleInputChange}
             />

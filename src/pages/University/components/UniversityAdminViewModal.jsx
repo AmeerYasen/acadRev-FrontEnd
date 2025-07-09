@@ -18,13 +18,12 @@ import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslatio
 import ConfirmDeleteDialog from "../../../components/ui/ConfirmDeleteDialog";
 import { deleteUniversity } from "../../../api/universityApi";
 import { ROLES } from "../../../constants";
+import { formatDisplayDate } from "../../../utils/dateUtils";
 
 export default function UniversityAdminViewModal({
   isOpen,
   onClose,
   universityData,
-  onEdit,
-  userRole,
   loggedInUser,
   onUniversityDeleted,
 }) {
@@ -45,16 +44,6 @@ export default function UniversityAdminViewModal({
     users: universityData.usersCount || Math.floor(Math.random() * 500) + 100,
     createdAt: universityData.createdAt || "2022-07-15T09:24:58.123Z",
     lastUpdated: universityData.lastUpdated || new Date().toISOString(),
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return translateUniversity("adminModal.noDate");
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   // Check if current user is authority and can delete university
@@ -141,17 +130,13 @@ export default function UniversityAdminViewModal({
           <h2 className="text-2xl font-bold text-gray-800">
             {universityData.name}
           </h2>
-          {universityData.abbreviation && (
-            <p className="text-gray-500 mt-1">
-              ({universityData.abbreviation})
-            </p>
-          )}
+
           <div className="flex items-center justify-center mt-2">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
               <Calendar className="w-3 h-3 mr-1" />
               {translateUniversity("adminModal.established", {
                 year:
-                  universityData.since ||
+                  formatDisplayDate(universityData.created_at) ||
                   translateUniversity("adminModal.notAvailable"),
               })}
             </span>
@@ -216,6 +201,7 @@ export default function UniversityAdminViewModal({
                       {universityData.email}
                     </a>
                   }
+                  translateFn={translateUniversity}
                 />
               )}
 
@@ -224,6 +210,7 @@ export default function UniversityAdminViewModal({
                   icon={<Phone className="w-4 h-4 text-gray-500" />}
                   label={translateUniversity("adminModal.contactLabels.phone")}
                   value={universityData.phone}
+                  translateFn={translateUniversity}
                 />
               )}
 
@@ -234,6 +221,7 @@ export default function UniversityAdminViewModal({
                     "adminModal.contactLabels.address"
                   )}
                   value={universityData.address}
+                  translateFn={translateUniversity}
                 />
               )}
 
@@ -254,45 +242,9 @@ export default function UniversityAdminViewModal({
                       <ExternalLink className="ml-1 w-3 h-3" />
                     </a>
                   }
+                  translateFn={translateUniversity}
                 />
               )}
-            </div>
-
-            {/* System information */}
-            <div className="mt-8">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                {translateUniversity("adminModal.systemInformation")}
-              </h3>
-
-              <div className="text-xs text-gray-500 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span>
-                    {translateUniversity("adminModal.systemLabels.created")}:
-                  </span>
-                  <span className="font-medium">
-                    {formatDate(mockStats.createdAt)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>
-                    {translateUniversity("adminModal.systemLabels.lastUpdated")}
-                    :
-                  </span>
-                  <span className="font-medium">
-                    {formatDate(mockStats.lastUpdated)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>
-                    {translateUniversity("adminModal.systemLabels.recordId")}:
-                  </span>
-                  <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
-                    {universityData.id ||
-                      translateUniversity("adminModal.notAvailable")}
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -316,6 +268,52 @@ export default function UniversityAdminViewModal({
                 </p>
               </div>
             )}
+          </div>
+
+          {/* System information */}
+          <div className="mt-8">
+            <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
+              <Clock className="w-4 h-4 mr-1" />
+              {translateUniversity("adminModal.systemInformation")}
+            </h3>
+
+            <div className="text-xs text-gray-500 space-y-2">
+              <div className="flex items-center justify-between">
+                <span>
+                  {translateUniversity("adminModal.systemLabels.created")}:
+                </span>
+                <span className="font-medium">
+                  {universityData.created_at
+                    ? formatDisplayDate(universityData.created_at, {
+                        format: "medium",
+                      })
+                    : formatDisplayDate(mockStats.createdAt, {
+                        format: "medium",
+                      })}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>
+                  {translateUniversity("adminModal.systemLabels.lastUpdated")}:
+                </span>
+                <span className="font-medium">
+                  {mockStats.lastUpdated
+                    ? formatDisplayDate(mockStats.lastUpdated, {
+                        format: "medium",
+                      })
+                    : translateUniversity("adminModal.noDate")}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>
+                  {translateUniversity("adminModal.systemLabels.recordId")}:
+                </span>
+                <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                  {universityData.id ||
+                    translateUniversity("adminModal.notAvailable")}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -362,14 +360,14 @@ export default function UniversityAdminViewModal({
 }
 
 // Helper component for displaying contact items
-function ContactItem({ icon, label, value }) {
+function ContactItem({ icon, label, value, translateFn }) {
   return (
     <div className="flex items-start">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div className="ml-3">
         <h4 className="text-xs font-medium text-gray-500">{label}</h4>
         <div className="text-sm text-gray-800">
-          {value || translateUniversity("adminModal.noData")}
+          {value || (translateFn ? translateFn("adminModal.noData") : "-")}
         </div>
       </div>
     </div>

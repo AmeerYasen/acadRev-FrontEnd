@@ -36,7 +36,6 @@ const DepartmentAdminView = ({
   // Role-based props
   isUniversityFixed,
   isCollegeUser,
-  userRole, // Added userRole to potentially control add button for other roles too
 }) => {
   const { translateDepartment } = useNamespacedTranslation();
   return (

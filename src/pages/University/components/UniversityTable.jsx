@@ -1,5 +1,6 @@
 import { Eye, Trash2, Edit } from "lucide-react";
 import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
+import { formatDisplayDate } from "../../../utils/dateUtils";
 
 function UniversityTable({
   universities = [], // Matches prop name from University.jsx
@@ -28,11 +29,7 @@ function UniversityTable({
               translateUniversity("table.headers.name"),
               "name"
             )}
-          {renderSortableHeader &&
-            renderSortableHeader(
-              translateUniversity("table.headers.country"),
-              "country"
-            )}
+
           {renderSortableHeader &&
             renderSortableHeader(
               translateUniversity("table.headers.email"),
@@ -78,18 +75,15 @@ function UniversityTable({
                 <div className="text-sm font-medium text-gray-900">
                   {uni.name || "-"}
                 </div>
-                <div className="text-xs text-gray-500">
-                  {uni.abbreviation || ""}
-                </div>
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600">
-                {uni.country || "-"}
-              </td>
+
               <td className="px-6 py-4 text-sm text-gray-600">
                 {uni.email || "-"}
               </td>
               <td className="px-6 py-4 text-sm text-gray-600">
-                {uni.since || "-"}
+                {uni.created_at
+                  ? formatDisplayDate(uni.created_at, { format: "short" })
+                  : "-"}
               </td>
               <td className="px-6 py-4">
                 {uni.website ? (

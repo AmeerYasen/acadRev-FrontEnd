@@ -20,7 +20,6 @@ const CollegeAdminView = ({
   collegeError,
   collegesLoading,
   filteredColleges,
-  universityCodeMap,
   openCollegePopup,
   onCollegeAdded,
   

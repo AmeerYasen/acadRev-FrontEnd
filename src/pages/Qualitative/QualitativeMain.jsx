@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from 'react-router-dom';
 
 // Context
-import { useAuth } from "../../context/AuthContext";
 
 // Components
 import QualitativeLayout from "./components/QualitativeLayout";

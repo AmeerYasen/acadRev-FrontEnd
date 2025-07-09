@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { ROLES,getRoleWeight } from '../../constants';
-import { 
-  fetchPrograms, 
-  fetchProgramsWithPagination, 
-  addProgram, 
-  editProgram, 
-  fetchProgramNamesByDepartment
-} from '../../api/programAPI';
-import { fetchUniversityNames } from '../../api/universityApi';
-import { fetchCollegeNamesByUniversity } from '../../api/collegeApi';
-import { fetchDepNamesByCollege } from '../../api/departmentAPI';
-import {useDebounce} from '../../hooks/useDebounce';
-import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
-import ProgramAdminView from './ProgramAdminView';
-import ProgramEditModal from './components/ProgramEditModal';
-import AddProgramModal from './components/AddProgramModal';
-import { useToast } from '../../context/ToastContext';
+import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { ROLES, getRoleWeight } from "../../constants";
+import {
+  fetchProgramsWithPagination,
+  addProgram,
+  editProgram,
+} from "../../api/programAPI";
+import { fetchUniversityNames } from "../../api/universityApi";
+import { fetchCollegeNamesByUniversity } from "../../api/collegeApi";
+import { fetchDepNamesByCollege } from "../../api/departmentAPI";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
+import ProgramAdminView from "./ProgramAdminView";
+import ProgramEditModal from "./components/ProgramEditModal";
+import AddProgramModal from "./components/AddProgramModal";
+import { useToast } from "../../context/ToastContext";
 
 // Main Program component
 const Program = () => {
@@ -33,18 +31,18 @@ const Program = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  
+  const { showSuccess, showError } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+
   // Filter states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUniversity, setSelectedUniversity] = useState('');
-  const [selectedCollege, setSelectedCollege] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState('');
-  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUniversity, setSelectedUniversity] = useState("");
+  const [selectedCollege, setSelectedCollege] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
   // Debounced search term with 500ms delay
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  
+
   const [itemsPerPage, setItemsPerPage] = useState(12);
 
   // Modal State
@@ -56,16 +54,17 @@ const Program = () => {
   // Pagination control flags
   const [hasPrevPage, setHasPrevPage] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
-  
+
   // Determine if filters should be fixed based on user role
-  const isUniversityFixed = userRole === ROLES.UNIVERSITY && user?.university_id;
+  const isUniversityFixed =
+    userRole === ROLES.UNIVERSITY && user?.university_id;
   const isCollegeUser = userRole === ROLES.COLLEGE && user?.college_id;
   const isDepartmentUser = userRole === ROLES.DEPARTMENT && user?.department_id;
 
   const fetchUniversitiesList = useCallback(async () => {
     try {
       const names = await fetchUniversityNames();
-      setUniversities(names.map(uni => ({ id: uni.id, name: uni.name })));
+      setUniversities(names.map((uni) => ({ id: uni.id, name: uni.name })));
     } catch (err) {
       setError(err.message);
       setUniversities([]);
@@ -75,36 +74,36 @@ const Program = () => {
   const fetchCollegesList = useCallback(async (universityId) => {
     if (!universityId) {
       setColleges([]);
-      setSelectedCollege('');
+      setSelectedCollege("");
       setDepartments([]);
-      setSelectedDepartment('');
+      setSelectedDepartment("");
       return;
     }
     try {
       const names = await fetchCollegeNamesByUniversity(universityId);
-      setColleges(names.map(col => ({ id: col.id, name: col.name })));
+      setColleges(names.map((col) => ({ id: col.id, name: col.name })));
     } catch (err) {
       setError(err.message);
       setColleges([]);
-      setSelectedCollege('');
+      setSelectedCollege("");
       setDepartments([]);
-      setSelectedDepartment('');
+      setSelectedDepartment("");
     }
   }, []);
 
   const fetchDepartmentsList = useCallback(async (collegeId) => {
     if (!collegeId) {
       setDepartments([]);
-      setSelectedDepartment('');
+      setSelectedDepartment("");
       return;
     }
     try {
       const names = await fetchDepNamesByCollege(collegeId);
-      setDepartments(names.map(dept => ({ id: dept.id, name: dept.name })));
+      setDepartments(names.map((dept) => ({ id: dept.id, name: dept.name })));
     } catch (err) {
       setError(err.message);
       setDepartments([]);
-      setSelectedDepartment('');
+      setSelectedDepartment("");
     }
   }, []);
 
@@ -113,12 +112,12 @@ const Program = () => {
     if (isDepartmentUser && user?.department_id) {
       // Case 1: User is a Department User - fix all filters
       setSelectedDepartment(user.department_id.toString());
-      setSelectedCollege(user.college_id?.toString() || '');
-      setSelectedUniversity(user.university_id?.toString() || '');
+      setSelectedCollege(user.college_id?.toString() || "");
+      setSelectedUniversity(user.university_id?.toString() || "");
     } else if (isCollegeUser && user?.college_id) {
       // Case 2: User is a College User - fix university and college
       setSelectedCollege(user.college_id.toString());
-      setSelectedUniversity(user.university_id?.toString() || '');
+      setSelectedUniversity(user.university_id?.toString() || "");
       fetchDepartmentsList(user.college_id);
     } else if (isUniversityFixed && user?.university_id) {
       // Case 3: University is fixed
@@ -128,7 +127,17 @@ const Program = () => {
       // Case 4: No fixed filters (admin/authority)
       fetchUniversitiesList();
     }
-  }, [isDepartmentUser, isCollegeUser, isUniversityFixed, user?.university_id, user?.college_id, user?.department_id, fetchUniversitiesList, fetchCollegesList, fetchDepartmentsList]);
+  }, [
+    isDepartmentUser,
+    isCollegeUser,
+    isUniversityFixed,
+    user?.university_id,
+    user?.college_id,
+    user?.department_id,
+    fetchUniversitiesList,
+    fetchCollegesList,
+    fetchDepartmentsList,
+  ]);
 
   // Effect to fetch colleges when selectedUniversity changes
   useEffect(() => {
@@ -137,12 +146,18 @@ const Program = () => {
         fetchCollegesList(selectedUniversity);
       } else {
         setColleges([]);
-        setSelectedCollege('');
+        setSelectedCollege("");
         setDepartments([]);
-        setSelectedDepartment('');
+        setSelectedDepartment("");
       }
     }
-  }, [selectedUniversity, isUniversityFixed, isCollegeUser, isDepartmentUser, fetchCollegesList]);
+  }, [
+    selectedUniversity,
+    isUniversityFixed,
+    isCollegeUser,
+    isDepartmentUser,
+    fetchCollegesList,
+  ]);
 
   // Effect to fetch departments when selectedCollege changes
   useEffect(() => {
@@ -151,76 +166,97 @@ const Program = () => {
         fetchDepartmentsList(selectedCollege);
       } else {
         setDepartments([]);
-        setSelectedDepartment('');
+        setSelectedDepartment("");
       }
     }
   }, [selectedCollege, isCollegeUser, isDepartmentUser, fetchDepartmentsList]);
 
   // Memoized fetchPrograms function
-  const fetchProgramsData = useCallback(async (pageToFetch) => {
-    setLoading(true);
-    setError(null);
-    let determinedPage = pageToFetch;
+  const fetchProgramsData = useCallback(
+    async (pageToFetch) => {
+      setLoading(true);
+      setError(null);
+      let determinedPage = pageToFetch;
 
-    try {
-      const options = {};
-      if (debouncedSearchTerm) {
-        options.search = debouncedSearchTerm;
-      }
+      try {
+        const options = {};
+        if (debouncedSearchTerm) {
+          options.search = debouncedSearchTerm;
+        }
 
-      let universityToFilter = selectedUniversity;
-      let collegeToFilter = selectedCollege;
-      let departmentToFilter = selectedDepartment;
+        let universityToFilter = selectedUniversity;
+        let collegeToFilter = selectedCollege;
+        let departmentToFilter = selectedDepartment;
 
-      if (isDepartmentUser && user?.department_id) {
-        departmentToFilter = user.department_id;
-        collegeToFilter = user.college_id;
-        universityToFilter = user.university_id;
-      } else if (isCollegeUser && user?.college_id) {
-        collegeToFilter = user.college_id;
-        universityToFilter = user.university_id;
-      } else if (isUniversityFixed && user?.university_id) {
-        universityToFilter = user.university_id;
-      }
-      
-      if (universityToFilter) {
-        options.university_id = universityToFilter;
-      }
-      if (collegeToFilter) {
-        options.college_id = collegeToFilter;
-      }
-      if (departmentToFilter) {
-        options.department_id = departmentToFilter;
-      }
+        if (isDepartmentUser && user?.department_id) {
+          departmentToFilter = user.department_id;
+          collegeToFilter = user.college_id;
+          universityToFilter = user.university_id;
+        } else if (isCollegeUser && user?.college_id) {
+          collegeToFilter = user.college_id;
+          universityToFilter = user.university_id;
+        } else if (isUniversityFixed && user?.university_id) {
+          universityToFilter = user.university_id;
+        }
 
-      const result = await fetchProgramsWithPagination(determinedPage, itemsPerPage, options);
-      
-      setPrograms(result.data);
-      setTotalRecords(result.pagination.totalRecords);
-      setTotalPages(result.pagination.totalPages);
-      setHasPrevPage(result.pagination.hasPrevPage);
-      setHasNextPage(result.pagination.hasNextPage);
-      setCurrentPage(result.pagination.currentPage);
-      
-      return result.pagination.currentPage;
-    } catch (err) {
-      setError(err.message);
-      setPrograms([]);
-      setTotalRecords(0);
-      setTotalPages(0);
-      setHasPrevPage(false);
-      setHasNextPage(false);
+        if (universityToFilter) {
+          options.university_id = universityToFilter;
+        }
+        if (collegeToFilter) {
+          options.college_id = collegeToFilter;
+        }
+        if (departmentToFilter) {
+          options.department_id = departmentToFilter;
+        }
+
+        const result = await fetchProgramsWithPagination(
+          determinedPage,
+          itemsPerPage,
+          options
+        );
+
+        setPrograms(result.data);
+        setTotalRecords(result.pagination.totalRecords);
+        setTotalPages(result.pagination.totalPages);
+        setHasPrevPage(result.pagination.hasPrevPage);
+        setHasNextPage(result.pagination.hasNextPage);
+        setCurrentPage(result.pagination.currentPage);
+
+        return result.pagination.currentPage;
+      } catch (err) {
+        setError(err.message);
+        setPrograms([]);
+        setTotalRecords(0);
+        setTotalPages(0);
+        setHasPrevPage(false);
+        setHasNextPage(false);
+        return determinedPage;
+      } finally {
+        setLoading(false);
+      }
       return determinedPage;
-    } finally {
-      setLoading(false);
-    }
-    return determinedPage;
-  }, [debouncedSearchTerm, selectedUniversity, selectedCollege, selectedDepartment, itemsPerPage, isDepartmentUser, isCollegeUser, isUniversityFixed, user]);
+    },
+    [
+      debouncedSearchTerm,
+      selectedUniversity,
+      selectedCollege,
+      selectedDepartment,
+      itemsPerPage,
+      isDepartmentUser,
+      isCollegeUser,
+      isUniversityFixed,
+      user,
+    ]
+  );
 
   // Handle page changes from the pagination component
   const handlePageChange = (pageNumber) => {
     const numericPageNumber = Number(pageNumber);
-    if (numericPageNumber >= 1 && numericPageNumber <= totalPages && numericPageNumber !== currentPage) {
+    if (
+      numericPageNumber >= 1 &&
+      numericPageNumber <= totalPages &&
+      numericPageNumber !== currentPage
+    ) {
       setCurrentPage(numericPageNumber);
     }
   };
@@ -239,19 +275,19 @@ const Program = () => {
 
   // Handle filter reset
   const handleReset = () => {
-    setSearchTerm('');
+    setSearchTerm("");
     // Only reset filters if not fixed by role
     if (!isUniversityFixed && !isCollegeUser && !isDepartmentUser) {
-      setSelectedUniversity('');
-      setSelectedCollege('');
-      setSelectedDepartment('');
+      setSelectedUniversity("");
+      setSelectedCollege("");
+      setSelectedDepartment("");
     }
     if (isUniversityFixed && !isCollegeUser && !isDepartmentUser) {
-      setSelectedCollege('');
-      setSelectedDepartment('');
+      setSelectedCollege("");
+      setSelectedDepartment("");
     }
     if (isCollegeUser && !isDepartmentUser) {
-      setSelectedDepartment('');
+      setSelectedDepartment("");
     }
   };
 
@@ -262,12 +298,24 @@ const Program = () => {
 
   // Handle changes to filters - now resets to page 1 if not already there
   useEffect(() => {
-    if (currentPage !== 1 && (debouncedSearchTerm || selectedUniversity || selectedCollege || selectedDepartment)) {
+    if (
+      currentPage !== 1 &&
+      (debouncedSearchTerm ||
+        selectedUniversity ||
+        selectedCollege ||
+        selectedDepartment)
+    ) {
       setCurrentPage(1);
     } else if (currentPage === 1) {
       fetchProgramsData(1);
     }
-  }, [debouncedSearchTerm, selectedUniversity, selectedCollege, selectedDepartment, fetchProgramsData]);
+  }, [
+    debouncedSearchTerm,
+    selectedUniversity,
+    selectedCollege,
+    selectedDepartment,
+    fetchProgramsData,
+  ]);
 
   const openProgramModal = (program) => {
     setCurrentProgramToEdit(program);
@@ -280,11 +328,11 @@ const Program = () => {
   };
 
   const openAddProgramModal = () => {
-    setCurrentProgramToAdd({ 
-      name: '', 
-      university_id: selectedUniversity, 
+    setCurrentProgramToAdd({
+      name: "",
+      university_id: selectedUniversity,
       college_id: selectedCollege,
-      department_id: selectedDepartment 
+      department_id: selectedDepartment,
     });
     setIsAddModalOpen(true);
   };
@@ -294,19 +342,34 @@ const Program = () => {
     setCurrentProgramToAdd(null);
   };
 
+  const handleDeleteProgram = async (deletedProgramId) => {
+    try {
+      // Refresh the programs list after deletion
+      await fetchProgramsData(currentPage);
+      // Success message is already shown in the modal, so we don't show it again here
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message;
+      setError(errorMessage);
+      showError(translatePrograms("errors.deleteError"));
+    }
+  };
+
   const handleAddProgram = async (newData) => {
     try {
       await addProgram(newData);
+      showSuccess(translatePrograms("messages.addSuccess"));
       await fetchProgramsData(currentPage);
       closeAddProgramModal();
     } catch (err) {
-      setError(err.message);
+      const errorMessage = err.response?.data?.message || err.message;
+      setError(errorMessage);
+      showError(`${translatePrograms("errors.createError")}: ${errorMessage}`);
     }
   };
 
   const handleUpdateProgram = async (updatedData) => {
     if (!currentProgramToEdit || !currentProgramToEdit.id) {
-      setError('No program selected for editing');
+      setError("No program selected for editing");
       return;
     }
     try {
@@ -317,15 +380,23 @@ const Program = () => {
       setError(err.message);
     }
   };
-  
+
   // Determine view based on user role
-  const canAdminView = [ROLES.ADMIN, ROLES.AUTHORITY, ROLES.UNIVERSITY, ROLES.COLLEGE, ROLES.DEPARTMENT].includes(userRole);
+  const canAdminView = [
+    ROLES.ADMIN,
+    ROLES.AUTHORITY,
+    ROLES.UNIVERSITY,
+    ROLES.COLLEGE,
+    ROLES.DEPARTMENT,
+  ].includes(userRole);
 
   // Show loading screen only on initial load
   if (loading && programs.length === 0) {
-    return <div className="flex justify-center items-center h-screen">
+    return (
+      <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600"></div>
-    </div>;
+      </div>
+    );
   }
 
   if (canAdminView) {
@@ -365,7 +436,6 @@ const Program = () => {
           userRole={userRole}
           roleWeight={roleWeight}
           roles={ROLES}
-
         />
         {isEditModalOpen && currentProgramToEdit && (
           <ProgramEditModal
@@ -373,6 +443,7 @@ const Program = () => {
             program={currentProgramToEdit}
             onClose={closeProgramModal}
             onUpdate={handleUpdateProgram}
+            onProgramDeleted={handleDeleteProgram}
             userRole={userRole}
           />
         )}
@@ -382,9 +453,25 @@ const Program = () => {
             onClose={closeAddProgramModal}
             onAddProgram={handleAddProgram}
             userRole={userRole}
-            departmentId={isDepartmentUser ? user?.department_id : selectedDepartment}
-            collegeId={isDepartmentUser ? user?.college_id : (isCollegeUser ? user?.college_id : selectedCollege)}
-            universityId={isDepartmentUser ? user?.university_id : (isCollegeUser ? user?.university_id : (isUniversityFixed ? user?.university_id : selectedUniversity))}
+            departmentId={
+              isDepartmentUser ? user?.department_id : selectedDepartment
+            }
+            collegeId={
+              isDepartmentUser
+                ? user?.college_id
+                : isCollegeUser
+                ? user?.college_id
+                : selectedCollege
+            }
+            universityId={
+              isDepartmentUser
+                ? user?.university_id
+                : isCollegeUser
+                ? user?.university_id
+                : isUniversityFixed
+                ? user?.university_id
+                : selectedUniversity
+            }
           />
         )}
       </>
@@ -393,8 +480,12 @@ const Program = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">{translatePrograms('errors.accessDenied')}</h2>
-          <p className="text-gray-600">{translatePrograms('errors.noPermission')}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {translatePrograms("errors.accessDenied")}
+          </h2>
+          <p className="text-gray-600">
+            {translatePrograms("errors.noPermission")}
+          </p>
         </div>
       </div>
     );

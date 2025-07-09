@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, AlertTriangle } from 'lucide-react';
+import React, { useState } from "react";
+import { X, AlertTriangle } from "lucide-react";
 
 /**
  * Confirmation dialog for deleting resources, similar to GitHub repository deletion
@@ -22,14 +22,14 @@ function ConfirmDeleteDialog({
   resourceName = "",
   confirmationText = "",
   confirmButtonText = "Delete",
-  isLoading = false
+  isLoading = false,
 }) {
-  const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (inputValue !== confirmationText) {
       setError(`Please type "${confirmationText}" to confirm deletion.`);
@@ -40,21 +40,27 @@ function ConfirmDeleteDialog({
       await onConfirm();
       handleClose();
     } catch (err) {
-      setError(err.message || 'Failed to delete. Please try again.');
+      setError(err.message || "Failed to delete. Please try again.");
     }
   };
 
   const handleClose = () => {
-    setInputValue('');
-    setError('');
+    setInputValue("");
+    setError("");
     onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex justify-center items-center z-200 p-4 transition-opacity duration-300">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md relative animate-fade-in-up border border-red-200">
+    <div
+      className="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex justify-center items-center z-200 p-4 transition-opacity duration-300"
+      onClick={handleClose}
+    >
+      <div
+        className="bg-white rounded-lg shadow-xl w-full max-w-md relative animate-fade-in-up border border-red-200"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
@@ -92,8 +98,15 @@ function ConfirmDeleteDialog({
           {/* Confirmation input */}
           {confirmationText && (
             <div>
-              <label htmlFor="confirm-input" className="block text-sm font-medium text-gray-700 mb-2">
-                Type <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-600">{confirmationText}</span> to confirm deletion:
+              <label
+                htmlFor="confirm-input"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Type{" "}
+                <span className="font-mono bg-gray-100 px-1 py-0.5 rounded text-red-600">
+                  {confirmationText}
+                </span>{" "}
+                to confirm deletion:
               </label>
               <input
                 id="confirm-input"
@@ -101,7 +114,7 @@ function ConfirmDeleteDialog({
                 value={inputValue}
                 onChange={(e) => {
                   setInputValue(e.target.value);
-                  setError('');
+                  setError("");
                 }}
                 placeholder={confirmationText}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
@@ -109,9 +122,7 @@ function ConfirmDeleteDialog({
                 autoComplete="off"
                 spellCheck={false}
               />
-              {error && (
-                <p className="mt-1 text-sm text-red-600">{error}</p>
-              )}
+              {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
             </div>
           )}
 
@@ -127,7 +138,10 @@ function ConfirmDeleteDialog({
             </button>
             <button
               type="submit"
-              disabled={isLoading || (confirmationText && inputValue !== confirmationText)}
+              disabled={
+                isLoading ||
+                (confirmationText && inputValue !== confirmationText)
+              }
               className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isLoading && (

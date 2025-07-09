@@ -1,6 +1,6 @@
 // src/api/programAPI.js
-import { apiFetch } from './apiConfig';
-import { ENDPOINTS } from '../constants';
+import { apiFetch } from "./apiConfig";
+import { ENDPOINTS } from "../constants";
 
 /**
  * Fetches all programs.
@@ -10,11 +10,13 @@ export const fetchPrograms = async () => {
   try {
     const response = await apiFetch(ENDPOINTS.PROGRAMS.GET_ALL);
     if (!Array.isArray(response)) {
-      throw new Error('Invalid data format received from server for programs list');
+      throw new Error(
+        "Invalid data format received from server for programs list"
+      );
     }
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch programs');
+    throw new Error(error.message || "Failed to fetch programs");
   }
 };
 
@@ -26,12 +28,12 @@ export const fetchPrograms = async () => {
 export const addProgram = async (programData) => {
   try {
     const response = await apiFetch(ENDPOINTS.PROGRAMS.CREATE, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(programData),
     });
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to add program');
+    throw new Error(error.message || "Failed to add program");
   }
 };
 
@@ -43,15 +45,15 @@ export const addProgram = async (programData) => {
 export const editProgram = async (programData) => {
   try {
     if (!programData || !programData.id) {
-      throw new Error('Program ID is required for editing');
+      throw new Error("Program ID is required for editing");
     }
     const response = await apiFetch(ENDPOINTS.PROGRAMS.UPDATE(programData.id), {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(programData),
     });
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to update program');
+    throw new Error(error.message || "Failed to update program");
   }
 };
 
@@ -62,11 +64,11 @@ export const editProgram = async (programData) => {
  */
 export const deleteProgram = async (programId) => {
   try {
-    await apiFetch(ENDPOINTS.PROGRAMS.DELETE(programId), {
-      method: 'DELETE',
+    await apiFetch(ENDPOINTS.PROGRAMS.DELETE_PROGRAM(programId), {
+      method: "DELETE",
     });
   } catch (error) {
-    throw new Error(error.message || 'Failed to delete program');
+    throw new Error(error.message || "Failed to delete program");
   }
 };
 
@@ -80,7 +82,7 @@ export const fetchProgramById = async (programId) => {
     const response = await apiFetch(ENDPOINTS.PROGRAMS.GET_BY_ID(programId));
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch program');
+    throw new Error(error.message || "Failed to fetch program");
   }
 };
 
@@ -93,7 +95,7 @@ export const fetchMyProgram = async () => {
     const response = await apiFetch(ENDPOINTS.PROGRAMS.MY_PROGRAM);
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch your program');
+    throw new Error(error.message || "Failed to fetch your program");
   }
 };
 
@@ -105,11 +107,13 @@ export const fetchProgramsByDepartment = async () => {
   try {
     const response = await apiFetch(ENDPOINTS.PROGRAMS.BY_DEPARTMENT);
     if (!Array.isArray(response)) {
-      throw new Error('Invalid data format received from server for department programs list');
+      throw new Error(
+        "Invalid data format received from server for department programs list"
+      );
     }
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch department programs');
+    throw new Error(error.message || "Failed to fetch department programs");
   }
 };
 
@@ -121,15 +125,21 @@ export const fetchProgramsByDepartment = async () => {
 export const fetchProgramNamesByDepartment = async (departmentId) => {
   try {
     if (!departmentId) {
-      throw new Error('Department ID is required to fetch programs');
+      throw new Error("Department ID is required to fetch programs");
     }
-    const response = await apiFetch(ENDPOINTS.PROGRAMS.GET_NAMES_BY_DEPARTMENT_ID(departmentId));
+    const response = await apiFetch(
+      ENDPOINTS.PROGRAMS.GET_NAMES_BY_DEPARTMENT_ID(departmentId)
+    );
     if (!Array.isArray(response)) {
-      throw new Error('Invalid data format received from server for program names list');
+      throw new Error(
+        "Invalid data format received from server for program names list"
+      );
     }
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch program names by department ID');
+    throw new Error(
+      error.message || "Failed to fetch program names by department ID"
+    );
   }
 };
 
@@ -140,34 +150,43 @@ export const fetchProgramNamesByDepartment = async (departmentId) => {
  * @param {Object} options - Additional query options
  * @returns {Promise<Object>} Paginated programs response
  */
-export const fetchProgramsWithPagination = async (page = 1, perPage = 20, options = {}) => {
+export const fetchProgramsWithPagination = async (
+  page = 1,
+  perPage = 20,
+  options = {}
+) => {
   try {
     let endpoint = ENDPOINTS.PROGRAMS.PAGINATION(page, perPage);
     const queryParams = new URLSearchParams();
-    
+
     if (options.department_id) {
-      queryParams.append('department_id', options.department_id);
+      queryParams.append("department_id", options.department_id);
     }
     if (options.college_id) {
-      queryParams.append('college_id', options.college_id);
+      queryParams.append("college_id", options.college_id);
     }
     if (options.university_id) {
-      queryParams.append('university_id', options.university_id);
+      queryParams.append("university_id", options.university_id);
     }
     if (options.search) {
-      queryParams.append('search', options.search);
+      queryParams.append("search", options.search);
     }
 
     const queryString = queryParams.toString();
     if (queryString) {
       endpoint += `&${queryString}`;
     }
-    
+
     console.log(`Fetching paginated programs from endpoint: ${endpoint}`);
     const response = await apiFetch(endpoint);
 
     // Check if the response is successful and has the expected structure
-    if (response && response.success && Array.isArray(response.data) && response.pagination) {
+    if (
+      response &&
+      response.success &&
+      Array.isArray(response.data) &&
+      response.pagination
+    ) {
       return {
         data: response.data,
         pagination: {
@@ -182,12 +201,18 @@ export const fetchProgramsWithPagination = async (page = 1, perPage = 20, option
       };
     } else {
       // Log the unexpected structure for debugging
-      console.log('Paginated programs response structure was unexpected or request failed:', response);
+      console.log(
+        "Paginated programs response structure was unexpected or request failed:",
+        response
+      );
       // Throw an error or return a default structure
-      throw new Error(response?.message || 'Invalid data format received from server for paginated programs');
+      throw new Error(
+        response?.message ||
+          "Invalid data format received from server for paginated programs"
+      );
     }
   } catch (error) {
     // Ensure the error message is propagated
-    throw new Error(error.message || 'Failed to fetch paginated programs');
+    throw new Error(error.message || "Failed to fetch paginated programs");
   }
 };

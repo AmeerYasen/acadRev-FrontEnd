@@ -17,7 +17,33 @@
   },
   "account": {
     "title": "Account Settings",
-    "comingSoon": "Account settings are coming soon"
+    "password": {
+      "title": "Change Password",
+      "description": "Update your account password for better security",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "requirements": {
+        "title": "Password Requirements:",
+        "minLength": "At least 8 characters long",
+        "match": "Passwords match"
+      },
+      "button": {
+        "change": "Change Password",
+        "changing": "Changing..."
+      },
+      "errors": {
+        "required": "This field is required",
+        "minLength": "Password must be at least 8 characters long",
+        "confirmRequired": "Please confirm your password",
+        "noMatch": "Passwords do not match"
+      },
+      "messages": {
+        "success": "Password changed successfully!",
+        "error": "Failed to change password. Please try again."
+      }
+    }
   },
   "notifications": {
     "title": "Notification Settings",

@@ -43,7 +43,7 @@ const CollegeCard = ({ college, universityCode, onClick }) => {
           <div></div>{" "}
           {/* Empty div to push departments count to the right if no other info */}
           <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-text-muted">
-            {college.departments?.length || 0}{" "}
+            {college.department_count || 0}{" "}
             {translateCollege("card.departments")}
           </span>
         </div>

@@ -146,6 +146,8 @@
       "addProgram": "Add Program",
       "creating": "Creating..."
     },
+    "deleteTitle": "Delete Program",
+    "deleteWarning": "This action cannot be undone. This will permanently delete the program and all associated data.",
     "assessmentTools": {
       "title": "Assessment Tools",
       "quantitativeIndicators": "Quantitative Indicators",
