@@ -57,5 +57,43 @@
   "success": {
     "evaluationSaved": "Evaluation saved successfully",
     "responseUpdated": "Response updated successfully"
+  },
+  "evidencePopup": {
+    "title": "Evidence Repository",
+    "domainLabel": "Domain",
+    "indicatorLabel": "Indicator",
+    "responseMustBeSaved": "Response must be saved before uploading evidence",
+    "readyToUpload": "Ready to upload evidence",
+    "uploadedEvidence": "Uploaded Evidence",
+    "loading": "Loading...",
+    "noEvidenceFound": "No Evidence Found",
+    "noEvidenceDescription": "No evidence files have been uploaded for this indicator yet.",
+    "uploadNewEvidence": "Upload New Evidence",
+    "saveResponseFirst": "Please save your response first before uploading evidence.",
+    "fileUploadRestricted": "File upload is restricted to department users only. You can view and download existing evidence files.",
+    "fileUploadRestrictedShort": "File upload is restricted to department users",
+    "dragAndDrop": "Drag and drop files here, or click to browse",
+    "chooseFiles": "Choose Files",
+    "supportedFormats": "Supports: PDF, DOC, DOCX, JPG, PNG, TXT",
+    "selectedFiles": "Selected Files",
+    "uploading": "Uploading...",
+    "uploaded": "Uploaded",
+    "failed": "Failed",
+    "dismiss": "Dismiss",
+    "downloading": "Downloading...",
+    "open": "Open",
+    "download": "Download",
+    "fileTypes": {
+      "link": "Link",
+      "image": "Image",
+      "pdf": "PDF",
+      "file": "File"
+    },
+    "errors": {
+      "loadEvidence": "Failed to load evidence files",
+      "uploadFailed": "Failed to upload",
+      "departmentOnly": "File upload is restricted to department users only",
+      "downloadFailed": "Failed to download"
+    }
   }
 }

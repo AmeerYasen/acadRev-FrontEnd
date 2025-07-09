@@ -14,6 +14,8 @@ import { Progress } from "../../../components/ui/progress";
 import { uploadEvidence } from "../../../api/qualitativeAPI";
 import EvidencePopup from "./EvidencePopup";
 import { useToast } from "../../../context/ToastContext";
+import { useAuth } from "../../../context/AuthContext";
+import { ROLES } from "../../../constants";
 import { useNamespacedTranslation } from "../../../hooks/useNamespacedTranslation";
 import {
   getLocalizedText,
@@ -36,8 +38,13 @@ const EvaluationModal = React.memo(
     handleRemoveResponse,
   }) => {
     const { showToast } = useToast();
+    const { user } = useAuth();
     const { translateQualitative, currentLanguage } =
       useNamespacedTranslation();
+    
+    // Check if user has department role for enabling/disabling buttons
+    const isDepartmentUser = user?.role === ROLES.DEPARTMENT;
+    
     const [showNotesFor, setShowNotesFor] = useState({}); // Track which indicators have notes visible
     const [selectedFiles, setSelectedFiles] = useState({}); // Track multiple selected files per indicator
     const [uploadStatus, setUploadStatus] = useState({}); // Track upload status per indicator
@@ -219,6 +226,18 @@ const EvaluationModal = React.memo(
               </div>
             ) : (
               <>
+                {/* Access Notice for Non-Department Users */}
+                {!isDepartmentUser && (
+                  <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-center">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
+                      <p className="text-sm text-yellow-800">
+                        <strong>View Only Mode:</strong> Only department users can edit evaluations and add evidence. You can view existing data and evidence.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Progress Bar */}
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
@@ -276,6 +295,7 @@ const EvaluationModal = React.memo(
                                 <button
                                   key={option.value}
                                   onClick={() =>
+                                    isDepartmentUser &&
                                     handleResponseChange(
                                       selectedDomain,
                                       indicator.id,
@@ -283,8 +303,11 @@ const EvaluationModal = React.memo(
                                       response?.notes || ""
                                     )
                                   }
+                                  disabled={!isDepartmentUser}
                                   className={`px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-200 ${
-                                    isSelected
+                                    !isDepartmentUser
+                                      ? "bg-gray-400 cursor-not-allowed opacity-50"
+                                      : isSelected
                                       ? `${option.color} ring-2 ring-offset-2 ring-gray-400 scale-105`
                                       : `${option.color} opacity-70 hover:opacity-100`
                                   }`}
@@ -306,8 +329,11 @@ const EvaluationModal = React.memo(
                                 variant="outline"
                                 size="sm"
                                 onClick={() => toggleNotes(indicator.id)}
+                                disabled={!isDepartmentUser}
                                 className={`border-blue-200 hover:bg-blue-50 ${
-                                  showNotesFor[indicator.id]
+                                  !isDepartmentUser
+                                    ? "opacity-50 cursor-not-allowed bg-gray-100"
+                                    : showNotesFor[indicator.id]
                                     ? "bg-blue-50 text-blue-700"
                                     : "text-blue-600"
                                 }`}
@@ -328,6 +354,28 @@ const EvaluationModal = React.memo(
                                 {translateQualitative("viewEvidence")}
                               </Button>
                             </div>
+
+                            {/* File Upload Input */}
+                            <div className="flex items-center space-x-2">
+                              <input
+                                type="file"
+                                multiple
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt,.xls,.xlsx,.ppt,.pptx"
+                                onChange={(e) => handleFileUpload(indicator.id, e)}
+                                disabled={!isDepartmentUser}
+                                className={`text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold ${
+                                  !isDepartmentUser
+                                    ? "file:bg-gray-300 file:text-gray-500 cursor-not-allowed opacity-50"
+                                    : "file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                }`}
+                                style={{ display: !isDepartmentUser ? "none" : "block" }}
+                              />
+                              {!isDepartmentUser && (
+                                <div className="text-sm text-gray-500 italic">
+                                  File upload disabled (view only mode)
+                                </div>
+                              )}
+                            </div>
                           </div>
 
                           {/* Conditional Content: Notes */}
@@ -342,7 +390,7 @@ const EvaluationModal = React.memo(
                                 value={response?.notes || ""}
                                 onChange={(e) => {
                                   const notes = e.target.value;
-                                  if (response?.evaluation !== undefined) {
+                                  if (response?.evaluation !== undefined && isDepartmentUser) {
                                     handleResponseChange(
                                       selectedDomain,
                                       indicator.id,
@@ -351,10 +399,14 @@ const EvaluationModal = React.memo(
                                     );
                                   }
                                 }}
-                                className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg 
-                                             bg-white text-gray-900 text-sm resize-none
-                                             focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                                             transition-all duration-200"
+                                disabled={!isDepartmentUser}
+                                className={`w-full h-32 px-4 py-3 border border-gray-300 rounded-lg 
+                                             text-gray-900 text-sm resize-none
+                                             transition-all duration-200 ${
+                                               !isDepartmentUser
+                                                 ? "bg-gray-100 cursor-not-allowed opacity-50"
+                                                 : "bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                             }`}
                               />
                             </div>
                           )}
@@ -432,16 +484,19 @@ const EvaluationModal = React.memo(
                                                 Failed
                                               </span>
                                             )}
-                                          </div>
-                                          <button
-                                            onClick={() =>
-                                              removeFile(indicator.id, index)
-                                            }
-                                            className="text-red-500 hover:text-red-700 ml-2"
-                                            disabled={
-                                              fileUploadStatus === "uploading"
-                                            }
-                                          >
+                                          </div>                                            <button
+                                              onClick={() =>
+                                                removeFile(indicator.id, index)
+                                              }
+                                              disabled={
+                                                fileUploadStatus === "uploading" || !isDepartmentUser
+                                              }
+                                              className={`ml-2 ${
+                                                !isDepartmentUser || fileUploadStatus === "uploading"
+                                                  ? "text-gray-400 cursor-not-allowed"
+                                                  : "text-red-500 hover:text-red-700"
+                                              }`}
+                                            >
                                             <X className="h-4 w-4" />
                                           </button>
                                         </div>
@@ -464,7 +519,12 @@ const EvaluationModal = React.memo(
                                   indicator.id
                                 )
                               }
-                              className="text-red-600 border-red-200 hover:bg-red-50"
+                              disabled={!isDepartmentUser}
+                              className={`border-red-200 ${
+                                !isDepartmentUser
+                                  ? "text-gray-400 bg-gray-100 cursor-not-allowed opacity-50"
+                                  : "text-red-600 hover:bg-red-50"
+                              }`}
                             >
                               Remove Response
                             </Button>
@@ -502,11 +562,14 @@ const EvaluationModal = React.memo(
                 <Button
                   onClick={handleSaveResponses}
                   disabled={
+                    !isDepartmentUser ||
                     loading.saving ||
                     Object.keys(unsavedChanges || {}).length === 0
                   }
                   className={`${
-                    Object.keys(unsavedChanges || {}).length > 0
+                    !isDepartmentUser
+                      ? "bg-gray-400 cursor-not-allowed opacity-50"
+                      : Object.keys(unsavedChanges || {}).length > 0
                       ? "bg-green-600 hover:bg-green-700"
                       : "bg-gray-400 cursor-not-allowed"
                   }`}

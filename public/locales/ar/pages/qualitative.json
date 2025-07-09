@@ -57,5 +57,43 @@
   "success": {
     "evaluationSaved": "تم حفظ التقييم بنجاح",
     "responseUpdated": "تم تحديث الاستجابة بنجاح"
+  },
+  "evidencePopup": {
+    "title": "مستودع الأدلة",
+    "domainLabel": "المجال",
+    "indicatorLabel": "المؤشر",
+    "responseMustBeSaved": "يجب حفظ الاستجابة قبل رفع الأدلة",
+    "readyToUpload": "جاهز لرفع الأدلة",
+    "uploadedEvidence": "الأدلة المرفوعة",
+    "loading": "جاري التحميل...",
+    "noEvidenceFound": "لم يتم العثور على أدلة",
+    "noEvidenceDescription": "لم يتم رفع أي ملفات أدلة لهذا المؤشر بعد.",
+    "uploadNewEvidence": "رفع أدلة جديدة",
+    "saveResponseFirst": "يرجى حفظ استجابتك أولاً قبل رفع الأدلة.",
+    "fileUploadRestricted": "رفع الملفات مقيد لمستخدمي القسم فقط. يمكنك عرض وتحميل ملفات الأدلة الموجودة.",
+    "fileUploadRestrictedShort": "رفع الملفات مقيد لمستخدمي القسم",
+    "dragAndDrop": "اسحب وأسقط الملفات هنا، أو انقر للتصفح",
+    "chooseFiles": "اختر الملفات",
+    "supportedFormats": "يدعم: PDF، DOC، DOCX، JPG، PNG، TXT",
+    "selectedFiles": "الملفات المحددة",
+    "uploading": "جاري الرفع...",
+    "uploaded": "تم الرفع",
+    "failed": "فشل",
+    "dismiss": "رفض",
+    "downloading": "جاري التحميل...",
+    "open": "فتح",
+    "download": "تحميل",
+    "fileTypes": {
+      "link": "رابط",
+      "image": "صورة",
+      "pdf": "PDF",
+      "file": "ملف"
+    },
+    "errors": {
+      "loadEvidence": "فشل في تحميل ملفات الأدلة",
+      "uploadFailed": "فشل في الرفع",
+      "departmentOnly": "رفع الملفات مقيد لمستخدمي القسم فقط",
+      "downloadFailed": "فشل في التحميل"
+    }
   }
 }

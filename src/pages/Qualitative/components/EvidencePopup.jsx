@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { uploadEvidence, getEvidence } from "../../../api/qualitativeAPI";
 import { API_BASE_URL } from "../../../api/apiConfig";
+import { useAuth } from "../../../context/AuthContext";
+import { ROLES } from "../../../constants";
 
 const EvidencePopup = ({
   isOpen,
@@ -19,6 +21,9 @@ const EvidencePopup = ({
   responseId,
   onEvidenceUpdate,
 }) => {
+  const { user } = useAuth();
+  const isDepartmentUser = user?.role === ROLES.DEPARTMENT;
+  
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [uploadStatus, setUploadStatus] = useState({});
@@ -50,6 +55,11 @@ const EvidencePopup = ({
   };
 
   const handleFileUpload = async (files) => {
+    if (!isDepartmentUser) {
+      setError("File upload is restricted to department users only");
+      return;
+    }
+    
     if (!responseId) {
       setError("Please save your response first before uploading evidence");
       return;
@@ -74,16 +84,22 @@ const EvidencePopup = ({
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    setDragOver(true);
+    if (isDepartmentUser) {
+      setDragOver(true);
+    }
   };
   const handleDragLeave = (e) => {
     e.preventDefault();
-    setDragOver(false);
+    if (isDepartmentUser) {
+      setDragOver(false);
+    }
   };
   const handleDrop = (e) => {
     e.preventDefault();
     setDragOver(false);
-    responseId && handleFileUpload(e.dataTransfer.files);
+    if (isDepartmentUser && responseId) {
+      handleFileUpload(e.dataTransfer.files);
+    }
   };
 
   const handleDownload = async (file) => {
@@ -290,7 +306,16 @@ const EvidencePopup = ({
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Upload New Evidence
             </h2>
-            {!responseId && (
+            
+            {!isDepartmentUser && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <p className="text-yellow-800 text-sm">
+                  ⚠️ File upload is restricted to department users only. You can view and download existing evidence files.
+                </p>
+              </div>
+            )}
+            
+            {!responseId && isDepartmentUser && (
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
                 <p className="text-orange-800 text-sm">
                   ⚠️ Please save your response first before uploading evidence.
@@ -303,20 +328,23 @@ const EvidencePopup = ({
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                dragOver && responseId
+                dragOver && responseId && isDepartmentUser
                   ? "border-blue-400 bg-blue-50"
-                  : responseId
+                  : responseId && isDepartmentUser
                   ? "border-gray-300 hover:border-blue-300"
                   : "border-gray-200 bg-gray-50"
               }`}
             >
-              <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-4">
-                Drag and drop files here, or click to browse
+              <Upload className={`h-12 w-12 mx-auto mb-4 ${!isDepartmentUser ? "text-gray-300" : "text-gray-400"}`} />
+              <p className={`mb-4 ${!isDepartmentUser ? "text-gray-400" : "text-gray-600"}`}>
+                {!isDepartmentUser 
+                  ? "File upload is restricted to department users"
+                  : "Drag and drop files here, or click to browse"
+                }
               </p>
               <label
                 className={`inline-flex items-center px-4 py-2 border rounded-lg ${
-                  responseId
+                  responseId && isDepartmentUser
                     ? "border-blue-200 text-blue-600 hover:bg-blue-50 cursor-pointer"
                     : "border-gray-300 text-gray-400 cursor-not-allowed"
                 }`}
@@ -329,7 +357,7 @@ const EvidencePopup = ({
                   onChange={(e) => handleFileUpload(e.target.files)}
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
                   multiple
-                  disabled={!responseId}
+                  disabled={!responseId || !isDepartmentUser}
                 />
               </label>
               <p className="text-xs text-gray-500 mt-2">
@@ -337,7 +365,7 @@ const EvidencePopup = ({
               </p>
             </div>
 
-            {selectedFiles.length > 0 && (
+            {selectedFiles.length > 0 && isDepartmentUser && (
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
                   Selected Files ({selectedFiles.length})
