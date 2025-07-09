@@ -29,7 +29,8 @@ export const useResultsExport = (analysisData) => {
       
       // Generate CSV content
       const csvContent = exportAnalysisToCSV(analysisData);
-        // Create and download file
+      
+      // Create and download file
       const programTitle = analysisData.programName ? 
         `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
         `program_${analysisData.programId}`;
@@ -58,6 +59,28 @@ export const useResultsExport = (analysisData) => {
   };
 
   /**
+   * Recursively round numbers in an object to 2 decimal places
+   */
+  const roundNumbersInObject = (obj) => {
+    if (typeof obj === 'number') {
+      return parseFloat(obj.toFixed(2));
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(roundNumbersInObject);
+    }
+    if (obj && typeof obj === 'object') {
+      const rounded = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          rounded[key] = roundNumbersInObject(obj[key]);
+        }
+      }
+      return rounded;
+    }
+    return obj;
+  };
+
+  /**
    * Export analysis data as JSON file
    */
   const exportToJSON = async () => {
@@ -69,18 +92,19 @@ export const useResultsExport = (analysisData) => {
     try {
       setExporting(true);
       
-      // Prepare JSON data with metadata
+      // Prepare JSON data with metadata and rounded numbers
       const jsonData = {
         exportDate: new Date().toISOString(),
         programId: analysisData.programId,
-        analysis: analysisData,
+        analysis: roundNumbersInObject(analysisData),
         metadata: {
           totalDomains: analysisData.summary?.totalDomains || 0,
           totalIndicators: analysisData.summary?.totalIndicators || 0,
-          finalScore: analysisData.weightedResults?.final_program_score || 0
+          finalScore: parseFloat((analysisData.weightedResults?.final_program_score || 0).toFixed(2))
         }
       };
-        // Create and download file
+      
+      // Create and download file
       const programTitle = analysisData.programName ? 
         `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
         `program_${analysisData.programId}`;
@@ -138,7 +162,8 @@ export const useResultsExport = (analysisData) => {
       
       // Append to body temporarily
       document.body.appendChild(element);
-        // Configure html2pdf options
+      
+      // Configure html2pdf options
       const programTitle = analysisData.programName ? 
         `${analysisData.programName.replace(/[^a-zA-Z0-9]/g, '_')}_${analysisData.programId}` : 
         `program_${analysisData.programId || 'unknown'}`;
@@ -177,14 +202,16 @@ export const useResultsExport = (analysisData) => {
       setExporting(false);
     }
   };
+
   /**
-   * Generate enhanced HTML content for PDF export
+   * Generate bilingual HTML content for PDF export (English and Arabic pages)
    */
   const generateEnhancedPrintHTML = (data) => {
     const { weightedResults, summary, programName, programId } = data;
     
     return `
-      <div style="font-family: Arial, sans-serif; direction: ltr; text-align: left;">
+      <!-- English Page -->
+      <div style="font-family: Arial, sans-serif; direction: ltr; text-align: left; page-break-after: always; min-height: 100vh;">
         <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 15px;">
           <h1 style="color: #007bff; margin: 0; font-size: 24px;">Qualitative Analysis Report</h1>
           <h2 style="margin: 10px 0; font-size: 18px;">
@@ -199,7 +226,7 @@ export const useResultsExport = (analysisData) => {
           <p><strong>Total Domains:</strong> ${summary?.totalDomains || 0}</p>
           <p><strong>Total Indicators:</strong> ${summary?.totalIndicators || 0}</p>
           <p style="font-size: 18px; font-weight: bold; color: #007bff;">
-            Final Score: ${weightedResults?.final_program_score?.toFixed(2) || 0}%
+            Final Score: ${(weightedResults?.final_program_score || 0).toFixed(2)}%
           </p>
         </div>
         
@@ -217,19 +244,73 @@ export const useResultsExport = (analysisData) => {
           <tbody>
             ${weightedResults?.result_by_domain?.map((domain, index) => `
               <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
-                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_id || `D${index + 1}`}</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">
+                  ${domain.domain_id || `D${index + 1}`}${domain.domain_en ? ` (${domain.domain_en})` : ''}
+                </td>
                 <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.indicator_count || 0}</td>
-                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_weight?.toFixed(2) || 0}%</td>
-                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_score?.toFixed(2) || 0}%</td>
-                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.domain_weighted_score?.toFixed(6) || 0}</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_weight || 0).toFixed(2)}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_score || 0).toFixed(2)}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_weighted_score || 0).toFixed(2)}</td>
               </tr>
             `).join('') || ''}
           </tbody>
         </table>
         
         <div style="margin-top: 30px; text-align: center; font-size: 11px; color: #666; border-top: 1px solid #ddd; padding-top: 15px;">
-          <p>Generated by Academic Self-Assessment System</p>
+          <p>Generated by Academic Reviewer</p>
           <p>Generated on: ${new Date().toLocaleString('en-US')}</p>
+        </div>
+      </div>
+
+      <!-- Arabic Page -->
+      <div style="font-family: Arial, sans-serif; direction: rtl; text-align: right; min-height: 100vh;">
+        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #007bff; padding-bottom: 15px;">
+          <h1 style="color: #007bff; margin: 0; font-size: 24px;">تقرير التحليل النوعي</h1>
+          <h2 style="margin: 10px 0; font-size: 18px;">
+            ${programName ? `برنامج: ${programName}` : `رقم البرنامج: ${programId || 'غير محدد'}`}
+          </h2>
+          ${programName && programId ? `<p style="margin: 5px 0; color: #666;">رقم البرنامج: ${programId}</p>` : ''}
+          <p style="margin: 5px 0; color: #666;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-SA')}</p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #007bff; margin-top: 0;">ملخص التحليل</h3>
+          <p><strong>عدد المجالات:</strong> ${summary?.totalDomains || 0}</p>
+          <p><strong>عدد المؤشرات الكلي:</strong> ${summary?.totalIndicators || 0}</p>
+          <p style="font-size: 18px; font-weight: bold; color: #007bff;">
+            الدرجة النهائية: ${(weightedResults?.final_program_score || 0).toFixed(2)}%
+          </p>
+        </div>
+        
+        <h3 style="color: #007bff;">تحليل المجالات</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background-color: #007bff; color: white;">
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">المجال</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">عدد المؤشرات</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">الوزن (Wi)</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">الدرجة (Si)</th>
+              <th style="padding: 10px; text-align: center; border: 1px solid #ddd;">الدرجة المرجحة</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${weightedResults?.result_by_domain?.map((domain, index) => `
+              <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">
+                  ${domain.domain_id}${domain.domain_ar ? ` (${domain.domain_ar})` : ''}
+                </td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${domain.indicator_count || 0}</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_weight || 0).toFixed(2)}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_score || 0).toFixed(2)}%</td>
+                <td style="padding: 8px; text-align: center; border: 1px solid #ddd;">${(domain.domain_weighted_score || 0).toFixed(2)}</td>
+              </tr>
+            `).join('') || ''}
+          </tbody>
+        </table>
+        
+        <div style="margin-top: 30px; text-align: center; font-size: 11px; color: #666; border-top: 1px solid #ddd; padding-top: 15px;">
+          <p>تم إنشاء هذا التقرير بواسطة نظام التقويم الذاتي الأكاديمي</p>
+          <p>وقت الإنشاء: ${new Date().toLocaleString('ar-SA')}</p>
         </div>
       </div>
     `;
@@ -265,6 +346,7 @@ export const useResultsExport = (analysisData) => {
     
     showToast('تم إعداد التقرير للطباعة', 'success');
   };
+
   /**
    * Generate HTML content for printing (Arabic version)
    */
@@ -325,7 +407,8 @@ export const useResultsExport = (analysisData) => {
           }
         </style>
       </head>
-      <body>        <div class="header">
+      <body>
+        <div class="header">
           <h1>تقرير التحليل النوعي</h1>
           <h2>${programName ? `برنامج: ${programName}` : `برنامج رقم: ${programId}`}</h2>
           ${programName && programId ? `<p>رقم البرنامج: ${programId}</p>` : ''}
@@ -336,7 +419,7 @@ export const useResultsExport = (analysisData) => {
           <h3>ملخص النتائج</h3>
           <p><strong>عدد المجالات:</strong> ${summary?.totalDomains || 0}</p>
           <p><strong>عدد المؤشرات الكلي:</strong> ${summary?.totalIndicators || 0}</p>
-          <p class="final-score">الدرجة النهائية: ${weightedResults?.final_program_score?.toFixed(2) || 0}%</p>
+          <p class="final-score">الدرجة النهائية: ${(weightedResults?.final_program_score || 0).toFixed(2)}%</p>
         </div>
         
         <table>
@@ -352,11 +435,11 @@ export const useResultsExport = (analysisData) => {
           <tbody>
             ${weightedResults?.result_by_domain?.map(domain => `
               <tr>
-                <td>Domain ${domain.domain_id}</td>
-                <td>${domain.indicator_count}</td>
-                <td>${domain.domain_weight?.toFixed(2)}%</td>
-                <td>${domain.domain_score?.toFixed(2)}%</td>
-                <td>${domain.domain_weighted_score?.toFixed(6)}</td>
+                <td>${domain.domain_id}${domain.domain_ar ? ` (${domain.domain_ar})` : ''}</td>
+                <td>${domain.indicator_count || 0}</td>
+                <td>${(domain.domain_weight || 0).toFixed(2)}%</td>
+                <td>${(domain.domain_score || 0).toFixed(2)}%</td>
+                <td>${(domain.domain_weighted_score || 0).toFixed(2)}</td>
               </tr>
             `).join('') || ''}
           </tbody>

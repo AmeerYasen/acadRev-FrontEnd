@@ -287,7 +287,7 @@ export const exportAnalysisToCSV = (analysisData) => {
     domain.indicator_count,
     domain.domain_weight.toFixed(2),
     domain.domain_score.toFixed(2),
-    domain.domain_weighted_score.toFixed(6)
+    domain.domain_weighted_score.toFixed(2)
   ]);
   
   // Add final score row
