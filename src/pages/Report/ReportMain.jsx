@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 
 import LoadingSpinner from "../../components/LoadingSpinner";
-import ReportSidebar from './components/ReportSidebar';
-import ReportHeader from './components/ReportHeader';
-import ReportPromptCard from './components/ReportPromptCard';
-import ReportEditorSection from './components/ReportEditorSection';
-import ReportPagination from './components/ReportPagination';
-import ReportSaveButton from './components/ReportSaveButton';
+import ReportSidebar from "./components/ReportSidebar";
+import ReportHeader from "./components/ReportHeader";
+import ReportPromptCard from "./components/ReportPromptCard";
+import ReportEditorSection from "./components/ReportEditorSection";
+import ReportPagination from "./components/ReportPagination";
+import ReportSaveButton from "./components/ReportSaveButton";
 
-import { useReportData } from './hooks/useReportData';
-import { useReportState } from './hooks/useReportState';
-import { useReportSave } from './hooks/useReportSave';
-import { getEditorSections } from './utils/reportHelpers';
-import { getLocalizedText } from '../../utils/translationUtils';
-import { useNamespacedTranslation } from '../../hooks/useNamespacedTranslation';
+import { useReportData } from "./hooks/useReportData";
+import { useReportState } from "./hooks/useReportState";
+import { useReportSave } from "./hooks/useReportSave";
+import { getEditorSections } from "./utils/reportHelpers";
+import { useNamespacedTranslation } from "../../hooks/useNamespacedTranslation";
 
 const ReportMain = () => {
   const { programId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { translateReport, currentLanguage, isRTL } = useNamespacedTranslation();
+  const { isRTL } = useNamespacedTranslation();
 
   // Get localized editor sections
   const editorSections = getEditorSections();
@@ -32,11 +31,11 @@ const ReportMain = () => {
     promptsPagination,
     loading,
     handleDomainChange,
-    handlePromptsPageChange
+    handlePromptsPageChange,
   } = useReportData(programId);
 
   const reportState = useReportState();
-  
+
   const { saving, handleSaveReport } = useReportSave(
     programId,
     currentDomain,
@@ -62,7 +61,7 @@ const ReportMain = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gray-50" dir={isRTL ? "rtl" : "ltr"}>
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-6">
           <ReportSidebar
@@ -85,10 +84,7 @@ const ReportMain = () => {
               onSave={handleSaveReport}
             />
 
-            <ReportPromptCard
-              currentDomain={currentDomain}
-              prompts={prompts}
-            />
+            <ReportPromptCard currentDomain={currentDomain} prompts={prompts} />
 
             {/* Editor Sections */}
             <div className="space-y-6 mt-6">

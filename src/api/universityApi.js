@@ -1,6 +1,6 @@
 // src/api/universityApi.js
-import { apiFetch } from './apiConfig';
-import { ENDPOINTS } from '../constants';
+import { apiFetch } from "./apiConfig";
+import { ENDPOINTS } from "../constants";
 
 /**
  * Fetches all universities.
@@ -11,7 +11,7 @@ export const fetchUniversities = async () => {
     const response = await apiFetch(ENDPOINTS.UNIVERSITIES.GET_ALL);
     return response; // Assumes response is an array of universities
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch universities');
+    throw new Error(error.message || "Failed to fetch universities");
   }
 };
 
@@ -23,12 +23,12 @@ export const fetchUniversities = async () => {
 export const addUniversity = async (formData) => {
   try {
     const response = await apiFetch(ENDPOINTS.UNIVERSITIES.CREATE, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(formData),
     });
     return response; // Assumes response is the created university
   } catch (error) {
-    throw new Error(error.message || 'Failed to add university');
+    throw new Error(error.message || "Failed to add university");
   }
 };
 
@@ -39,13 +39,13 @@ export const addUniversity = async (formData) => {
  */
 export const editUniversity = async (formData) => {
   try {
-    const response = await apiFetch(ENDPOINTS.UNIVERSITIES.UPDATE(formData.id), {
-      method: 'PUT',
+    const response = await apiFetch(ENDPOINTS.UNIVERSITIES.UPDATE, {
+      method: "PUT",
       body: JSON.stringify(formData),
     });
     return response; // Assumes response is the updated university
   } catch (error) {
-    throw new Error(error.message || 'Failed to update university');
+    throw new Error(error.message || "Failed to update university");
   }
 };
 
@@ -57,10 +57,10 @@ export const editUniversity = async (formData) => {
 export const deleteUniversity = async (universityId) => {
   try {
     await apiFetch(ENDPOINTS.UNIVERSITIES.DELETE_UNIVERSITY(universityId), {
-      method: 'DELETE',
+      method: "DELETE",
     });
   } catch (error) {
-    throw new Error(error.message || 'Failed to delete university');
+    throw new Error(error.message || "Failed to delete university");
   }
 };
 
@@ -73,7 +73,7 @@ export const fetchUniversityNames = async () => {
     const response = await apiFetch(ENDPOINTS.UNIVERSITIES.GET_UNI_NAMES);
     return response; // Assumes response is an array of university names
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch university names');
+    throw new Error(error.message || "Failed to fetch university names");
   }
 };
 
@@ -88,6 +88,8 @@ export const fetchMyUniversity = async () => {
     const response = await apiFetch(ENDPOINTS.UNIVERSITIES.GET_MY_UNIVERSITY);
     return response; // Assumes response is the university object
   } catch (error) {
-    throw new Error(error.message || 'Failed to fetch your university information');
+    throw new Error(
+      error.message || "Failed to fetch your university information"
+    );
   }
 };

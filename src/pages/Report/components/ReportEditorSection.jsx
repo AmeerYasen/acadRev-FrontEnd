@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Edit3 } from "lucide-react";
 import { Editor } from 'primereact/editor';
+import { useAuth } from '../../../context/AuthContext';
 
 const ReportEditorSection = ({ 
   section, 
@@ -9,6 +10,9 @@ const ReportEditorSection = ({
   onChange, 
   index 
 }) => {
+  const { user } = useAuth();
+  const isDepartmentRole = user?.role === 'department';
+
   return (
     <Card key={index} className="shadow-sm">
       <CardHeader className="pb-3">
@@ -23,7 +27,14 @@ const ReportEditorSection = ({
           value={value || ''}
           onTextChange={(e) => onChange(section.key, e.htmlValue)}
           style={{ height: '200px' }}
+          readOnly={!isDepartmentRole}
+          disabled={!isDepartmentRole}
         />
+        {!isDepartmentRole && (
+          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+            Only department users can edit this content.
+          </div>
+        )}
       </CardContent>
     </Card>
   );
