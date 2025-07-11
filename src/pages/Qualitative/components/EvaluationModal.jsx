@@ -484,7 +484,8 @@ const EvaluationModal = React.memo(
                                                 Failed
                                               </span>
                                             )}
-                                          </div>                                            <button
+                                          </div>                                            
+                                          <button
                                               onClick={() =>
                                                 removeFile(indicator.id, index)
                                               }
