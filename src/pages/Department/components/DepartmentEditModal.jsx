@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ROLES } from '../../../constants'; // Ensure ROLES is correctly imported
 import { useNamespacedTranslation } from '../../../hooks/useNamespacedTranslation';
 import { editDepartment } from '../../../api/departmentAPI';
+import { formatDisplayDate } from '../../../utils/dateUtils'; // Assuming you have a utility for date formatting
 
 const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole }) => { // Removed canEdit from props
   const { translateDepartment } = useNamespacedTranslation();
@@ -41,7 +42,7 @@ const DepartmentEditModal = ({ department, isOpen, onClose, onUpdate, userRole }
         logo: department.logo || '',
         head_name: department.head_name || '',
         description: department.description || '',
-        established: department.created_at || '', // Assuming created_at is the source for established year
+        established: formatDisplayDate(department.created_at) || '', // Assuming created_at is the source for established year
       });
       setPrograms(getPrograms(department.programs_info));
       setIsEditing(false); // Reset editing mode when department changes
